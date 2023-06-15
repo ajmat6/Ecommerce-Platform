@@ -1,0 +1,19 @@
+{
+  "name": "ecommerce-backend",
+  "version": "1.0.0",
+  "description": "This is the backend of Ecommerce Flipkart Clone project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecommerce",
+    "mern",
+    "project",
+    "backend",
+    "api",
+    "api"
+  ],
+  "author": "Ajmat Kathat",
+  "license": "ISC"
+}
