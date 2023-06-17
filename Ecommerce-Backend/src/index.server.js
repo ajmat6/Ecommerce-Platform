@@ -24,19 +24,7 @@ mongoose.connect(
 // Middleware to parse the data coming as json in the req body:
 app.use(express.json());
 
-// Hello API:
-app.get('/', (req, res, next) => {
-    res.status(200).json({
-        message: "Hello! This is Server"
-    })
-})
-
-// Hello API:
-app.post('/data', (req, res, next) => {
-    res.status(200).json({
-        message: req.body
-    })
-})
+app.use('/api', userRoutes); // middleware and every route to be start with /api
 
 app.listen(process.env.PORT, () => {
     console.log(`Server Chal Raha He Bhai at ${process.env.PORT}`);
