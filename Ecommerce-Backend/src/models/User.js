@@ -57,6 +57,12 @@ UserSchema.virtual('password')
     this.hash_password = bcrypt.hashSync(password, 10); // first argument in hashSync is plainPassword and second is salt
 })
 
+// virtual to get fullname whenever it is called:
+UserSchema.virtual('fullname')
+.get(function(password) {
+    return `${this.firstName} ${this.lastName}`
+})
+
 // method to authenticate the password:
 UserSchema.methods = {
     authenticate: function(password){

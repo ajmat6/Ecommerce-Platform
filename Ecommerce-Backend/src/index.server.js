@@ -4,7 +4,7 @@ const env = require('dotenv'); // importing dotenv for the port as an environmen
 const mongoose = require('mongoose');
 
 // Routes Import:
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/auth');
 
 // Using env variable (Port no)
 env.config();
@@ -16,7 +16,6 @@ mongoose.connect(
     { 
         useNewUrlParser:true,
         useUnifiedTopology:true,
-        // useCreateIndex: true
     }
 ).then(() => {
     console.log("Database Connected")
