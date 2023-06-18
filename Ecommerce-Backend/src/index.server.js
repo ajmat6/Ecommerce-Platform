@@ -15,7 +15,8 @@ mongoose.connect(
     `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.kvw3z7z.mongodb.net/`,
     { 
         useNewUrlParser:true,
-        useUnifiedTopology:true
+        useUnifiedTopology:true,
+        // useCreateIndex: true
     }
 ).then(() => {
     console.log("Database Connected")
