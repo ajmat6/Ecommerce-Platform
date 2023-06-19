@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router(); // for routing
 const jwt = require('jsonwebtoken'); // importing jwt for sending token to the user
 const User = require('../models/User'); // importing User model
-
-// JWT Secret signature:
-const JWT_SECRET = process.env.JWT_SECRET;
+const fetchuser = require('../middleware/fetchuser') // importing fetchuser middleware
 
 // API end point for signup: POST Request -> to create an account:
 router.post('/signup', async (req,res) => {
@@ -40,13 +38,19 @@ router.post('/signup', async (req,res) => {
         // Saving the document(a particular of the users collection) in the DB:
         _user.save();
 
-        // sending response to the user if user is created:
+        //Token data that we want to send to the user (here id of the user)
         const data = {
-            user: _user
+            user:{
+                id: _user._id
+            }
         }
 
-        res.status(201).json(data)
-    }catch (error) {
+        const authToken = jwt.sign(data, process.env.JWT_SECRET);
+
+        res.status(201).json({authToken})
+    }
+    
+    catch (error) {
         console.log(error.message); //method to print the error (error.message)
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");
     }
@@ -76,10 +80,18 @@ router.post('/signin', async (req,res) => {
             // calling authenticate method of User DB(checking for the password):
             if(user.authenticate(req.body.password))
             {
-                const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {expiresIn: '1hr'});
+                // auth-token we are sending to the user:
+
+                const data = {
+                    user: {
+                        id: user._id
+                    }
+                }
+
+                const token = jwt.sign(data, process.env.JWT_SECRET, {expiresIn: '1hr'});
 
                 // sending response to the user: Here fullName will be set by virtual
-                const { firstName, lastName, email, role, fullname } = user;
+                const { firstName, lastName, email, role, fullname, _id} = user;
 
                 res.status(200).json({
                     token,
@@ -88,7 +100,8 @@ router.post('/signin', async (req,res) => {
                         lastName,
                         email,
                         role,
-                        fullname
+                        fullname,
+                        _id
                     }
                 })
 
@@ -108,10 +121,19 @@ router.post('/signin', async (req,res) => {
 
 
 // API end point for signin: POST Request -> to login
-router.post('/profile', (req, res) => {
-    res.status(200).json({
-        user: 'profile'
-    })
+router.post('/profile', fetchuser, async (req, res) => {
+    try
+    {
+        // finding user by its ID:
+        const userId = req.user.id;
+        const user = await User.findById(userId);
+        res.status(200).json({user});
+    } 
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
 })
 
 module.exports = router;
