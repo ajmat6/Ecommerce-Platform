@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-// const JWT_SECRET
 
 const fetchuser = (req, res, next) => {
 
