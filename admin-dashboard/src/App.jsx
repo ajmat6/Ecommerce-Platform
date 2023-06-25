@@ -1,22 +1,22 @@
 import './App.css';
-import Layout from './components/Layout/Layout'
 import {
   BrowserRouter,
   Routes,
   Route
 } from 'react-router-dom'
-import Home from './containers/Home/Home';
-import Signin from './containers/Signin/Signin';
-import Signup from './containers/Signup/Signup';
+import Home from './components/Home/Home';
+import Signin from './components/Signin/Signin';
+import Signup from './components/Signup/Signup';
+import Navbar from './components/Navbar/Navbar'
 
 function App() {
   return (
     <div className="App">
       {/* Routing using react-router-dom */}
       <BrowserRouter>
-        <Layout />
+        <Navbar />
         <Routes>
-          <Route path='/'  element={<Home />} />
+          <Route path='/' element={<Home />} />
           <Route path='/signin' element={<Signin />} />
           <Route path='/signup' element={<Signup />} />
         </Routes>

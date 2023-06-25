@@ -38,7 +38,7 @@ function index() {
               </li>
             </ul>
 
-            <Link className="btn btn-secondary mx-1" to="/login" role="button">Sign In</Link>
+            <Link className="btn btn-secondary mx-1" to="/signin" role="button">Sign In</Link>
             <Link className="btn btn-secondary mx-1" to="/signup" role="button">Sign Up</Link>
 
 

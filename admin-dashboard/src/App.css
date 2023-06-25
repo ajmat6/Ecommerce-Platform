@@ -9,6 +9,7 @@
   padding-right: 15px;
 }
 
+
 @media screen and (min-width: 768px)
 {
 .container-fluid .jumbotron, .container .jumbotron {
@@ -32,4 +33,14 @@
   margin-bottom: 30px;
   padding-bottom: 30px;
   padding-top: 30px;
+}
+
+
+/* CSS for hamburger container class removal in mobile case: */
+@media (max-width: 568px)
+{
+  .container {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
