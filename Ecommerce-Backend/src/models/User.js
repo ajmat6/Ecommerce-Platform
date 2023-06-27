@@ -70,4 +70,4 @@ UserSchema.methods = {
     }
 }
  
-module.exports = mongoose.model('User', UserSchema); // this will create a Users database in the database
+module.exports = mongoose.model('User', UserSchema); // this will create a Users collection in the database

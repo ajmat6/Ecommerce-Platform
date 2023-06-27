@@ -3,9 +3,25 @@ const router = express.Router(); // for routing
 const jwt = require('jsonwebtoken'); // importing jwt for sending token to the user
 const User = require('../models/User'); // importing User model
 const fetchuser = require('../middleware/fetchuser') // importing fetchuser middleware
+const {body, validationResult} = require('express-validator'); // express validator for validation the user
 
 // API end point for signup: POST Request -> to create an account:
-router.post('/signup', async (req,res) => {
+router.post('/signup',[
+    // Express validators:
+    body('firstName', 'FirstName is Required').notEmpty(), // to validate that first name is not empty
+    body('lastName', 'Last Name is Required').notEmpty(),
+    body('email', 'Please enter a valid email').isEmail(),
+    body('password', 'Password must be at least 8 characters long').isLength({min: 6}) // to set min length of the password
+], async (req,res) => {
+
+    // Validation result of express validator: It takes req as argument and it returns an array of errors:
+    const errors = validationResult(req)
+
+    // if errors are there in the validationResult, then sendion response to the user:
+    if(!errors.isEmpty())
+    {
+        return res.status(400).json({error: errors.array()});
+    }
     
     // Finding the user:
     try
