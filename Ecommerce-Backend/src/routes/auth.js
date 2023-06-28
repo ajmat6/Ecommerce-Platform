@@ -4,24 +4,10 @@ const jwt = require('jsonwebtoken'); // importing jwt for sending token to the u
 const User = require('../models/User'); // importing User model
 const fetchuser = require('../middleware/fetchuser') // importing fetchuser middleware
 const {body, validationResult} = require('express-validator'); // express validator for validation the user
+const {validateSignupRequest, validateSigninRequest, isRequestValidated} = require('../validators/validate'); // importing validators
 
 // API end point for signup: POST Request -> to create an account:
-router.post('/signup',[
-    // Express validators:
-    body('firstName', 'FirstName is Required').notEmpty(), // to validate that first name is not empty
-    body('lastName', 'Last Name is Required').notEmpty(),
-    body('email', 'Please enter a valid email').isEmail(),
-    body('password', 'Password must be at least 8 characters long').isLength({min: 6}) // to set min length of the password
-], async (req,res) => {
-
-    // Validation result of express validator: It takes req as argument and it returns an array of errors:
-    const errors = validationResult(req)
-
-    // if errors are there in the validationResult, then sendion response to the user:
-    if(!errors.isEmpty())
-    {
-        return res.status(400).json({error: errors.array()});
-    }
+router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res) => { /// using validateRequest(array) and isRequestValidated as midddleware defined in validators folder
     
     // Finding the user:
     try
@@ -68,14 +54,14 @@ router.post('/signup',[
     
     catch (error) {
         console.log(error.message); //method to print the error (error.message)
-        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some time");
     }
 
 })
 
 
 // API end point for signin: POST Request -> to login
-router.post('/signin', async (req,res) => {
+router.post('/signin', validateSigninRequest, isRequestValidated, async (req,res) => {
 
     try
     {
@@ -157,7 +143,7 @@ router.post('/profile', fetchuser, async (req, res) => {
 
 
 // API end point for signup: POST Request -> to create an account:
-router.post('/admin/signup', async (req,res) => {
+router.post('/admin/signup', validateSignupRequest, isRequestValidated, async (req,res) => {
     
     // Finding the user:
     try
@@ -212,7 +198,7 @@ router.post('/admin/signup', async (req,res) => {
 
 
 // API end point for signin: POST Request -> to login
-router.post('/admin/signin', async (req,res) => {
+router.post('/admin/signin', validateSigninRequest, isRequestValidated, async (req,res) => {
 
     try
     {
