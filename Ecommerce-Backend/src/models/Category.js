@@ -7,7 +7,7 @@ const categorySchema = new mongoose.Schema({
         trim: true
     },
 
-    slug: { // slug is used to give an alternative name to a category if the name of the category entered is weird
+    slug: { // slug is used to store the slugify (to convert a string into a url)
         type: String,
         required: true,
         trim: true
@@ -21,4 +21,4 @@ const categorySchema = new mongoose.Schema({
 {timestamps: true}
 )
 
-exports.default = mongoose.model('Category', categorySchema);
+module.exports = mongoose.model('Category', categorySchema);
