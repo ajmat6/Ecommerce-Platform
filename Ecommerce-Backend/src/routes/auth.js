@@ -43,7 +43,8 @@ router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res
         //Token data that we want to send to the user (here id of the user)
         const data = {
             user:{
-                id: _user._id
+                id: _user._id,
+                role: _user.role
             }
         }
 
@@ -56,7 +57,6 @@ router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res
         console.log(error.message); //method to print the error (error.message)
         res.status(500).send("Some Internal Server Error Occured! Please try again after some time");
     }
-
 })
 
 
@@ -86,7 +86,8 @@ router.post('/signin', validateSigninRequest, isRequestValidated, async (req,res
 
                 const data = {
                     user: {
-                        id: user._id
+                        id: user._id,
+                        role: user.role // assigning role to validate in fetching the category
                     }
                 }
 
@@ -180,7 +181,8 @@ router.post('/admin/signup', validateSignupRequest, isRequestValidated, async (r
         //Token data that we want to send to the user (here id of the user)
         const data = {
             user:{
-                id: _user._id
+                id: _user._id,
+                role: _user.role
             }
         }
 
@@ -223,7 +225,8 @@ router.post('/admin/signin', validateSigninRequest, isRequestValidated, async (r
 
                 const data = {
                     user: {
-                        id: user._id
+                        id: user._id,
+                        role: user.role
                     }
                 }
 
