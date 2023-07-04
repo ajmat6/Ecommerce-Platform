@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 // Routes Import:
 const userRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/categories');
+const productRoutes = require('./routes/product');
 
 // Using env variable (Port no)
 env.config();
@@ -27,6 +28,7 @@ app.use(express.json());
 
 app.use('/api', userRoutes); // middleware and every route to be start with /api
 app.use('/api', categoryRoutes); 
+app.use('/api', productRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server Chal Raha He Bhai at ${process.env.PORT}`);
