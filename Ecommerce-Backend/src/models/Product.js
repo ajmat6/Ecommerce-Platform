@@ -24,6 +24,11 @@ const productSchema = new mongoose.Schema({
         trim: true
     },
 
+    quantity: {
+        type: Number,
+        required: true
+    },
+
     offers: {
         type: Number
     },
@@ -44,12 +49,14 @@ const productSchema = new mongoose.Schema({
 
     // Category of the product:
     category: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Category'
+        type: mongoose.Schema.Types.ObjectId, ref: 'Category',
+        required: true
     },
 
     // For the admin as only admin can create a product:
     createdBy: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'User'
+        type: mongoose.Schema.Types.ObjectId, ref: 'User',
+        required: true
     },
 
     updatedAt: Date
