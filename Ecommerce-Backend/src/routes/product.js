@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }); // the destination of the storage is defined in the storage function
 
 // End point to create a product:
-router.post('/product/create', fetchuser, adminMiddleware, upload.array('productPicture') , async (req,res) => { // uploading an array of file (the name here for files should be same to be used in the body of postman)
+router.post('/product/create', fetchuser, adminMiddleware, upload.array('productPicture') , async (req, res) => { // uploading an array of file (the name here for files should be same to be used in the body of postman)
     try
     {
         // Destructuring and extracting parameters from the request body:
