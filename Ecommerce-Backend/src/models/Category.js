@@ -13,6 +13,10 @@ const categorySchema = new mongoose.Schema({
         trim: true
     },
 
+    categoryImage: {
+        type: String
+    },
+
     parentId: { // To store the parent of the item. For eg Mobiles have electronics as their parent:
         type: String
     }

@@ -16,7 +16,7 @@ router.post('/user/cart/add-to-cart', fetchuser, userMiddleware, async (req, res
             // Modify the cart by changing the quantity or by adding new products into it:
 
             // if cart already exist then check if a product already exist in the cart or not:
-            const alreadyProduct = Cart.cartItems.find((cartItems) => cartItems.productId === req.body.cartItems.productId);
+            const alreadyProduct = alreadyCart.cartItems.find((cartItems) => cartItems.productId == req.body.cartItems.productId);
             
             // if that product already in cart, then update its quantity:
             if(alreadyProduct)
@@ -24,12 +24,13 @@ router.post('/user/cart/add-to-cart', fetchuser, userMiddleware, async (req, res
                 // "cartitems.productId" is way to acces a key in a document object: Here searching for a user and a product
                 const updateCart = await Cart.findOneAndUpdate({userId: req.user.id, "cartItems.productId": req.body.cartItems.productId}, {
                     "$set": {
-                        "cartItems": {
+                        "cartItems.$": { // when we have more than one product in cart and try to increase the quantity of one of them then the other products were getting lost. So to solve this problem use .$
                             ...req.body.cartItems,
                             quantity: alreadyProduct.quantity + req.body.cartItems.quantity
                         }
                     }
                 })
+                res.status(200).json({updateCart})
             }
 
             // if not in cart then add in cart:
@@ -40,9 +41,9 @@ router.post('/user/cart/add-to-cart', fetchuser, userMiddleware, async (req, res
                         "cartItems": req.body.cartItems
                     }
                 })
+                res.status(200).json({updateCart})
             }
 
-            res.status(200).json({updateCart})
         }
 
         // if cart doest not exist then create it:
