@@ -4,17 +4,41 @@ const Category = require('../models/Category'); // importing Category model
 const slugify = require('slugify'); // to make url of the categories
 const fetchuser = require('../middleware/fetchuser'); // to check for signed in or not
 const { adminMiddleware } = require('../middleware/categoryMiddleware'); // admin middleware to make sure that only admin can create a category
+const multer = require('multer'); // importing multer to upload files
+const shortid = require('shortid'); // to create a short id of the file uploaded
+const path = require('path');
+
+// to read files uploaded using multer as files uploaded using multer are not readable(taken from docs)
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.join(path.dirname(__dirname), 'uploads')) // destination folder path using path.join
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, shortid.generate() + '-' + file.originalname) // short id will generate some random name for the file uploaded which will be suffixed by the file.originalname that is received in the req.file
+    }
+});
+
+const upload = multer({ storage }); // the destination of the storage is defined in the storage function
 
 // End point to create a category: to create first you should be signed in and you should be a admin
-router.post('/category/create', fetchuser, adminMiddleware, async (req, res) => {
+router.post('/category/create', fetchuser, adminMiddleware, upload.single('categoryPic'), async (req, res) => {
     try
     {
+        
         // category req info:
         const categoryData = {
             name: req.body.name,
-            slug: slugify(req.body.name)
+            slug: slugify(req.body.name),
         }
-    
+        
+        // checking if category have a pic in the request:
+        if(req.file)
+        {
+            let categoryPicURL = process.env.CATEGORY_PICURL + '/public/' + req.file.filename // creating a url for the categoryPic (link is made env variable as it will change in future (jo part change ho sakta he))
+            categoryData.categoryImage = categoryPicURL // adding above url in categoryPic key of the category model
+        }
+
         // checking if parentId exist in the request body (if present store in db):
         if(req.body.parentId)
         {
