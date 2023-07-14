@@ -1,5 +1,7 @@
-import redux from 'redux'
+import {configureStore} from '@redux/tookit';
 
-const store = redux.legacy_createStore // to create a store
+const store = configureStore({
+
+})
 
 export default store;
