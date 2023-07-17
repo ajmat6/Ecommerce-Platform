@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { authAction } from "../../reducers/authReducer";
 import { useSelector } from "react-redux"; // importing useSelector to get hold of states in store
 import { useDispatch } from "react-redux"; // to dispatch an action
 
 
 function Signin() {
-  const credentials = useSelector((state) => state.auth.name)
+  // Defining useState hook for email and password:
+  const [Email, setEmail] = useState('');
+  const [Password, setPassword] = useState('');
+  const [Errors, setErrors] = useState('');
+
+  const credentials = useSelector((state) => state.auth.name) // to hold any state of the redux store
   const dispatch = useDispatch(); // to use useDispatch storing it in a variable
 
   // function to pass credentials to the authAction action on the submit of the form:
@@ -14,8 +19,8 @@ function Signin() {
     console.log("Form submitted")
 
     const user = {
-      email: "ajmat@gmail.com",
-      password: "Ak579123"
+      email: Email,     // sending entered email and password to the authAction
+      password: Password
     }
 
     dispatch(authAction(user)) // Diapatching action using useDispatch and passing credentials of user as arguments
@@ -33,6 +38,8 @@ function Signin() {
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
+            value={Email} // assigning value using useState hook
+            onChange={(e) => setEmail(e.target.value)} // on change of input field setting email as target value (entered value)
           />
           <div id="emailHelp" className="form-text">
             We'll never share your email with anyone else.
@@ -46,6 +53,8 @@ function Signin() {
             type="password"
             className="form-control"
             id="exampleInputPassword1"
+            value={Password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <button type="submit" className="btn btn-primary">
