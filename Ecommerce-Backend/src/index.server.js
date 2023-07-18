@@ -3,6 +3,7 @@ const app = express();
 const env = require('dotenv'); // importing dotenv for the port as an environment variable
 const mongoose = require('mongoose');
 const path = require('path');
+const cors = require('cors')
 
 // Routes Import:
 const userRoutes = require('./routes/auth');
@@ -27,6 +28,7 @@ mongoose.connect(
 
 // Middleware to parse the data coming as json in the req body:
 app.use(express.json());
+app.use(cors()) // to follow the cors policy to make use of backend in the frontend
 app.use('/public', express.static(path.join(__dirname, 'uploads'))); // joining curr file to uploads folder and serving upload folder as a static file to browser
 
 app.use('/api', userRoutes); // middleware and every route to be start with /api

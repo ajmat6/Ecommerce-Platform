@@ -1,27 +1,40 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axiosInstance from "../helpers/axios";
 
 // defining initial State:
 const initialState = {
-    name: 'ajmat'
+    email: 'ajmat@gmail.com',
+    password: 'ajmatkathat'
 }
+
+// createAsyncThunk for handling async actions, it takes type of action as its first argument
+export const authCredentials = createAsyncThunk('/authReducer/authCredentials', async (user) => {
+    return await axiosInstance.post('/admin/signin')
+    .then((response) => response.data)
+    .catch((error) => {
+        console.log(error.message);
+    })
+})
 
 const authSlice = createSlice({
     name: "Ajmat",
     initialState: initialState,
+
     // Reducers:
     reducers: {
-        authAction: async (state, action) => {
-            console.log(action.payload);
-            console.log(action) // it will print action type as Ajmat/authAction
 
-            const res = await axiosInstance.post('/admin/signin', {
-                // putting payload in the signin header getting from the form values
-                ...action
-            })
-        }
+    },
+
+    // extrareducers for async actions:
+    extraReducers: (builder) => {
+        builder.addCase(authCredentials.fulfilled, (state, action) => {
+            state.email = action.payload
+            state.password = action.payload
+
+            console.log(action.payload)
+        })
     }
 })
 
 export default authSlice.reducer
-export const {authAction} = authSlice.actions; // exporting actions created by the reducer
+// export const {authAction} = authSlice.actions; // exporting actions created by the reducer
