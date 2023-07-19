@@ -5,11 +5,11 @@ import { useDispatch } from "react-redux"; // to dispatch an action
 
 function Signin() {
   // Defining useState hook for email and password:
-  const [Email, setEmail] = useState('');
-  const [Password, setPassword] = useState('');
-  const [Errors, setErrors] = useState('');
+  const [email, setemail] = useState('');
+  const [password, setpassword] = useState('');
+  const [errors, seterrors] = useState('');
   
-  const credentials = useSelector((state) => state.auth) // here auth is one of the reducer in redux store
+  const { loading, userInfo, error, success } = useSelector((state) => state.auth) // here auth is one of the reducer in redux store
   const dispatch = useDispatch(); // to use useDispatch storing it in a variable
   
   // Dispatching authCredentials action using useEffect hook:
@@ -20,17 +20,11 @@ function Signin() {
     console.log("Form submitted")
     
     const user = {
-      email: Email,     // sending entered email and password to the authAction
-      password: Password
+      email, password     // sending entered email and password to the authAction
     }
     
     dispatch(authCredentials(user));
-    // credentials.email = Email // Diapatching action using useDispatch and passing credentials of user as arguments
-    // credentials.password = Password
   }
-
-  useEffect(() => {
-  }, [])
 
   return (
     <div className="mt-2">
@@ -44,8 +38,8 @@ function Signin() {
             className="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
-            value={Email} // assigning value using useState hook
-            onChange={(e) => setEmail(e.target.value)} // on change of input field setting email as target value (entered value)
+            value={email} // assigning value using useState hook
+            onChange={(e) => setemail(e.target.value)} // on change of input field setting email as target value (entered value)
           />
           <div id="emailHelp" className="form-text">
             We'll never share your email with anyone else.
@@ -59,8 +53,8 @@ function Signin() {
             type="password"
             className="form-control"
             id="exampleInputPassword1"
-            value={Password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            onChange={(e) => setpassword(e.target.value)}
           />
         </div>
         <button type="submit" className="btn btn-primary">

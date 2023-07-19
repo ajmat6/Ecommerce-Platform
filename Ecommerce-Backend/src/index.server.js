@@ -28,7 +28,7 @@ mongoose.connect(
 
 // Middleware to parse the data coming as json in the req body:
 app.use(express.json());
-app.use(cors()) // to follow the cors policy to make use of backend in the frontend
+app.use(cors()) // to follow the cors policy to make use of backend in the frontend as both frontend and backend are running on different ports
 app.use('/public', express.static(path.join(__dirname, 'uploads'))); // joining curr file to uploads folder and serving upload folder as a static file to browser
 
 app.use('/api', userRoutes); // middleware and every route to be start with /api

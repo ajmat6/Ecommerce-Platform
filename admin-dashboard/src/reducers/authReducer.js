@@ -3,17 +3,28 @@ import axiosInstance from "../helpers/axios";
 
 // defining initial State:
 const initialState = {
-    email: 'ajmat@gmail.com',
-    password: 'ajmatkathat'
+    userToken: null,
+    userInfo: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        picture: ''
+    },
+    authenticate: false,
+    authenticating: false
 }
 
 // createAsyncThunk for handling async actions, it takes type of action as its first argument
 export const authCredentials = createAsyncThunk('/authReducer/authCredentials', async (user) => {
-    return await axiosInstance.post('/admin/signin')
-    .then((response) => response.data)
-    .catch((error) => {
-        console.log(error.message);
-    })
+    const res = await axiosInstance.post('/admin/signin', {...user}) // splitting up email and password coming as argument
+
+    // if sign in details were correct:
+    if(res.status === 200)
+    {
+        // extracting token and user from the response:
+        const {token, user} = res.data
+        localStorage.setItem('token', token) // storing token in localStorage
+    }
 })
 
 const authSlice = createSlice({
@@ -22,19 +33,32 @@ const authSlice = createSlice({
 
     // Reducers:
     reducers: {
-
+        // ordered: (state, action) => {
+        //     state.authenticate = true,
+        //     state.userInfo = action.payload.user,
+        //     state.userToken = action.payload.token
+        // }
     },
 
     // extrareducers for async actions:
     extraReducers: (builder) => {
-        builder.addCase(authCredentials.fulfilled, (state, action) => {
-            state.email = action.payload
-            state.password = action.payload
+        builder.addCase(authCredentials.pending, (state) => {
+            state.authenticating = true
+        })
 
-            console.log(action.payload)
+        builder.addCase(authCredentials.fulfilled, (state, action) => {
+            state.authenticating = false
+            state.authenticate = true
+            state.userToken = action.payload.token
+            state.userInfo = action.payload.user
+        })
+
+        builder.addCase(authCredentials.rejected, (state, action) => {
+            state.authenticating = false
+            state.authenticate = false
         })
     }
 })
 
 export default authSlice.reducer
-// export const {authAction} = authSlice.actions; // exporting actions created by the reducer
+// export const {loginSuccess} = authSlice.actions; // exporting actions created by the reducer
