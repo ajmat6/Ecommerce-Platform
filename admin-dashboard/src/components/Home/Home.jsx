@@ -1,6 +1,16 @@
 import React from 'react'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-function Home() {
+function Home(props) {
+  let navigate = useNavigate();
+  useEffect(() => {
+    if(!localStorage.getItem('token'))
+    {
+      navigate('/signin')
+    }
+  }, [])
+  
   return (
     <div>
       {/* Jumbtron in Bootstrap 5 */}

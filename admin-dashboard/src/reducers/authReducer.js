@@ -11,7 +11,8 @@ const initialState = {
         picture: ''
     },
     authenticate: false,
-    authenticating: false
+    authenticating: false,
+    error: null
 }
 
 // createAsyncThunk for handling async actions, it takes type of action as its first argument
@@ -24,7 +25,17 @@ export const authCredentials = createAsyncThunk('/authReducer/authCredentials', 
         // extracting token and user from the response:
         const {token, user} = res.data
         localStorage.setItem('token', token) // storing token in localStorage
+        console.log("Localstorage me token bhej diya bhai")
     }
+    else
+    {
+        if(res.status === 400)
+        {
+            console.log("Axios fail ho gaya bhai!");
+        }
+    }
+
+    return res.data;
 })
 
 const authSlice = createSlice({
@@ -56,6 +67,7 @@ const authSlice = createSlice({
         builder.addCase(authCredentials.rejected, (state, action) => {
             state.authenticating = false
             state.authenticate = false
+            state.error = action.payload.error
         })
     }
 })
