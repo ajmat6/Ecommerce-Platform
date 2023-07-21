@@ -44,11 +44,7 @@ const authSlice = createSlice({
 
     // Reducers:
     reducers: {
-        // ordered: (state, action) => {
-        //     state.authenticate = true,
-        //     state.userInfo = action.payload.user,
-        //     state.userToken = action.payload.token
-        // }
+        
     },
 
     // extrareducers for async actions:
@@ -67,7 +63,7 @@ const authSlice = createSlice({
         builder.addCase(authCredentials.rejected, (state, action) => {
             state.authenticating = false
             state.authenticate = false
-            state.error = action.payload.error
+            // state.error = action.payload.error
         })
     }
 })

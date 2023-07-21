@@ -1,8 +1,17 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap'
+import {Nav, NavDropdown, Container } from 'react-bootstrap'
+import {useNavigate}  from 'react-router-dom'
 
-function index() {
+function Navbar() {
+
+  let navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    navigate('/signin');
+  }
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark navbar-default">
@@ -38,15 +47,11 @@ function index() {
               </li>
             </ul>
 
-            <Link className="btn btn-secondary mx-1" to="/signin" role="button">Sign In</Link>
-            <Link className="btn btn-secondary mx-1" to="/signup" role="button">Sign Up</Link>
-
-
             {/* When auth token is present in the localStorage then don't show login and signup, show logout */}
-            {/* {!localStorage.getItem('token')? <form className="d-flex" role="search">
-              <Link className="btn btn-secondary mx-1" to="/login" role="button">Login</Link>
+            {!localStorage.getItem('token')? <form className="d-flex" role="search">
+              <Link className="btn btn-secondary mx-1" to="/signin" role="button">Login</Link>
               <Link className="btn btn-secondary mx-1" to="/signup" role="button">Sign Up</Link>
-            </form> : <button className="btn btn-secondary mx-1" onClick={logout}>Logout</button>} */}
+            </form> : <button className="btn btn-secondary mx-1" onClick={logout}>Logout</button>} 
           </div>
         </div>
         {/* </Container> */}
@@ -55,4 +60,4 @@ function index() {
   )
 }
 
-export default index
+export default Navbar;

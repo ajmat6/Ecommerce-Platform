@@ -9,15 +9,11 @@ function PrivateRoute (props) {
     useEffect(() => {
       const token = localStorage.getItem('token');
 
-      if(token)
+      if(!token)
       {
-        return <Routes>
-            <Route {...props}/>
-        </Routes>
-      }
-
-      else
-      {
+        // return <Routes>
+        //     <Route {...props}/>
+        // </Routes>
         navigate('/signin')
       }
     }, [])
@@ -39,6 +35,8 @@ function PrivateRoute (props) {
 //             }}/>
 //         </Routes>
 //   ) 
+
+    return <Routes> <Route {...props}/> </Routes>
 }
 
 export default PrivateRoute

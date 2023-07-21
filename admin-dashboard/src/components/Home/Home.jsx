@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom'
 
 function Home(props) {
   let navigate = useNavigate();
+
   useEffect(() => {
-    if(!localStorage.getItem('token'))
+    const token = localStorage.getItem('token');
+    if(!token)
     {
       navigate('/signin')
     }

@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { authCredentials } from "../../reducers/authReducer";
 import { useSelector } from "react-redux"; // importing useSelector to get hold of states in store
 import { useDispatch } from "react-redux"; // to dispatch an action
+import { useNavigate } from "react-router-dom";
 
 function Signin() {
   // Defining useState hook for email and password:
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
-  const [errors, seterrors] = useState('');
+  // const [errors, seterrors] = useState('');
   
-  const { loading, userInfo, error, success } = useSelector((state) => state.auth) // here auth is one of the reducer in redux store
+  const auth = useSelector((state) => state.auth) // here auth is one of the reducer in redux store
   const dispatch = useDispatch(); // to use useDispatch storing it in a variable
-  
-  // Dispatching authCredentials action using useEffect hook:
-  
+  const navigate = useNavigate();
+    
   // function to pass credentials to the authAction action on the submit of the form:
-  const userLogin = (e) => {
+  const userLogin = async (e) => {
     e.preventDefault();
     console.log("Form submitted")
     
@@ -24,6 +24,12 @@ function Signin() {
     }
     
     dispatch(authCredentials(user));
+  }
+  
+  // now if sign in process remains succesfull navigate to Home page:
+  if(localStorage.getItem('token'))
+  {
+    return navigate('/');
   }
 
   return (
