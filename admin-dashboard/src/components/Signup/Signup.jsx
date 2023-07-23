@@ -1,6 +1,18 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function Signup() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if(token)
+    {
+      navigate('/')
+    }
+  }, [])
+
   return (
     <div className="mt-2">
       <form className="container col-md-4 my-5">

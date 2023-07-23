@@ -1,5 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit"
 import axiosInstance from "../helpers/axios";
+
+// const logout = createAction('auth/logout'); // creating action (imorted from actions)
 
 // defining initial State:
 const initialState = {
@@ -25,6 +27,7 @@ export const authCredentials = createAsyncThunk('/authReducer/authCredentials', 
         // extracting token and user from the response:
         const {token, user} = res.data
         localStorage.setItem('token', token) // storing token in localStorage
+        localStorage.setItem('user', JSON.stringify(user)); // storing user in localStorage in the form of string 
         console.log("Localstorage me token bhej diya bhai")
     }
     else
@@ -44,7 +47,30 @@ const authSlice = createSlice({
 
     // Reducers:
     reducers: {
-        
+        logout: (state, action) => {
+            localStorage.removeItem('token');
+            state.userToken = null
+            state.authenticate = false
+        },
+
+        // on refreshing token becomes null in data (not in localStorage) so to remove this problem this reducer and action is used:
+        isUserLoggedIn: (state, action) => {
+            const token = localStorage.getItem('token');
+            if(token)
+            {
+                const user = JSON.parse(localStorage.getItem('user')) // parsing into json as user is stored in the form of string in the localStorage
+                state.authenticate = true
+                state.authenticating = false
+                state.userToken = token
+                state.userInfo = user
+            }
+
+            else
+            {
+                state.authenticating = false
+                state.authenticate = false
+            }
+        }
     },
 
     // extrareducers for async actions:
@@ -69,4 +95,5 @@ const authSlice = createSlice({
 })
 
 export default authSlice.reducer
+export const { logout, isUserLoggedIn } = authSlice.actions
 // export const {loginSuccess} = authSlice.actions; // exporting actions created by the reducer

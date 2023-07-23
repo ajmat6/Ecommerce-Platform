@@ -116,7 +116,8 @@ router.post('/signin', validateSigninRequest, isRequestValidated, async (req,res
                 return res.status(400).send("Incorrect Password!, Please try again");
             }
         }
-    }catch (error) {
+    }
+    catch (error) {
         console.log(error.message); //method to print the error (error.message)
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");
     }
