@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { authCredentials, isUserLoggedIn } from "../../reducers/authReducer";
+import React, { useState } from "react";
+import { authCredentials } from "../../reducers/authReducer";
 import { useSelector } from "react-redux"; // importing useSelector to get hold of states in store
 import { useDispatch } from "react-redux"; // to dispatch an action
 import { useNavigate } from "react-router-dom";
@@ -13,16 +13,8 @@ function Signin() {
   const dispatch = useDispatch(); // to use useDispatch storing it in a variable
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(!auth.authenticate)
-    {
-      dispatch(isUserLoggedIn);
-    }
-  }, [])
-  
-    
   // function to pass credentials to the authAction action on the submit of the form:
-  const userLogin = async (e) => {
+  const userLogin = (e) => {
     e.preventDefault();
     console.log("Form submitted")
     
@@ -31,7 +23,6 @@ function Signin() {
     }
 
     dispatch(authCredentials(user));
-
   }
   
   // now if sign in process remains succesfull navigate to Home page:

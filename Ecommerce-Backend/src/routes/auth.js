@@ -189,7 +189,14 @@ router.post('/admin/signup', validateSignupRequest, isRequestValidated, async (r
 
         const authToken = jwt.sign(data, process.env.JWT_SECRET);
 
-        res.status(201).json({authToken})
+        // sending cookie to the browser: (name of cookie , value of cookie, object which is taking cookie expiry time)
+        res.cookie('token', authToken, {expiresIn: '1hr'});
+
+        res.status(200).json({
+            token: authToken,
+            user: _user,
+            message: "User Created Succesfully"
+        })
     }
     
     catch (error) {
@@ -258,6 +265,22 @@ router.post('/admin/signin', validateSigninRequest, isRequestValidated, async (r
         }
     }catch (error) {
         console.log(error.message); //method to print the error (error.message)
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");
+    }
+})
+
+router.post('/admin/signout', fetchuser, async (req ,res) => {
+    try
+    {
+       res.clearCookie('token') // clearing cookie named token
+       res.status(200).json({
+        message: "Sign Out Successfully"
+       })
+    }
+
+    catch
+    {
+        console.log(error.message);
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");
     }
 })

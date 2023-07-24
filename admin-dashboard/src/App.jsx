@@ -9,18 +9,20 @@ import Signin from './components/Signin/Signin';
 import Signup from './components/Signup/Signup';
 import Navbar from './components/Navbar/Navbar'
 import PrivateRoute from './HOC/PrivateRoute';
+import { isUserLoggedIn } from './reducers/authReducer';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 // import PrivateRoute from './HOC/PrivateRoute';
 
 function App() {
   let navigate = useNavigate();
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
     if(!auth.authenticate)
     {
-      navigate('/signin')
+      dispatch(isUserLoggedIn());
     }
   }, [])
   
