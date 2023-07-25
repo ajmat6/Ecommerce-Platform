@@ -269,7 +269,8 @@ router.post('/admin/signin', validateSigninRequest, isRequestValidated, async (r
     }
 })
 
-router.post('/admin/signout', fetchuser, async (req ,res) => {
+// API end point to sign out an admin:
+router.post('/admin/signout', async (req ,res) => {
     try
     {
        res.clearCookie('token') // clearing cookie named token
@@ -286,7 +287,7 @@ router.post('/admin/signout', fetchuser, async (req ,res) => {
 })
 
 
-// API end point for signin: POST Request -> to login
+// API end point to fetch an admin:
 router.post('/admin/profile', fetchuser, async (req, res) => {
     try
     {

@@ -12,6 +12,10 @@ import PrivateRoute from './HOC/PrivateRoute';
 import { isUserLoggedIn } from './reducers/authReducer';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Product from './components/Products/Product';
+import Orders from './components/Orders/Orders';
+import Layout from './components/Layout/Layout';
+import Category from './components/Category/Category';
 // import PrivateRoute from './HOC/PrivateRoute';
 
 function App() {
@@ -28,12 +32,14 @@ function App() {
   
   return (
     <div className="App">
-      {/* Routing using react-router-dom */}
         <Navbar />
-        {/* Home component will be private and will be different for each of the user and the admin */}
-        {/* Passing path and element as props to the PrivateRoute component */}
+        <Layout />
         <Routes>
           <Route path='/' element={<Home />} /> 
+          <Route path='/products' element={<Product />} /> 
+          <Route path='/orders' element={<Orders />} /> 
+          <Route path='/category' element={<Category />} /> 
+
           <Route path='/signin' element={<Signin />} />
           <Route path='/signup' element={<Signup />} />
         </Routes>

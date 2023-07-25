@@ -13,6 +13,7 @@ function Navbar() {
 
   const Logout = () => {
     dispatch(logout()) // dispatching logout action in the store
+    navigate('/signin')
   }
 
   // when the user is logged in:

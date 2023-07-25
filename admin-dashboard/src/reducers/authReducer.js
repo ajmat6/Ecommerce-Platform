@@ -113,7 +113,7 @@ const authSlice = createSlice({
         builder.addCase(authCredentials.rejected, (state, action) => {
             state.authenticating = false
             state.authenticate = false
-            state.error = action.payload.error
+            // state.error = action.payload.error
         })
 
         builder.addCase(signUpCredentials.pending, (state) => {
