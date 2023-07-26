@@ -2,7 +2,8 @@
 import {
   Routes,
   Route,
-  useNavigate
+  useNavigate,
+  BrowserRouter
 } from 'react-router-dom'
 import Home from './components/Home/Home';
 import Signin from './components/Signin/Signin';
@@ -33,13 +34,11 @@ function App() {
   return (
     <div className="App">
         <Navbar />
-        <Layout />
         <Routes>
           <Route path='/' element={<Home />} /> 
           <Route path='/products' element={<Product />} /> 
           <Route path='/orders' element={<Orders />} /> 
           <Route path='/category' element={<Category />} /> 
-
           <Route path='/signin' element={<Signin />} />
           <Route path='/signup' element={<Signup />} />
         </Routes>

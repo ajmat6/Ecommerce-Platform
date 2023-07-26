@@ -8,20 +8,6 @@ import { useSelector } from 'react-redux';
 function Home(props) {
   let navigate = useNavigate();
   const auth = useSelector((state) => state.auth)
-
-  // useEffect(() => {
-  //   if(!auth.authenticate)
-  //   {
-  //     navigate('/signin')
-  //   }
-  // }, [])
-  
-
-  // if(!auth.authenticate)
-  // {
-  //   navigate('/signin')
-  // }
-  
   
   return (
     <Layout sidebar>

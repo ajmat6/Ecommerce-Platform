@@ -4,18 +4,16 @@ import { NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 
-
-
 function Layout(props) {
   let navigate = useNavigate();
   const auth = useSelector((state) => state.auth)
 
   useEffect(() => {
-    if(!auth.authenticate)
+    if(!localStorage.getItem('token'))
     {
       navigate('/signin')
     }  
-  }, [])
+  }, [])  
 
   return (
     <>
