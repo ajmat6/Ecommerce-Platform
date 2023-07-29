@@ -75,7 +75,7 @@ function Category() {
 
         form.append('name', categoryName); // name is the key field in the postman that backend will access as req.body.name as the category name
         form.append('parentId', parentCategoryId); // first is key and second is value same as like postman
-        form.append('categoryImage', categoryImage);
+        form.append('categoryPic', categoryImage);
 
         dispatch(addCategory(form));
     }

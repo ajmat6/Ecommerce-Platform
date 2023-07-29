@@ -7,6 +7,38 @@ const initialState = {
     error: ''
 }
 
+// function for pushing new category into categories[] when a new category is added:
+const buildNewCategories = (categories, category, Id) => {
+    let myCategories = [];
+
+    for(let cat of categories)
+    {
+        // checking conditions for adding category into the array:
+        if(cat._Id === Id) 
+        {
+            myCategories.push({
+                ...cat, // existing category as it is push
+                children: cat.children && cat.children.length > 0 ? buildNewCategories([...cat.children, {
+                    _id: category._id,
+                    name: category.name,
+                    slug: category.slug,
+                    parentId: category.parentId,
+                }], category, Id) : [] // chilren exist for a category, then calling function recursively
+            }) 
+        }
+
+        else
+        {
+            myCategories.push({
+                ...cat, // existing category as it is push
+                children: cat.children && cat.children.length > 0 ? buildNewCategories(cat.children, category, Id) : [] // chilren exist for a category, then calling function recursively
+            })
+        }
+    }
+
+    return myCategories;
+}
+
 // async action to get all the categories:
 export const getAllCategories = createAsyncThunk('getAllCategories', async () => {
     const res = await axiosInstance.get('/category/getcategories')
@@ -61,13 +93,16 @@ const categorySlice = createSlice({
             // if new category is succesfully created:
             if(action.payload.status == 200)
             {
-                state.categories = action.payload.categoryList
+                const newCat = buildNewCategories(state.categories, action.payload.data._category, action.payload.data._category.parentId);
+                console.log(newCat);
+                state.categories = newCat
+                state.loading = false
             }
 
             // if category already exist:
             if(action.payload.status == 400)
             {
-                state.error = action.payload.error
+                state.error = action.payload.data.error
             }
         })
 

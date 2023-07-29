@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
 import Navbar from '../Navbar/Navbar'
+import './layout.css'
 import { NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux';

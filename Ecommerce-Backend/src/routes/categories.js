@@ -92,6 +92,7 @@ function getCategoriesFunction(categories, parentId = null)
         categoryList.push({
             _id: catt._id,
             name: catt.name,
+            parentId: catt.parentId,
             slug: catt.slug,
             children: getCategoriesFunction(categories, catt._id) // Recursively calling the function to fetch all the subcategories of a category
         });
