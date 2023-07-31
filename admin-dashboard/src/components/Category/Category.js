@@ -12,11 +12,11 @@ function Category() {
     const [parentCategoryId, setparentCategoryId] = useState('')
     const [categoryImage, setcategoryImage] = useState('')
 
-    // fetching all the categories using useEffect:
-    useEffect(() => {
-        console.log("cat")
-        dispatch(getAllCategories());
-    }, [])
+    // // fetching all the categories using useEffect: As categories are needed not just in this section but also in product section. So moved this to App.js
+    // useEffect(() => {
+    //     console.log("cat")
+    //     dispatch(getAllCategories());
+    // }, [])
 
     // rendering all categories:
     const renderCategories = (category) => {

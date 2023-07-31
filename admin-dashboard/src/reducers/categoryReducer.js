@@ -11,6 +11,20 @@ const initialState = {
 const buildNewCategories = (categories, category, Id) => {
     let myCategories = [];
 
+    // if the new category does not have any parent means it is brand new category:
+    if(Id == undefined)
+    {
+        return [
+            ...categories,
+            {
+                _id: category._id,
+                name: category.name,
+                slug: category.slug,
+                children: []
+            }
+        ]
+    }
+
     for(let cat of categories)
     {
         // checking conditions for adding category into the array:
@@ -31,7 +45,7 @@ const buildNewCategories = (categories, category, Id) => {
         {
             myCategories.push({
                 ...cat, // existing category as it is push
-                children: cat.children && cat.children.length > 0 ? buildNewCategories(cat.children, category, Id) : [] // chilren exist for a category, then calling function recursively
+                children: cat.children ? buildNewCategories(cat.children, category, Id) : [] // chilren exist for a category, then calling function recursively
             })
         }
     }

@@ -9,15 +9,13 @@ import Home from './components/Home/Home';
 import Signin from './components/Signin/Signin';
 import Signup from './components/Signup/Signup';
 import Navbar from './components/Navbar/Navbar'
-import PrivateRoute from './HOC/PrivateRoute';
 import { isUserLoggedIn } from './reducers/authReducer';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Product from './components/Products/Product';
 import Orders from './components/Orders/Orders';
-import Layout from './components/Layout/Layout';
 import Category from './components/Category/Category';
-// import PrivateRoute from './HOC/PrivateRoute';
+import { getAllCategories } from './reducers/categoryReducer';
 
 function App() {
   let navigate = useNavigate();
@@ -29,8 +27,11 @@ function App() {
     {
       dispatch(isUserLoggedIn());
     }
+
   }, [])
   
+  // fetching all the categories:
+  dispatch(getAllCategories());
   return (
     <div className="App">
         <Navbar />

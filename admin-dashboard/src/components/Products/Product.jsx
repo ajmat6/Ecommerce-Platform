@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../Layout/Layout";
 import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from "../../reducers/productReducer";
 
 function Product() {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ function Product() {
   const [price, setprice] = useState("");
   const [description, setdescription] = useState("");
   const [category, setcategory] = useState("");
-  const [productPictures, setproductPictures] = useState("");
+  const [productPictures, setproductPictures] = useState([]);
 
   // creating a list of categories:
   const createCategoryList = (categories, option = []) => {
@@ -31,14 +32,32 @@ function Product() {
   };
 
   // function for handling submission of adding a category modal:
-  const hadleCategorySelection = (e) => {
-    // const form = new FormData(); // this provides an easy method to create key-value pairs of the form fiels and their input values which will make it easy to send them to backend
-    // // console.log(categoryValues);
-    // form.append('name', categoryName); // name is the key field in the postman that backend will access as req.body.name as the category name
-    // form.append('parentId', parentCategoryId); // first is key and second is value same as like postman
-    // form.append('categoryPic', categoryImage);
-    // dispatch(addCategory(form));
+  const handleAddProduct = (e) => {
+    const form = new FormData();
+    
+    form.append('name', name);
+    form.append('quantity', quantity);
+    form.append('price', price);
+    form.append('description', description);
+    form.append('category', category);
+
+    // appending product pics array in form:
+    for(let pic of productPictures)
+    {
+      form.append('productPicture', pic);
+    }
+
+    dispatch(addProduct(form));
   };
+
+  // function to handle array of product pics:
+  const handleProductPics = (e) => {
+    setproductPictures([
+      ...productPictures, // spilliting / not changing current product pics if any and adding the added picture
+      e.target.files[0]
+    ])
+  }
+
 
   return (
     <Layout sidebar>
@@ -114,7 +133,7 @@ function Product() {
               <input
                 className="form-control my-3"
                 type="number"
-                value={productPictures}
+                value={price}
                 placeholder="Price"
                 onChange={(e) => setprice(e.target.value)}
               />
@@ -123,7 +142,7 @@ function Product() {
                 className="form-control my-3"
                 type="text"
                 value={description}
-                placeholder="Product Name"
+                placeholder="Add Description"
                 onChange={(e) => setdescription(e.target.value)}
               />
 
@@ -141,13 +160,20 @@ function Product() {
                 ))}
               </select>
 
-              {/* selecting image for the category */}
+              {/* showing images of the product */}
+              {
+                productPictures.length > 0 ? 
+                productPictures.map((pic, index) => 
+                  <div key={index}> {JSON.stringify(pic.name)} </div>
+                ) : null
+              }
               <input
                 type="file"
-                name="categoryImage"
+                name="productPictures"
                 //  onChange={handleImage}
                 placeholder="Choose Category Image"
-                className="form-control"
+                className="form-control my-2"
+                onChange={handleProductPics}
               />
             </div>
             <div class="modal-footer">
@@ -162,8 +188,9 @@ function Product() {
                 type="button"
                 class="btn btn-primary"
                 data-bs-dismiss="modal"
+                onClick={handleAddProduct}
               >
-                Add Category
+                Add Product
               </button>
             </div>
           </div>
