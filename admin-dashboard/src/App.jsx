@@ -28,10 +28,11 @@ function App() {
       dispatch(isUserLoggedIn());
     }
 
+    // fetching all the categories:
+    console.log("fetching all categories")
+    dispatch(getAllCategories());
   }, [])
   
-  // fetching all the categories:
-  dispatch(getAllCategories());
   return (
     <div className="App">
         <Navbar />

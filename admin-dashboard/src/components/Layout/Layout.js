@@ -31,7 +31,7 @@ function Layout(props) {
                     <li><NavLink to='/category'> Category </NavLink></li>
                   </ul>
                 </div>
-                <div className="col-md-10" style={{marginLeft: 'auto'}}>
+                <div className="col-md-10" style={{marginLeft: 'auto', paddingTop: '65px'}}>
                   {props.children}
                 </div>
               </div>

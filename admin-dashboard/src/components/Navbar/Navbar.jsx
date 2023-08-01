@@ -35,7 +35,7 @@ function Navbar() {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark navbar-default" style={{zIndex: '1'}}>
+      <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark navbar-default" style={{zIndex: '1'}}>
         <div className="container-fluid mx-3">
           <Link className="navbar-brand" to="/">
             Admin - Dashboard

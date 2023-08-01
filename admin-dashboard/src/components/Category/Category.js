@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCategories, addCategory } from '../../reducers/categoryReducer';
+import Modal from '../Modal/Modal';
 
 function Category() {
     const category = useSelector((state) => state.category)
@@ -39,15 +40,13 @@ function Category() {
 
     // creating a list of categories:
     const createCategoryList = (categories, option = []) => {
-        for(let category of categories)
-        {
+        for (let category of categories) {
             option.push({
                 value: category._id,
                 name: category.name
             });
 
-            if(category.children.length > 0)
-            {
+            if (category.children.length > 0) {
                 createCategoryList(category.children, option)
             }
         }
@@ -64,20 +63,15 @@ function Category() {
     const hadleCategorySelection = (e) => {
         const form = new FormData(); // this provides an easy method to create key-value pairs of the form fiels and their input values which will make it easy to send them to backend
 
-        // all entered values in the add category form:
-        // const categoryValues = {
-        //     categoryName,
-        //     parentCategoryId,
-        //     categoryImage
-        // }
-
-        // console.log(categoryValues);
-
         form.append('name', categoryName); // name is the key field in the postman that backend will access as req.body.name as the category name
         form.append('parentId', parentCategoryId); // first is key and second is value same as like postman
         form.append('categoryPic', categoryImage);
 
         dispatch(addCategory(form));
+
+        // making add category empty:
+        setcategoryName('');
+        setparentCategoryId('');
     }
 
     return (
@@ -106,8 +100,42 @@ function Category() {
             </div>
 
             {/* Modal for adding category */}
+            <Modal modaltitle={"Add Category"} handleSubmit={hadleCategorySelection} add="Add Category">
+                <input
+                    className='form-control my-3'
+                    type="text"
+                    value={categoryName}
+                    placeholder='Add Category Name'
+                    onChange={(e) => setcategoryName(e.target.value)}
+                /> 
 
-            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                {/* to select category from the available options */}
+                {/* below category value is value in the createCategoryList function which is set below as a value of option */}
+                <select className='form-control my-3'
+                    value={parentCategoryId}
+                    onChange={(e) => setparentCategoryId(e.target.value)}
+                >
+                    {/* First option is itself 'Select Category' and the rest are rendered using createCategoryList function */}
+                    <option value={0}>Select Category</option>
+                    {
+                        createCategoryList(category.categories).map((value) =>
+                            <option key={value.value} value={value.value}>{value.name}</option>
+                        )
+                    }
+
+                </select>
+
+                {/* selecting image for the category */}
+                <input type="file"
+                    name='categoryImage'
+                    onChange={handleImage}
+                    placeholder='Choose Category Image'
+                    className='form-control'
+                />
+            </Modal>
+
+
+            {/* <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -123,26 +151,26 @@ function Category() {
                              value={categoryName}
                              placeholder='Add Category Name'
                              onChange={(e) => setcategoryName(e.target.value)}
-                             />
+                             /> */}
 
-                            {/* to select category from the available options */}
-                            {/* below category value is value in the createCategoryList function which is set below as a value of option */}
-                             <select className='form-control my-3'
+            {/* to select category from the available options */}
+            {/* below category value is value in the createCategoryList function which is set below as a value of option */}
+            {/* <select className='form-control my-3'
                               value={parentCategoryId}
                               onChange={(e) => setparentCategoryId(e.target.value)}
-                              > 
-                                {/* First option is itself 'Select Category' and the rest are rendered using createCategoryList function */}
-                                <option value={0}>Select Category</option>
+                              >  */}
+            {/* First option is itself 'Select Category' and the rest are rendered using createCategoryList function */}
+            {/* <option value={0}>Select Category</option>
                                 {
                                     createCategoryList(category.categories).map((value) => 
                                         <option key={value.value} value={value.value}>{value.name}</option>
                                     )
                                 }
 
-                             </select>
+                             </select> */}
 
-                            {/* selecting image for the category */}
-                            <input type="file"
+            {/* selecting image for the category */}
+            {/* <input type="file"
                              name='categoryImage'
                              onChange={handleImage}
                              placeholder='Choose Category Image'
@@ -154,7 +182,7 @@ function Category() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </Layout>
     )
 }

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import Layout from "../Layout/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../reducers/productReducer";
+import Modal from "../Modal/Modal";
 
 function Product() {
   const dispatch = useDispatch();
-  const myCategory = useSelector((state) => state.category)
+  const myCategory = useSelector((state) => state.category);
 
   // defining states:
   const [name, setname] = useState("");
@@ -34,30 +35,65 @@ function Product() {
   // function for handling submission of adding a category modal:
   const handleAddProduct = (e) => {
     const form = new FormData();
-    
-    form.append('name', name);
-    form.append('quantity', quantity);
-    form.append('price', price);
-    form.append('description', description);
-    form.append('category', category);
+
+    form.append("name", name);
+    form.append("quantity", quantity);
+    form.append("price", price);
+    form.append("description", description);
+    form.append("category", category);
 
     // appending product pics array in form:
-    for(let pic of productPictures)
-    {
-      form.append('productPicture', pic);
+    for (let pic of productPictures) {
+      form.append("productPicture", pic);
     }
 
     dispatch(addProduct(form));
+
+    // making add product form empty:
+    setname("");
+    setquantity("");
+    setprice("");
+    setdescription("");
+    setproductPictures([]);
+    setcategory("");
   };
 
   // function to handle array of product pics:
   const handleProductPics = (e) => {
     setproductPictures([
       ...productPictures, // spilliting / not changing current product pics if any and adding the added picture
-      e.target.files[0]
-    ])
-  }
+      e.target.files[0],
+    ]);
+  };
 
+  const renderProducts = () => {
+    return (
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">S.NO</th>
+            <th scope="col">Name</th>
+            <th scope="col">Quantityy</th>
+            <th scope="col">Price</th>
+            <th scope="col">Description</th>
+            <th scope="col">Category</th>
+            <th scope="col">Product Pictures</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+            <td>@mdo</td>
+            <td>@mdo</td>
+            <td>@mdo</td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  };
 
   return (
     <Layout sidebar>
@@ -78,19 +114,85 @@ function Product() {
           </div>
         </div>
 
-        <div className="row">
+        {/* Table to show Products  */}
+        <div className="row my-4">
           <div className="col-md-12">
-            <ul>
-              {/* category is one of the reducer in the store and categories is one of initialState values in categoryReducer */}
-              {/* {renderCategories(category.categories)} */}
-            </ul>
+            {renderProducts()}
           </div>
         </div>
       </div>
 
-      {/* Modal for adding category */}
+      {/* Modal for adding category: Passing props to modal component */}
 
-      <div
+      <Modal
+        modaltitle={"Add Product"}
+        handleSubmit={handleAddProduct}
+        add="Add Product"
+      >
+        {/* Body send to modal */}
+        <input
+          className="form-control my-3"
+          type="text"
+          value={name}
+          placeholder="Product Name"
+          onChange={(e) => setname(e.target.value)}
+        />
+
+        <input
+          className="form-control my-3"
+          type="number"
+          value={quantity}
+          placeholder="Product Quantity"
+          onChange={(e) => setquantity(e.target.value)}
+        />
+
+        <input
+          className="form-control my-3"
+          type="number"
+          value={price}
+          placeholder="Price"
+          onChange={(e) => setprice(e.target.value)}
+        />
+
+        <input
+          className="form-control my-3"
+          type="text"
+          value={description}
+          placeholder="Add Description"
+          onChange={(e) => setdescription(e.target.value)}
+        />
+
+        <select
+          className="form-control my-3"
+          value={category}
+          onChange={(e) => setcategory(e.target.value)}
+        >
+          {/* First option is itself 'Select Category' and the rest are rendered using createCategoryList function */}
+          <option value={0}>Select Category</option>
+          {createCategoryList(myCategory.categories).map((value) => (
+            <option key={value.value} value={value.value}>
+              {value.name}
+            </option>
+          ))}
+        </select>
+
+        {/* showing images of the product */}
+        {productPictures.length > 0
+          ? productPictures.map((pic, index) => (
+              <div key={index}> {JSON.stringify(pic.name)} </div>
+            ))
+          : null}
+        <input
+          type="file"
+          name="productPictures"
+          //  onChange={handleImage}
+          placeholder="Choose Category Image"
+          className="form-control my-2"
+          onChange={handleProductPics}
+        />
+      </Modal>
+
+      {/* <div
         class="modal fade"
         id="exampleModalCenter"
         tabindex="-1"
@@ -150,27 +252,25 @@ function Product() {
                 className="form-control my-3"
                 value={category}
                 onChange={(e) => setcategory(e.target.value)}
-              >
-                {/* First option is itself 'Select Category' and the rest are rendered using createCategoryList function */}
-                <option value={0}>Select Category</option>
+              > */}
+      {/* First option is itself 'Select Category' and the rest are rendered using createCategoryList function */}
+      {/* <option value={0}>Select Category</option>
                 {createCategoryList(myCategory.categories).map((value) => (
                   <option key={value.value} value={value.value}>
                     {value.name}
                   </option>
                 ))}
-              </select>
+              </select> */}
 
-              {/* showing images of the product */}
-              {
-                productPictures.length > 0 ? 
-                productPictures.map((pic, index) => 
-                  <div key={index}> {JSON.stringify(pic.name)} </div>
-                ) : null
-              }
+      {/* showing images of the product */}
+      {/* {productPictures.length > 0
+                ? productPictures.map((pic, index) => (
+                    <div key={index}> {JSON.stringify(pic.name)} </div>
+                  ))
+                : null}
               <input
                 type="file"
                 name="productPictures"
-                //  onChange={handleImage}
                 placeholder="Choose Category Image"
                 className="form-control my-2"
                 onChange={handleProductPics}
@@ -195,7 +295,7 @@ function Product() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </Layout>
   );
 }

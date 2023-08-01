@@ -47,7 +47,7 @@ function Signup() {
 
 
   return (
-    <div className="mt-2">
+    <div className="mt-2" style={{paddingTop: '65px'}}>
      {auth.authenticate && <p style={{alignItems: 'center'}}>{auth.message}</p>}
       <form className="container col-md-4 my-5" onSubmit={userSignUp}>
         <div className="mb-3">

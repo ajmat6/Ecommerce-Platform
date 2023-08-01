@@ -53,14 +53,20 @@ const buildNewCategories = (categories, category, Id) => {
     return myCategories;
 }
 
-// async action to get all the categories:
-export const getAllCategories = createAsyncThunk('getAllCategories', async () => {
-    const res = await axiosInstance.get('/category/getcategories')
-    console.log("fetching all categories")
-    console.log(res);
-
-    return res.data;
+export const getAllCategories = createAsyncThunk('getInitialData', async () => {
+    const res = await  axiosInstance.post('/initialdata')
+    console.log(res)
+    return res;
 })
+
+// async action to get all the categories:
+// export const getAllCategories = createAsyncThunk('getAllCategories', async () => {
+//     const res = await axiosInstance.get('/category/getcategories')
+//     console.log("fetching all categories")
+//     console.log(res);
+
+//     return res.data;
+// })
 
 // async action to create a category:
 export const addCategory = createAsyncThunk('addCategory', async (form) => {
@@ -89,12 +95,19 @@ const categorySlice = createSlice({
 
         builder.addCase(getAllCategories.fulfilled, (state, action) => {
             state.loading = false
-            state.categories = action.payload.categoryList
+            if(action.payload.status === 200)
+            {
+                console.log("fetching all categories sucessful")
+                state.categories = action.payload.data.categoryList
+            }
+
+            // state.loading = false
+            // state.categories = action.payload.categoryList
         })
 
         builder.addCase(getAllCategories.rejected, (state, action) => {
             state.loading = false
-            state.error = action.payload.error
+            state.error = "getting all categories rejected!"
         })
 
         builder.addCase(addCategory.pending, (state) => {
