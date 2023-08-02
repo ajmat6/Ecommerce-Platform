@@ -16,6 +16,7 @@ import Product from './components/Products/Product';
 import Orders from './components/Orders/Orders';
 import Category from './components/Category/Category';
 import { getAllCategories } from './reducers/categoryReducer';
+import { getallProducts } from './reducers/productReducer';
 
 function App() {
   let navigate = useNavigate();
@@ -31,6 +32,7 @@ function App() {
     // fetching all the categories:
     console.log("fetching all categories")
     dispatch(getAllCategories());
+    dispatch(getallProducts());
   }, [])
   
   return (

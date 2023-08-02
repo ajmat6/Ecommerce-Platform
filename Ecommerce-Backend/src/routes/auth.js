@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router(); // for routing
 const jwt = require('jsonwebtoken'); // importing jwt for sending token to the user
+const bcrypt = require('bcrypt') // importing brcrypt for password hashing
 const User = require('../models/User'); // importing User model
 const fetchuser = require('../middleware/fetchuser') // importing fetchuser middleware
 const {body, validationResult} = require('express-validator'); // express validator for validation the user
@@ -28,12 +29,16 @@ router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res
             email,
             password
         } = req.body;
+
+        // password hashing:
+        const salt = await bcrypt.genSalt(10); // generating salt of 10 characters
+        const hash_password = await bcrypt.hash(password, salt) // hashing password with generated salt
     
         const _user = await new User({
             firstName,
             lastName,
             email,
-            password,
+            hash_password,
             username: Math.random().toString() // will generate the username randomly and then converting it to the string
         })
     
@@ -76,47 +81,41 @@ router.post('/signin', validateSigninRequest, isRequestValidated, async (req,res
             })
         }
 
-        // if user exist:
-        else
+        const comparePassword = await bcrypt.compare(req.body.password, user.hash_password);
+
+        if(!comparePassword)
         {
-            // calling authenticate method of User DB(checking for the password):
-            if(user.authenticate(req.body.password))
-            {
-                // auth-token we are sending to the user:
+            return res.status(400).json({
+                message: "Please enter valid credentials"
+            })
+        }
 
-                const data = {
-                    user: {
-                        id: user._id,
-                        role: user.role // assigning role to validate in fetching the category
-                    }
-                }
 
-                const token = jwt.sign(data, process.env.JWT_SECRET, {expiresIn: '1hr'});
-
-                // sending response to the user: Here fullName will be set by virtual
-                const { firstName, lastName, email, role, fullname, _id} = user;
-
-                res.status(200).json({
-                    token,
-                    user: {
-                        firstName,
-                        lastName,
-                        email,
-                        role,
-                        fullname,
-                        _id
-                    }
-                })
-
-            }
-
-            // if password not authenticated:
-            else
-            {
-                return res.status(400).send("Incorrect Password!, Please try again");
+        const data = {
+            user: {
+                id: user._id,
+                role: user.role // assigning role to validate in fetching the category
             }
         }
+
+        const token = jwt.sign(data, process.env.JWT_SECRET, {expiresIn: '1hr'});
+
+        // sending response to the user: Here fullName will be set by virtual
+        const { firstName, lastName, email, role, fullname, _id} = user;
+
+        res.status(200).json({
+            token,
+            user: {
+                firstName,
+                lastName,
+                email,
+                role,
+                fullname,
+                _id
+            }
+        })
     }
+
     catch (error) {
         console.log(error.message); //method to print the error (error.message)
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");
@@ -166,12 +165,16 @@ router.post('/admin/signup', validateSignupRequest, isRequestValidated, async (r
             email,
             password
         } = req.body;
+
+        // password hashing:
+        const salt = await bcrypt.genSalt(10); // generating salt of 10 characters
+        const hash_password = await bcrypt.hash(password, salt)
     
         const _user = await new User({
             firstName,
             lastName,
             email,
-            password,
+            hash_password,
             username: Math.random().toString(), // will generate the username randomly and then converting it to the string
             role: 'admin'
         })
@@ -223,47 +226,43 @@ router.post('/admin/signin', validateSigninRequest, isRequestValidated, async (r
             })
         }
 
-        // if user exist:
-        else
+        // password check:
+        const comparePassword = await bcrypt.compare(req.body.password, user.hash_password);
+
+        // if password are not equal:
+        if(!comparePassword)
         {
-            // calling authenticate method of User DB(checking for the password):
-            if(user.authenticate(req.body.password) && user.role === 'admin')
-            {
-                // auth-token we are sending to the user:
+            return res.status(400).json({
+                message: "Please enter valid credentials"
+            })
+        }
 
-                const data = {
-                    user: {
-                        id: user._id,
-                        role: user.role
-                    }
-                }
 
-                const token = jwt.sign(data, process.env.JWT_SECRET, {expiresIn: '1hr'});
-
-                // sending response to the user: Here fullName will be set by virtual
-                const { firstName, lastName, email, role, fullname, _id} = user;
-
-                res.status(200).json({
-                    token,
-                    user: {
-                        firstName,
-                        lastName,
-                        email,
-                        role,
-                        fullname,
-                        _id
-                    }
-                })
-
-            }
-
-            // if password not authenticated:
-            else
-            {
-                return res.status(400).send("Incorrect Password!, Please try again");
+        const data = {
+            user: {
+                id: user._id,
+                role: user.role
             }
         }
-    }catch (error) {
+
+        const token = jwt.sign(data, process.env.JWT_SECRET, {expiresIn: '1hr'});
+
+        // sending response to the user: Here fullName will be set by virtual
+        const { firstName, lastName, email, role, fullname, _id} = user;
+
+        res.status(200).json({
+            token,
+            user: {
+                firstName,
+                lastName,
+                email,
+                role,
+                fullname,
+                _id
+            }
+        })
+    }
+    catch (error) {
         console.log(error.message); //method to print the error (error.message)
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");
     }

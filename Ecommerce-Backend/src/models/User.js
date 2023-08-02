@@ -51,11 +51,11 @@ const UserSchema =  new mongoose.Schema({
 {timestamps: true} // timestamps tells mongoose to provide createdAt and updatedAt feature in your database
 )
 
-// Setting virtuals (which are not stored in MongoDB)
-UserSchema.virtual('password')
-.set(function(password) {
-    this.hash_password = bcrypt.hashSync(password, 10); // first argument in hashSync is plainPassword and second is salt
-})
+// Setting virtuals (which are not stored in MongoDB): this is synchronous way to hash a password using brcypt which is not recommended:
+// UserSchema.virtual('password')
+// .set(function(password) {
+//     this.hash_password = bcrypt.hashSync(password, 10); // first argument in hashSync is plainPassword and second is salt
+// })
 
 // virtual to get fullname whenever it is called:
 UserSchema.virtual('fullname')

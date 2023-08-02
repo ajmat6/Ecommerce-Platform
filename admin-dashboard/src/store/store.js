@@ -8,7 +8,7 @@ const store = configureStore({
     reducer: { // object of reducers -> acts like combineReducers of redux in redux toolkit
         auth: authReducer,
         product: productReducer,
-        order: productReducer,
+        order: orderReducer,
         category: categoryReducer,
     }
 })

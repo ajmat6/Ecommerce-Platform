@@ -54,7 +54,7 @@ const buildNewCategories = (categories, category, Id) => {
 }
 
 export const getAllCategories = createAsyncThunk('getInitialData', async () => {
-    const res = await  axiosInstance.post('/initialdata')
+    const res = await axiosInstance.post('/initialdata')
     console.log(res)
     return res;
 })
@@ -97,7 +97,6 @@ const categorySlice = createSlice({
             state.loading = false
             if(action.payload.status === 200)
             {
-                console.log("fetching all categories sucessful")
                 state.categories = action.payload.data.categoryList
             }
 
