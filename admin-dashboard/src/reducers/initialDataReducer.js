@@ -30,7 +30,7 @@ const initialDataSlice = createSlice({
             // if fetching initialData remains successful:
             if(action.payload.status === 200)
             {
-                state.data = action.payload.
+                
             }
         })
     }

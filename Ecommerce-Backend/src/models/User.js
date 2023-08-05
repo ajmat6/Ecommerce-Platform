@@ -64,10 +64,10 @@ UserSchema.virtual('fullname')
 })
 
 // method to authenticate the password:
-UserSchema.methods = {
-    authenticate: function(password){
-        return bcrypt.compareSync(password, this.hash_password); // first argument is password that user will enter and the second is the hashed password that we had created above using salt. It will return either true or false based on the comparing
-    }
-}
+// UserSchema.methods = {
+//     authenticate: function(password){
+//         return bcrypt.compareSync(password, this.hash_password); // first argument is password that user will enter and the second is the hashed password that we had created above using salt. It will return either true or false based on the comparing
+//     }
+// }
  
 module.exports = mongoose.model('User', UserSchema); // this will create a Users collection in the database
