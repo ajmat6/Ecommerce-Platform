@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addProduct, getallProducts } from "../../reducers/productReducer";
 import Modal from "../Modal/Modal";
 import './product.css'
+import { generatePublicURL } from "../../urlConfig";
 
 function Product() {
   const dispatch = useDispatch();
@@ -169,7 +170,7 @@ function Product() {
                 <td>{product.quantity}</td>
                 <td>{product.price}</td>
                 {/* <td>{product.description}</td> */}
-                <td>{product.category ? product.category : <div>--</div>}</td>
+                <td>{product.category ? product.category.name : <div>--</div>}</td>
                 {/* <td>--</td> */}
               </tr>
             ) : null
@@ -221,19 +222,23 @@ function Product() {
                               <div className="col-md-6 my-2">
                                 <span>
                                   <label className="productLabel">Category</label>
-                                  <p className="productLabelDetails">{product.category}</p>
+                                  <p className="productLabelDetails">{product.category ? product.category.name : <div>--</div>}</p>
                                 </span>
                               </div>
 
                               <div className="col-md-12 my-2">
-                                <span>
+                                <span style={{display: 'flex', flexDirection: 'column'}}>
                                   <label className="productLabel">Product Pictures</label>
-                                  {product.productPic.map(pic => 
-                                    <div>
-                                      {/* pic.img is img that you used in the product model */}
-                                      <img src={`https://localhost:2000/public/${pic.img}` } /> 
-                                    </div>
-                                  )}
+                                  <div style={{display: 'flex', gap: '20px', marginTop: '9px'}}>
+                                    {product.productPic.map(pic => 
+                                      <div className="productImage">
+                                        {/* pic.img is img that you used in the product model */}
+                                        {/* product image url is fetched using below function */}
+                                        <img src={generatePublicURL(pic.img)} /> 
+                                      </div>
+                                    )}
+
+                                  </div>
                                 </span>
                               </div>
                             </div>

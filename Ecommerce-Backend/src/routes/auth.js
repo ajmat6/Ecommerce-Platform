@@ -6,6 +6,8 @@ const User = require('../models/User'); // importing User model
 const fetchuser = require('../middleware/fetchuser') // importing fetchuser middleware
 const {body, validationResult} = require('express-validator'); // express validator for validation the user
 const {validateSignupRequest, validateSigninRequest, isRequestValidated} = require('../validators/validate'); // importing validators
+const shorid = require('shortid');
+const shortid = require('shortid');
 
 // API end point for signup: POST Request -> to create an account:
 router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res) => { /// using validateRequest(array) and isRequestValidated as midddleware defined in validators folder
@@ -39,7 +41,7 @@ router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res
             lastName,
             email,
             hash_password,
-            username: Math.random().toString() // will generate the username randomly and then converting it to the string
+            username: shortid.generate() 
         })
     
         // Saving the document(a particular of the users collection) in the DB:
@@ -175,7 +177,7 @@ router.post('/admin/signup', validateSignupRequest, isRequestValidated, async (r
             lastName,
             email,
             hash_password,
-            username: Math.random().toString(), // will generate the username randomly and then converting it to the string
+            username: shortid.generate(), // username generated through shortid library
             role: 'admin'
         })
     
