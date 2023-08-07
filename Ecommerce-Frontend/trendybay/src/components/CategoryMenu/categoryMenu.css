@@ -5,3 +5,69 @@
     border-bottom: 1px solid #cecece;
     box-shadow: 0 2px 2px -2px;
 }
+
+/* below is all the ul of .categoryMenu */
+.categoryMenu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* below is dirct(first) child of .categoryMenu */
+.categoryMenu > ul {
+    display: flex;
+    margin: 0 50px;
+    position: relative;
+}
+
+/* style for a category that do not have any parent (first category that will contain a drop down option */
+.categoryMenu > ul > li > span {
+    display: block;
+    line-height: 40px; /* to make category name exactly in the middle of the category menu */
+    cursor: pointer;
+    padding: 0 20px;
+    font-size: 16px;
+}
+
+/* when you hover over a category */
+.categoryMenu > ul > li > span:hover {
+    color: #2874f0;
+}
+
+/* sub categories of parentless category */
+.categoryMenu > ul > li > ul {
+    position: absolute;
+    background-color: white;
+    left: 0; /* every parentless category shows all of its subcategory from the very left of the drop down */
+    right: 0; /* same reason as of left and it will make an area of drop down */
+    display: none; /* initially it will not display the sub categories. It will display them only when you hover over parentless categories */
+    border: 2px solid #cecece;
+    border-radius: 5px;
+}
+
+/* display sub categories when you hover over parentless categories */
+.categoryMenu > ul > li:hover ul {
+    display: block;
+}
+
+/* style for all sub category of parentless category */
+.categoryMenu > ul > li > ul > li {
+    margin: 0 20px;
+    float: left; /* all sub categories to cover whole category menu */
+    min-width: 200px; /* to set min width in the drop down of sub categories */
+}
+
+/* style for direct sub category of parentless category links */
+.categoryMenu > ul > li > ul > li > a {
+    font-weight: bold;
+    display: block;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.categoryMenu > ul > li > ul > li a {
+    padding: 3px 0;
+    display: block; /* to apply padding */
+    text-decoration: none;
+    color: #707070;
+}

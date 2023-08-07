@@ -17,7 +17,10 @@ const CategoryMenu = () => {
         for (let cat of category) {
             categories.push(
                 <li key={cat.name}>
-                    {cat.name}
+                    {
+                        // if parent id exist then it has some parent and we are adding links to them, else show category name only:
+                        cat.parentId ? <a href={cat.slug}>{cat.name}</a> : <span>{cat.name}</span>
+                    }
                     {cat.children.length > 0 && ( // if there are subcategories present, then calling renderCategories recursively
                         <ul>
                             {renderCategories(cat.children)}
