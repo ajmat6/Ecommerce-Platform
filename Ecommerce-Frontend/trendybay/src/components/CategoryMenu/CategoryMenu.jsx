@@ -2,6 +2,7 @@ import React, {useEffect} from 'react'
 import './categoryMenu.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { getAllCategories } from '../../reducers/categoryReducer'
+import {Link} from 'react-router-dom'
 
 const CategoryMenu = () => {
     const category = useSelector((state) => state.category)
@@ -19,7 +20,7 @@ const CategoryMenu = () => {
                 <li key={cat.name}>
                     {
                         // if parent id exist then it has some parent and we are adding links to them, else show category name only:
-                        cat.parentId ? <a href={cat.slug}>{cat.name}</a> : <span>{cat.name}</span>
+                        cat.parentId ? <Link to={cat.slug}>{cat.name}</Link> : <span>{cat.name}</span>
                     }
                     {cat.children.length > 0 && ( // if there are subcategories present, then calling renderCategories recursively
                         <ul>

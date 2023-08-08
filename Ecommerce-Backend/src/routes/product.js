@@ -4,6 +4,7 @@ const slugify = require('slugify'); // to make url of the categories
 const fetchuser = require('../middleware/fetchuser'); // to check for signed in or not
 const { adminMiddleware } = require('../middleware/categoryMiddleware');
 const Product = require('../models/Product'); // imporyting product model DB
+const Category = require('../models/Category')
 const multer = require('multer'); // importing multer to upload files
 const shortid = require('shortid'); // to create a short id of the file uploaded
 const path = require('path');
@@ -78,6 +79,54 @@ router.post('/product/create', fetchuser, adminMiddleware, upload.array('product
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
     }
 });
+
+// end point to fetch a product:
+router.get('/product/:slug', async (req, res) => {
+    try
+    {
+        // extracting slug from the parameters of the request:
+        const {slug} = req.params; 
+
+        // finding category of the slug:
+        const category = await Category.findOne({slug: slug}).select('_id');
+
+        // if category is found then fetch all the products of the category:
+        if(category)
+        {
+            const products = await Product.find({category: category._id})
+
+            if(products.length > 0)
+            {
+                // sending response of the products by filtering them according to the price range:
+                res.status(200).json({
+                    products,
+                    productsByPrice: {
+                        under5k: products.filter(product => product.price <= 5000),
+                        under10k: products.filter(product => product.price <= 10000 && product.price > 5000),
+                        under20k: products.filter(product => product.price <= 20000 && product.price > 10000),
+                        under30k: products.filter(product => product.price <= 30000 && product.price > 20000),
+                        under50k: products.filter(product => product.price <= 50000 && product.price > 30000),
+                        under100k: products.filter(product => product.price <= 100000 && product.price > 50000),
+                        above100k: products.filter(product => product.price > 100000),
+                    }
+                });
+            }
+            else
+            {
+                res.status(200).json({error: "No! Products of the this category"})
+            }
+        }
+        else
+        {
+            return res.status(400).json({error: "Category of product not found"})
+        }
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+})
 
 
 module.exports = router;
