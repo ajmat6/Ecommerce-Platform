@@ -1,0 +1,46 @@
+.card {
+    width: calc(100% - 20px); /* 100% minus 20px from sides total */
+    margin: 10px 10px;
+    border: 1px solid #cecece;
+    box-shadow: 0 0 2px -2px grey;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #cecece;
+}
+
+.product-container 
+{
+    width: 200px;
+    margin: 0 10px;
+}
+
+.product-container .product-img-container {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.product-container .product-img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    margin-top: 13px;
+    object-fit: contain; /* image will maintain its aspect ratio while fitting into the elementts specified height and width */
+}
+
+.product-info {
+    text-align: center;
+    font-size: 12px;
+}
+
+.product-price {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 5px 0;
+}

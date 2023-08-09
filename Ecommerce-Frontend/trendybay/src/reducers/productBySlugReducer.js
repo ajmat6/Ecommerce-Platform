@@ -2,7 +2,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axios";
 
 const initialState = {
-    loading: false
+    loading: false,
+    products: [],
+    productsByPrice: {
+        under5k: [],
+        under10k: [],
+        under20k: [],
+        under30k: [],
+        under50k: [],
+        under100k: [],
+        above100k: [],
+    }
 }
 
 // async action to fetch product by slug:
@@ -10,6 +20,7 @@ export const productBySlug = createAsyncThunk('productBySlug', async (slug) => {
     const res = await axiosInstance.get(`/product/${slug}`);
     console.log("Product by slug")
     console.log(res);
+    return res.data;
 })
 
 const productBySlugSlice = createSlice({
@@ -26,6 +37,10 @@ const productBySlugSlice = createSlice({
 
         builder.addCase(productBySlug.fulfilled, (state, action) => {
             state.loading = false
+            state.products = action.payload.products
+            state.productsByPrice = {
+                ...action.payload.productsByPrice
+            }
         })
 
         builder.addCase(productBySlug.rejected, (state, action) => {

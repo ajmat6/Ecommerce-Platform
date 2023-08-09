@@ -43,6 +43,7 @@
     display: none; /* initially it will not display the sub categories. It will display them only when you hover over parentless categories */
     border: 2px solid #cecece;
     border-radius: 5px;
+    z-index: 2;
 }
 
 /* display sub categories when you hover over parentless categories */
