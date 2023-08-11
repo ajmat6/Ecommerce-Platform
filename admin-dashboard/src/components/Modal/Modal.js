@@ -2,11 +2,11 @@ import React from 'react'
 
 const Modal = (props) => {
     return (
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class={props.size ? props.size : "modal fade"} id={props.modalId ? props.modalId : "exampleModalCenter"} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">{props.modaltitle}</h5>
+                        <h5 class="modal-title" id={props.modalId ? props.modalId :"exampleModalLongTitle"}>{props.modaltitle}</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

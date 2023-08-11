@@ -14,7 +14,7 @@ function App(props) {
       {/* <BrowserRouter> */}
         <Routes>
           <Route path='/' exact element={<HomePage />}/>
-          <Route path='/*' element={<ProductListPage />}/>
+          <Route path='/:slug' element={<ProductListPage />}/>
         </Routes>
       {/* </BrowserRouter> */}
     </div>

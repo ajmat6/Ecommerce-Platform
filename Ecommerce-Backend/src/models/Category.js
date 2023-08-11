@@ -13,6 +13,10 @@ const categorySchema = new mongoose.Schema({
         trim: true
     },
 
+    type: { // this is used to show different type of pages for different like displaying with price or just showcasing the products (like paid promotions)
+        type: String
+    },
+
     categoryImage: {
         type: String
     },

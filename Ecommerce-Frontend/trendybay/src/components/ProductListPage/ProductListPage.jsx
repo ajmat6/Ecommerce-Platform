@@ -25,7 +25,7 @@ const ProductListPage = (props) => {
 
   useEffect(() => {
     console.log(slug);
-    dispatch(productBySlug(slug.*)); // slug is an object in whic slug key gives product category(eg realme)
+    dispatch(productBySlug(slug.slug)); // slug is an object in whic slug key gives product category(eg realme)
   }, []);
 
   return (
@@ -38,7 +38,7 @@ const ProductListPage = (props) => {
           return (
             <div className="card">
               <div className="card-header">
-                <div>{slug.*} Mobile under {priceRange[key]}</div>
+                <div>{slug.slug} Mobile under {priceRange[key]}</div>
                 <button className="btn btn-primary">View All</button>
               </div>
               <div style={{display: 'flex'}}>
