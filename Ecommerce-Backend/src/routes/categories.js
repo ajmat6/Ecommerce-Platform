@@ -126,4 +126,32 @@ router.get('/category/getcategories', async (req, res) => {
     }
 });
 
+// end point to update the category:
+router.post('/category/update', upload.array('categoryPic'), async (req, res) => {
+    const {name, parentId, type} = req.body;
+
+    // if there are multiple category to update in the request -> means there is an array coming in request to update categories:
+    // name, parentId and type all have same length as all category to udpdate has its name, parentId and type:
+    if(name instanceof Array)
+    {
+        // iterating over category to be updated:
+        for(let i=0; i<name.length; i++)
+        {
+            // extracting name, type from req:
+            const caegory = {
+                name: name[i],
+                type: type[i]
+            }
+            // extracting parentId from req if present:
+            if(parentId[i] !== "")
+            {
+                category.parentId = parentId[i];
+            }
+
+            // finding category in DB that has to be updated:
+            
+        }
+    }
+})
+
 module.exports = router; // this routers end points will act as a middleware in our main index.server.js file where the end point will start with /api

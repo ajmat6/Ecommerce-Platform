@@ -55,7 +55,8 @@ function Category() {
         for (let category of categories) {
             option.push({
                 value: category._id,
-                name: category.name
+                name: category.name,
+                parentId: category.parentId
             });
 
             if (category.children.length > 0) {
@@ -73,6 +74,62 @@ function Category() {
 
     const doNothing = () => {
 
+    }
+
+    // function for update category:
+    const editCategory = () => {
+        const linearCategoryList = createCategoryList(category.categories)
+        const checkedArray = [];
+        const expandedArray = [];
+
+        // when we will select the categories we want to update by checking them and update, then we have to show no of edit options with respect to no of categories selected:
+        // categoryId below is the value you used in renderCategory function for checkBox:
+        checked.length > 0 && checked.forEach((categoryId, index) => {
+            // finding those categories from liner set of categories which are checked for edit:
+            // find is js method which return first element in array which matches the condition:
+            // linerCategoryList contains value optino in the object which contains the category id:
+            const category = linearCategoryList.find((cat, _index) => categoryId == cat.value)
+
+            // if a category is found matched (which will definitely happen as the categories checked are obviously in the linear list of all available categories. It is just for safety)
+            category && checkedArray.push(category);
+        })
+
+        expanded.length > 0 && expanded.forEach((categoryId, index) => {
+            const category = linearCategoryList.find((cat, _index) => categoryId == cat.value)
+
+            category && expandedArray.push(category);
+        })
+
+        // pushing expanded and checked Arrays into outer variables with same name to manage state:
+        setcheckedArray(checkedArray);
+        setexpandedArray(expandedArray)
+
+        console.log({ checked, expanded, linearCategoryList, checkedArray, expandedArray })
+    }
+
+    // function to handle update category name input change:
+    const handleCategoryUpdate = (key, value, index, type) => {
+        // for updating checked array:
+        if(type == 'checked')
+        {
+            // mapping through checkedArray and finding the category whose value we are changing. If that category is found, we are splitting its current state and just updating the key (which can be name, parent category) otherwise dont change category.
+            const updatedCheckedArray = checkedArray.map((item, _index) => 
+                index == _index ? {...item, [key]: value} : item
+            )
+
+            // changing state of checked array:
+            setcheckedArray(updatedCheckedArray);
+        }
+
+        // for updating expanded array:
+        else
+        {
+            const updatedExpandedArray = expandedArray.map((item, _index) => 
+                index == _index ? {...item, [key]: value} : item
+            )
+
+            setexpandedArray(updatedExpandedArray);
+        }
     }
 
     // function for handling submission of adding a category modal:
@@ -127,7 +184,7 @@ function Category() {
                 <div className="row">
                     <div className="col-md-12">
                         <button className="btn btn-primary">Delete</button>
-                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" onClick={editCategory}>Edit</button>
                     </div>
                 </div>
             </div>
@@ -169,50 +226,113 @@ function Category() {
 
             {/* Modal for editing category */}
             <Modal modaltitle={"Edit Category"} handleSubmit={doNothing} add="Edit Category" modalId="editModal" size="modal fade modal-lg">
+                {/* for updating expanded Array */}
                 <div className="row">
                     <div className="col">
-                        <input
-                            className='form-control my-3'
-                            type="text"
-                            value={categoryName}
-                            placeholder='Add Category Name'
-                            onChange={(e) => setcategoryName(e.target.value)}
-                        />
-                    </div>
-                    <div className="col">
-                        <select className='form-control my-3'
-                            value={parentCategoryId}
-                            onChange={(e) => setparentCategoryId(e.target.value)}
-                        >
-                            <option value={0}>Select Category</option>
-                            {
-                                createCategoryList(category.categories).map((value) =>
-                                    <option key={value.value} value={value.value}>{value.name}</option>
-                                )
-                            }
-                        </select>
-                    </div>
-                    <div className="col">
-                        <select
-                         className='form-control my-3'
-                         
-                        >
-                            <option value="select">Select Type</option>
-                            <option value="store">Store</option>
-                            <option value="product">Product</option>
-                            <option value="page">Page</option>
-                        </select>
+                        Expanded Categories
                     </div>
                 </div>
+                {
+                    expandedArray.length > 0 &&
+                    expandedArray.map((item, index) =>
+                        <div className="row" key={index}>
+                            <div className="col">
+                                <input
+                                    className='form-control my-3'
+                                    type="text"
+                                    value={item.name}
+                                    placeholder='Add Category Name'
+                                    onChange={(e) => handleCategoryUpdate('name', e.target.value, index, 'expanded')}
+                                />
+                            </div>
+                            <div className="col">
+                                <select className='form-control my-3'
+                                    value={item.parentId}
+                                    onChange={(e) => handleCategoryUpdate('parentId', e.target.value, index, 'expanded')}
+                                >
+                                    <option value={0}>Select Category</option>
+                                    {
+                                        createCategoryList(category.categories).map((value) =>
+                                            <option key={value.value} value={value.value}>{value.name}</option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                            <div className="col">
+                                <select
+                                    className='form-control my-3'
 
+                                >
+                                    <option value="select">Select Type</option>
+                                    <option value="store">Store</option>
+                                    <option value="product">Product</option>
+                                    <option value="page">Page</option>
+                                </select>
+                            </div>
+                            {/* selecting image for the category */}
+                            < input type="file"
+                                name='categoryImage'
+                                onChange={handleImage}
+                                placeholder='Choose Category Image'
+                                className='form-control'
+                            />
+                        </div>
+                    )
+                }
 
-                {/* selecting image for the category */}
-                <input type="file"
-                    name='categoryImage'
-                    onChange={handleImage}
-                    placeholder='Choose Category Image'
-                    className='form-control'
-                />
+                {/* for updating checked Array */}
+                <div className="row" style={{marginTop: '15px'}}>
+                    <div className="col">
+                        Checked Categories
+                    </div>
+                </div>
+                {
+                    checkedArray.length > 0 &&
+                    checkedArray.map((item, index) =>
+                        <div className="row" key={index}>
+                            <div className="col">
+                                <input
+                                    className='form-control my-3'
+                                    type="text"
+                                    value={item.name}
+                                    placeholder='Add Category Name'
+                                    onChange={(e) => handleCategoryUpdate('name', e.target.value, index, 'checked')}
+                                />
+                            </div>
+                            <div className="col">
+                                <select className='form-control my-3'
+                                    value={item.parentId}
+                                    onChange={(e) => handleCategoryUpdate('parentId', e.target.value, index, 'checked')}
+                                >
+                                    <option value={0}>Select Category</option>
+                                    {
+                                        createCategoryList(category.categories).map((value) =>
+                                            <option key={value.value} value={value.value}>{value.name}</option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                            <div className="col">
+                                <select
+                                    className='form-control my-3'
+
+                                >
+                                    <option value="select">Select Type</option>
+                                    <option value="store">Store</option>
+                                    <option value="product">Product</option>
+                                    <option value="page">Page</option>
+                                </select>
+                            </div>
+                            {/* selecting image for the category */}
+                            < input type="file"
+                                name='categoryImage'
+                                onChange={handleImage}
+                                placeholder='Choose Category Image'
+                                className='form-control'
+                            />
+                        </div>
+                    )
+                }
             </Modal>
 
 
