@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllCategories, addCategory } from '../../reducers/categoryReducer';
+import { getAllCategories, addCategory, updateCategoryAsyncAction } from '../../reducers/categoryReducer';
 import Modal from '../Modal/Modal';
 
 // importing react checkbox tree for category render in admin app and including its css:
@@ -72,10 +72,6 @@ function Category() {
         setcategoryImage(e.target.files[0]); // files will be like an array but there is only one option of file uploading
     }
 
-    const doNothing = () => {
-
-    }
-
     // function for update category:
     const editCategory = () => {
         const linearCategoryList = createCategoryList(category.categories)
@@ -110,11 +106,10 @@ function Category() {
     // function to handle update category name input change:
     const handleCategoryUpdate = (key, value, index, type) => {
         // for updating checked array:
-        if(type == 'checked')
-        {
+        if (type == 'checked') {
             // mapping through checkedArray and finding the category whose value we are changing. If that category is found, we are splitting its current state and just updating the key (which can be name, parent category) otherwise dont change category.
-            const updatedCheckedArray = checkedArray.map((item, _index) => 
-                index == _index ? {...item, [key]: value} : item
+            const updatedCheckedArray = checkedArray.map((item, _index) =>
+                index == _index ? { ...item, [key]: value } : item
             )
 
             // changing state of checked array:
@@ -122,10 +117,9 @@ function Category() {
         }
 
         // for updating expanded array:
-        else
-        {
-            const updatedExpandedArray = expandedArray.map((item, _index) => 
-                index == _index ? {...item, [key]: value} : item
+        else {
+            const updatedExpandedArray = expandedArray.map((item, _index) =>
+                index == _index ? { ...item, [key]: value } : item
             )
 
             setexpandedArray(updatedExpandedArray);
@@ -133,8 +127,8 @@ function Category() {
     }
 
     // function for handling submission of adding a category modal:
-    const hadleCategorySelection = (e) => {
-        const form = new FormData(); // this provides an easy method to create key-value pairs of the form fiels and their input values which will make it easy to send them to backend
+    const handleCategorySelection = (e) => {
+        const form = new FormData(); // this provides an easy method to create key-value pairs of the form fields and their input values which will make it easy to send them to backend
 
         form.append('name', categoryName); // name is the key field in the postman that backend will access as req.body.name as the category name
         form.append('parentId', parentCategoryId); // first is key and second is value same as like postman
@@ -147,50 +141,40 @@ function Category() {
         setparentCategoryId('');
     }
 
-    return (
-        // Passing sidebar as prop
-        <Layout sidebar>
-            <div className="container">
-                <div className="row">
-                    <div className='col-md-12'>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <h3>Category</h3>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                Add Category
-                            </button>
-                        </div>
-                    </div>
-                </div>
+    // function for handling submission of update category modal:
+    const handleUpdateCategoryModalSubmit = (e) => {
+        const form = new FormData();
 
-                <div className="row">
-                    <div className='col-md-12'>
-                        {/* <ul> */}
-                        {/* category is one of the reducer in the store and categories is one of initialState values in categoryReducer */}
-                        {/* {renderCategories(category.categories)}
-                        </ul> */}
+        // finding data from expanded as well as checked array:
+        expandedArray.forEach((item, index) => {
+            form.append('_id', item.value); // expanded array contains value field for id, name for name and parentId for parnetId int the array of expanded categories:
+            form.append('name', item.name);
+            form.append('parentId', item.parentId ? item.parentId : ""); // if parentId is present in expanded array, push it in form otherwise append "" in value field of key parentId as in backend logic , you have applied "" for absent of parentId
+            form.append('type', item.type)
+        })
 
-                        {/* react checkbox tree implementation */}
-                        <CheckboxTree
-                            nodes={renderCategories(category.categories)}
-                            checked={checked}
-                            expanded={expanded}
-                            onCheck={checked => setchecked(checked)}
-                            onExpand={expanded => setexpanded(expanded)}
-                        />
-                    </div>
-                </div>
+        checkedArray.forEach((item, index) => {
+            form.append('_id', item.value); // expanded array contains value field for id, name for name and parentId for parnetId int the array of expanded categories:
+            form.append('name', item.name);
+            form.append('parentId', item.parentId ? item.parentId : ""); // if parentId is present in expanded array, push it in form otherwise append "" in value field of key parentId as in backend logic , you have applied "" for absent of parentId
+            form.append('type', item.type);
+        })
 
-                {/* buttons for edit and delete category */}
-                <div className="row">
-                    <div className="col-md-12">
-                        <button className="btn btn-primary">Delete</button>
-                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" onClick={editCategory}>Edit</button>
-                    </div>
-                </div>
-            </div>
+        dispatch(updateCategoryAsyncAction(form))
+        .then(result => { // if category succesfully updated then getting all updated categories on frontend
+            if(result)
+            {
+                dispatch(getAllCategories())
+            }
+        })
 
-            {/* Modal for adding category */}
-            <Modal modaltitle={"Add Category"} handleSubmit={hadleCategorySelection} add="Add Category">
+        // setexpandedArray([]);
+        // setcheckedArray([]);
+    }
+
+    const renderAddCategoryModal = () => {
+        return (
+            <Modal modaltitle={"Add Category"} handleSubmit={handleCategorySelection} add="Add Category">
                 <input
                     className='form-control my-3'
                     type="text"
@@ -223,9 +207,12 @@ function Category() {
                     className='form-control'
                 />
             </Modal>
+        )
+    }
 
-            {/* Modal for editing category */}
-            <Modal modaltitle={"Edit Category"} handleSubmit={doNothing} add="Edit Category" modalId="editModal" size="modal fade modal-lg">
+    const renderUpdateCategoryModal = () => {
+        return (
+            <Modal modaltitle={"Edit Category"} handleSubmit={handleUpdateCategoryModalSubmit} add="Edit Category" modalId="editModal" size="modal fade modal-lg">
                 {/* for updating expanded Array */}
                 <div className="row">
                     <div className="col">
@@ -281,7 +268,7 @@ function Category() {
                 }
 
                 {/* for updating checked Array */}
-                <div className="row" style={{marginTop: '15px'}}>
+                <div className="row" style={{ marginTop: '15px' }}>
                     <div className="col">
                         Checked Categories
                     </div>
@@ -334,10 +321,56 @@ function Category() {
                     )
                 }
             </Modal>
+        )
+    }
 
+    return (
+        // Passing sidebar as prop
+        <Layout sidebar>
+            <div className="container">
+                <div className="row">
+                    <div className='col-md-12'>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <h3>Category</h3>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                                Add Category
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
+                <div className="row">
+                    <div className='col-md-12'>
+                        {/* <ul> */}
+                        {/* category is one of the reducer in the store and categories is one of initialState values in categoryReducer */}
+                        {/* {renderCategories(category.categories)}
+                        </ul> */}
 
+                        {/* react checkbox tree implementation */}
+                        <CheckboxTree
+                            nodes={renderCategories(category.categories)}
+                            checked={checked}
+                            expanded={expanded}
+                            onCheck={checked => setchecked(checked)}
+                            onExpand={expanded => setexpanded(expanded)}
+                        />
+                    </div>
+                </div>
 
+                {/* buttons for edit and delete category */}
+                <div className="row">
+                    <div className="col-md-12">
+                        <button className="btn btn-primary">Delete</button>
+                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" onClick={editCategory}>Edit</button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Modal for adding category */}
+            {renderAddCategoryModal()}
+
+            {/* Modal for editing category */}
+            {renderUpdateCategoryModal()}
         </Layout>
     )
 }

@@ -128,29 +128,58 @@ router.get('/category/getcategories', async (req, res) => {
 
 // end point to update the category:
 router.post('/category/update', upload.array('categoryPic'), async (req, res) => {
-    const {name, parentId, type} = req.body;
-
-    // if there are multiple category to update in the request -> means there is an array coming in request to update categories:
-    // name, parentId and type all have same length as all category to udpdate has its name, parentId and type:
-    if(name instanceof Array)
+    try
     {
-        // iterating over category to be updated:
-        for(let i=0; i<name.length; i++)
+        const {_id, name, parentId, type} = req.body;
+        const updatedCategories = []; // array to push updated categories after updating
+    
+        // if there are multiple category to update in the request -> means there is an array coming in request to update categories:
+        // name, parentId and type all have same length as all category to udpdate has its name, parentId and type:
+        if(name instanceof Array)
         {
-            // extracting name, type from req:
-            const caegory = {
-                name: name[i],
-                type: type[i]
-            }
-            // extracting parentId from req if present:
-            if(parentId[i] !== "")
+            // iterating over category to be updated:
+            for(let i=0; i<name.length; i++)
             {
-                category.parentId = parentId[i];
+                // extracting name, type from req:
+                const category = {
+                    name: name[i],
+                    type: type[i]
+                }
+                // extracting parentId from req if present:
+                if(parentId[i] !== "")
+                {
+                    category.parentId = parentId[i];
+                }
+    
+                // finding category in DB that has to be updated:
+                // findOneAndUpdate by default return object of previous state before update but if you want to get object after updating, mention new: true
+                const updatedCategory = await Category.findOneAndUpdate({_id: _id[i]}, category, {new: true})
+                updatedCategories.push(updatedCategory);
+
+            }
+            return res.status(201).json({updatedCategories: updatedCategories});
+        }
+
+        // if there is single category to update in the request:
+        else
+        {
+            const category = {
+                name, 
+                type
+            }
+            if(parentId !== "")
+            {
+                category.parentId = parentId;
             }
 
-            // finding category in DB that has to be updated:
-            
+            const updatedCategory = await Category.findOneAndUpdate({_id}, category, {new: true})
+            return res.status(201).json({updatedCategory})
         }
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
     }
 })
 

@@ -30,14 +30,16 @@ const buildNewCategories = (categories, category, Id) => {
         // checking conditions for adding category into the array:
         if(cat._Id === Id) 
         {
+            // creating new category
+            const newCategory = {
+                id: category._id,
+                name: category.name,
+                slug: category.slug,
+                parentId: category.parentId
+            }
             myCategories.push({
                 ...cat, // existing category as it is push
-                children: cat.children && cat.children.length > 0 ? buildNewCategories([...cat.children, {
-                    _id: category._id,
-                    name: category.name,
-                    slug: category.slug,
-                    parentId: category.parentId,
-                }], category, Id) : [] // chilren exist for a category, then calling function recursively
+                children: cat.children && cat.children.length > 0 ? [...cat.children, newCategory] : [newCategory] // if children exist of parent category then adding new category with them otherwise creating a new array of children
             }) 
         }
 
@@ -59,14 +61,7 @@ export const getAllCategories = createAsyncThunk('getInitialData', async () => {
     return res;
 })
 
-// async action to get all the categories:
-// export const getAllCategories = createAsyncThunk('getAllCategories', async () => {
-//     const res = await axiosInstance.get('/category/getcategories')
-//     console.log("fetching all categories")
-//     console.log(res);
 
-//     return res.data;
-// })
 
 // async action to create a category:
 export const addCategory = createAsyncThunk('addCategory', async (form) => {
@@ -79,6 +74,19 @@ export const addCategory = createAsyncThunk('addCategory', async (form) => {
     console.log(res)
 
     return res;
+})
+
+// async action to create a category:
+export const updateCategoryAsyncAction = createAsyncThunk('updateCategory', async (form) => {
+    const headers = {
+        "auth-token": localStorage.getItem('token')
+    }
+
+    const res = await axiosInstance.post('/category/update', form, {headers});
+
+    console.log(res)
+
+    if(res.status == 200) return true;
 })
 
 const categorySlice = createSlice({
