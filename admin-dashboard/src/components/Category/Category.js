@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../Layout/Layout'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllCategories, addCategory, updateCategoryAsyncAction } from '../../reducers/categoryReducer';
+import { 
+getAllCategories,
+addCategory, 
+updateCategoryAsyncAction,
+deleteCategoryAsyncAction } from '../../reducers/categoryReducer';
 import Modal from '../Modal/Modal';
 
 // importing react checkbox tree for category render in admin app and including its css:
@@ -72,8 +76,8 @@ function Category() {
         setcategoryImage(e.target.files[0]); // files will be like an array but there is only one option of file uploading
     }
 
-    // function for update category:
-    const editCategory = () => {
+    // function to make a list of expanded and checked categories and make available to edit and delete options:
+    const updateCheckedAndExpandedCategories = () => {
         const linearCategoryList = createCategoryList(category.categories)
         const checkedArray = [];
         const expandedArray = [];
@@ -101,6 +105,12 @@ function Category() {
         setexpandedArray(expandedArray)
 
         console.log({ checked, expanded, linearCategoryList, checkedArray, expandedArray })
+    }
+
+    // function for update category:
+    const editCategory = () => {
+        // getting list of expanded and checked categories:
+        updateCheckedAndExpandedCategories();
     }
 
     // function to handle update category name input change:
@@ -170,6 +180,85 @@ function Category() {
 
         // setexpandedArray([]);
         // setcheckedArray([]);
+    }
+
+    // function for delete button on click:
+    const deleteCategory = () => {
+        // making availability of checked and expanded categories:
+        updateCheckedAndExpandedCategories();
+    }
+
+    // function to handle yes on delete category modal:
+    const handleDeleteCategoryModalSubmit = () => {
+        // making an array of checked and expanded categories Ids for deleting them:
+        const checkedIdArray = checkedArray.map((item, index) => ({_id: item.value}))
+        const expandedIdArray = expandedArray.map((item, index) => ({_id: item.value}))
+
+        // making combo of both of them:
+        const idsArray = expandedIdArray.concat(checkedIdArray);
+
+        // dispatching delete category action
+        dispatch(deleteCategoryAsyncAction(idsArray))
+        .then((result) => {
+            if(result)
+            {
+                dispatch(getAllCategories())
+            }
+        })
+    }
+
+    const renderDeleteCategoryModal = () => {
+        // console.log('delete', checkedArray)
+        return (
+            <Modal 
+            modaltitle={"Delete Category"} 
+            // handleSubmit={handleDeleteCategoryModalSubmit} 
+            add="Delete" 
+            modalId="deleteModal"
+            buttons={[
+                {
+                    label: 'No',
+                    color: 'primary',
+                    onClick: () => {
+                        alert('No');
+                    }
+                },
+
+                {
+                    label: 'Yes',
+                    color: 'danger',
+                    onClick: handleDeleteCategoryModalSubmit
+                }
+            ]}
+            >
+                {/* showing admin the categories that he has selected to delete */}
+
+                {/* for updating expanded Array */}
+                <div className="row mb-3 form-control">
+                    <div className="col">
+                        Expanded Categories
+                    </div>
+                </div>
+                {
+                    expandedArray.length > 0 && expandedArray.map((item, index) => 
+                        <span key={index} className='mx-3'>{item.name}</span>
+                    )
+                }
+
+                {/* for updating expanded Array */}
+                <div className="row my-3 form-control">
+                    <div className="col">
+                        Checked Categories
+                    </div>
+                </div>
+                {
+                    checkedArray.length > 0 && checkedArray.map((item, index) => 
+                        <span key={index} className='mx-3'>{item.name}</span>
+                    )
+                }
+
+            </Modal>
+        )
     }
 
     const renderAddCategoryModal = () => {
@@ -360,7 +449,7 @@ function Category() {
                 {/* buttons for edit and delete category */}
                 <div className="row">
                     <div className="col-md-12">
-                        <button className="btn btn-primary">Delete</button>
+                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" onClick={deleteCategory}>Delete</button>
                         <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" onClick={editCategory}>Edit</button>
                     </div>
                 </div>
@@ -371,6 +460,9 @@ function Category() {
 
             {/* Modal for editing category */}
             {renderUpdateCategoryModal()}
+
+            {/* Modal for deleting categories */}
+            {renderDeleteCategoryModal()}
         </Layout>
     )
 }

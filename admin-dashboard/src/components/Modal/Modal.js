@@ -16,8 +16,26 @@ const Modal = (props) => {
                         {props.children}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={props.handleSubmit}>{props.add}</button>
+                        {/* if there are buttons in props for delete category then show them else show normal buttons */}
+                        {
+                            props.buttons ? props.buttons.map((btn, index) => 
+                                <button 
+                                key={index}
+                                type="button" 
+                                class={`btn btn-${btn.color}`} 
+                                data-bs-dismiss="modal" 
+                                onClick={btn.onClick}
+                                >
+                                    {btn.label}
+                                </button>
+                            ) :
+                            <>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={props.handleSubmit}>{props.add}</button>
+                            </>
+                        }
+                        {/* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> */}
+                        {/* <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={props.handleSubmit}>{props.add}</button> */}
                     </div>
                 </div>
             </div>

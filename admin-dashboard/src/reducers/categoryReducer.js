@@ -76,7 +76,7 @@ export const addCategory = createAsyncThunk('addCategory', async (form) => {
     return res;
 })
 
-// async action to create a category:
+// async action to update categories:
 export const updateCategoryAsyncAction = createAsyncThunk('updateCategory', async (form) => {
     const headers = {
         "auth-token": localStorage.getItem('token')
@@ -86,7 +86,22 @@ export const updateCategoryAsyncAction = createAsyncThunk('updateCategory', asyn
 
     console.log(res)
 
-    if(res.status == 200) return true;
+    if(res.status == 201) return true;
+    else return false
+})
+
+// async action to delete categories:
+export const deleteCategoryAsyncAction = createAsyncThunk('deleteCategory', async (ids) => {
+    console.log(ids)
+    const headers = {
+        "auth-token": localStorage.getItem('token')
+    }
+
+    const res = await axiosInstance.post('/category/delete', ids, {headers});
+
+    console.log(res)
+    if(res.status == 201) return true;
+    else return false
 })
 
 const categorySlice = createSlice({

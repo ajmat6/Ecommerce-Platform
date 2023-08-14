@@ -29,7 +29,7 @@ router.post('/category/create', fetchuser, adminMiddleware, upload.single('categ
         // category req info:
         const categoryData = {
             name: req.body.name,
-            slug: slugify(req.body.name),
+            slug: `${slugify(req.body.name)}-${shortid.generate()}`, // shortid is used to generate a unique slug for each category created
         }
         
         // checking if category have a pic in the request:
@@ -127,7 +127,7 @@ router.get('/category/getcategories', async (req, res) => {
 });
 
 // end point to update the category:
-router.post('/category/update', upload.array('categoryPic'), async (req, res) => {
+router.post('/category/update', fetchuser, adminMiddleware, upload.array('categoryPic'), async (req, res) => {
     try
     {
         const {_id, name, parentId, type} = req.body;
@@ -182,5 +182,36 @@ router.post('/category/update', upload.array('categoryPic'), async (req, res) =>
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
     }
 })
+
+// end point to delete the categories:
+router.post('/category/delete', fetchuser, adminMiddleware, async (req, res) => {
+    try
+    {
+        // extracting ids from the body:
+        const ids = req.body;
+
+        const deletedCategories = [];
+
+        // iterating over requested category Ids for deletion:
+        for(let i=0; i<ids.length; i++)
+        {
+            const deleteCategory = await Category.findOneAndDelete({_id: ids[i]._id}) // look at frontend
+            deletedCategories.push(deleteCategory);
+        }
+
+        // verifying deleted Categories and actual requested categories are equal or not:
+        if(deletedCategories.length === ids.length)
+        {
+            return res.status(201).json({deletedCategories: deletedCategories});
+        }
+
+        else return res.status(400).json({message: "Some went wrong in deleting categories"})
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+});
 
 module.exports = router; // this routers end points will act as a middleware in our main index.server.js file where the end point will start with /api
