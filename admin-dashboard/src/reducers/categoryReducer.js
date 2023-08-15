@@ -65,43 +65,59 @@ export const getAllCategories = createAsyncThunk('getInitialData', async () => {
 
 // async action to create a category:
 export const addCategory = createAsyncThunk('addCategory', async (form) => {
-    const headers = {
-        "auth-token": localStorage.getItem('token')
+    try
+    {
+        const res = await axiosInstance.post('/category/create', form);
+    
+        console.log(res , "add category")
+    
+        return res;
     }
-
-    const res = await axiosInstance.post('/category/create', form, {headers});
-
-    console.log(res)
-
-    return res;
+    catch(error)
+    {
+        console.log(error.message);
+    }
 })
 
 // async action to update categories:
 export const updateCategoryAsyncAction = createAsyncThunk('updateCategory', async (form) => {
-    const headers = {
-        "auth-token": localStorage.getItem('token')
+    try
+    {
+        const headers = {
+            "auth-token": localStorage.getItem('token')
+        }
+    
+        const res = await axiosInstance.post('/category/update', form, {headers});
+    
+        console.log(res)
+    
+        if(res.status == 201) return true;
+        else return false
     }
-
-    const res = await axiosInstance.post('/category/update', form, {headers});
-
-    console.log(res)
-
-    if(res.status == 201) return true;
-    else return false
+    catch(error)
+    {
+        console.log(error.message);
+    }
 })
 
 // async action to delete categories:
 export const deleteCategoryAsyncAction = createAsyncThunk('deleteCategory', async (ids) => {
-    console.log(ids)
-    const headers = {
-        "auth-token": localStorage.getItem('token')
+    try
+    {
+        const headers = {
+            "auth-token": localStorage.getItem('token')
+        }
+    
+        const res = await axiosInstance.post('/category/delete', ids, {headers});
+    
+        console.log(res)
+        if(res.status == 201) return true;
+        else return false
     }
-
-    const res = await axiosInstance.post('/category/delete', ids, {headers});
-
-    console.log(res)
-    if(res.status == 201) return true;
-    else return false
+    catch(error)
+    {
+        console.log(error.message);
+    }
 })
 
 const categorySlice = createSlice({

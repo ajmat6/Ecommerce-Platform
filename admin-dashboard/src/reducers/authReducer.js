@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import axiosInstance from "../helpers/axios";
+import axiosInstance from "../helpers/axios"
 
 // defining initial State:
 const initialState = {
@@ -63,6 +63,27 @@ export const signUpCredentials = createAsyncThunk('/signupReducer/signupCredenti
     }
 
     return res.data;
+})
+
+// action to sign out admin:
+export const signoutAction = createAsyncThunk('signout', async () => {
+    try
+    {
+        console.log("singout")
+        const res = axiosInstance.post('/admin/signout');
+        if(res.status == 200)
+        {
+            localStorage.clear();
+        }
+        else
+        {
+            console.log(res.data.error)
+        }
+    }
+    catch(error)
+    {
+        console.log(error.message)
+    }
 })
 
 const authSlice = createSlice({
