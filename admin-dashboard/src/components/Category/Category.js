@@ -16,6 +16,11 @@ import UpdateCategoriesModal from './ModalComponent/UpdateCategoriesModal';
 import AddCategoryModal from './ModalComponent/AddCategoryModal';
 import DeleteCategoryModal from './ModalComponent/DeleteCategoryModal';
 
+// import react icons:
+import {AiOutlinePlus} from 'react-icons/ai'
+import {AiTwotoneDelete} from 'react-icons/ai'
+import {GrUpdate} from 'react-icons/gr'
+
 function Category() {
     const category = useSelector((state) => state.category)
     const dispatch = useDispatch();
@@ -45,14 +50,6 @@ function Category() {
                     value: cat._id,
                     children: cat.children.length > 0 && renderCategories(cat.children) // passing array of chilren recursively
                 }
-                // <li key={cat.name}>
-                //     {cat.name}
-                //     {cat.children.length > 0 && ( // if there are subcategories present, then calling renderCategories recursively
-                //         <ul>
-                //             {renderCategories(cat.children)}
-                //         </ul>
-                //     )}
-                // </li>
             )
         }
         return categories;
@@ -64,7 +61,8 @@ function Category() {
             option.push({
                 value: category._id,
                 name: category.name,
-                parentId: category.parentId
+                parentId: category.parentId,
+                type: category.type
             });
 
             if (category.children.length > 0) {
@@ -144,21 +142,20 @@ function Category() {
     const handleCategorySelection = (e) => {
         const form = new FormData(); // this provides an easy method to create key-value pairs of the form fields and their input values which will make it easy to send them to backend
 
+        // if(categoryName.length === 0)
+        // {
+        //     alert("Please Enter Name")
+        // }
+
         form.append('name', categoryName); // name is the key field in the postman that backend will access as req.body.name as the category name
         form.append('parentId', parentCategoryId); // first is key and second is value same as like postman
         form.append('categoryPic', categoryImage);
 
         dispatch(addCategory(form))
         .then((res) => {
-            if(res.status == 500)
+            if(res)
             {
-                localStorage.clear();
-                dispatch(signoutAction());
-            }
-
-            else if(res.status == 200)
-            {
-                dispatch(getAllCategories());
+                dispatch(getAllCategories())
             }
         });
 
@@ -193,9 +190,6 @@ function Category() {
                 dispatch(getAllCategories())
             }
         })
-
-        // setexpandedArray([]);
-        // setcheckedArray([]);
     }
 
     // function for delete button on click:
@@ -224,7 +218,7 @@ function Category() {
                 }
             })
         }
-
+        
     }
 
     return (
@@ -235,9 +229,12 @@ function Category() {
                     <div className='col-md-12'>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <h3>Category</h3>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                Add Category
-                            </button>
+                            <div className='actionButtons' style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                                <span style={{fontSize: '20px'}}>Actions:</span>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><AiOutlinePlus style={{marginRight: '4px'}}/><span style={{textAlign: 'center'}}>Add Category</span></button>
+                                <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" onClick={deleteCategory}><AiTwotoneDelete style={{marginRight: '4px'}}/><span>Delete</span></button>
+                                <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" onClick={editCategory}><GrUpdate style={{marginRight: '4px'}}/><span>Edit</span></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -263,8 +260,6 @@ function Category() {
                 {/* buttons for edit and delete category */}
                 <div className="row">
                     <div className="col-md-12">
-                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" onClick={deleteCategory}>Delete</button>
-                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" onClick={editCategory}>Edit</button>
                     </div>
                 </div>
             </div>

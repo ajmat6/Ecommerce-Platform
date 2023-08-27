@@ -17,6 +17,7 @@ import Orders from './components/Orders/Orders';
 import Category from './components/Category/Category';
 import { getAllCategories } from './reducers/categoryReducer';
 import { getallProducts } from './reducers/productReducer';
+import Page from './components/Page/Page';
 
 function App() {
   let navigate = useNavigate();
@@ -40,6 +41,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} /> 
+          <Route path='/page' element={<Page />} /> 
           <Route path='/products' element={<Product />} /> 
           <Route path='/orders' element={<Orders />} /> 
           <Route path='/category' element={<Category />} /> 

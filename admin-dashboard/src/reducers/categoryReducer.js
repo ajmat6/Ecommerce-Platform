@@ -8,53 +8,54 @@ const initialState = {
 }
 
 // function for pushing new category into categories[] when a new category is added:
-const buildNewCategories = (categories, category, Id) => {
-    let myCategories = [];
+// const buildNewCategories = (categories, category, Id) => {
+//     let myCategories = [];
 
-    // if the new category does not have any parent means it is brand new category:
-    if(Id == undefined)
-    {
-        return [
-            ...categories,
-            {
-                _id: category._id,
-                name: category.name,
-                slug: category.slug,
-                children: []
-            }
-        ]
-    }
+//     // if the new category does not have any parent means it is brand new category:
+//     if(Id == undefined)
+//     {
+//         return [
+//             ...categories,
+//             {
+//                 _id: category._id,
+//                 name: category.name,
+//                 slug: category.slug,
+//                 children: []
+//             }
+//         ]
+//     }
 
-    for(let cat of categories)
-    {
-        // checking conditions for adding category into the array:
-        if(cat._Id === Id) 
-        {
-            // creating new category
-            const newCategory = {
-                id: category._id,
-                name: category.name,
-                slug: category.slug,
-                parentId: category.parentId
-            }
-            myCategories.push({
-                ...cat, // existing category as it is push
-                children: cat.children && cat.children.length > 0 ? [...cat.children, newCategory] : [newCategory] // if children exist of parent category then adding new category with them otherwise creating a new array of children
-            }) 
-        }
+//     for(let cat of categories)
+//     {
+//         // checking conditions for adding category into the array:
+//         if(cat._Id === Id) 
+//         {
+//             // creating new category
+//             const newCategory = {
+//                 id: category._id,
+//                 name: category.name,
+//                 slug: category.slug,
+//                 parentId: category.parentId
+//             }
+//             myCategories.push({
+//                 ...cat, // existing category as it is push
+//                 children: cat.children && cat.children.length > 0 ? [...cat.children, newCategory] : [newCategory] // if children exist of parent category then adding new category with them otherwise creating a new array of children
+//             }) 
+//         }
 
-        else
-        {
-            myCategories.push({
-                ...cat, // existing category as it is push
-                children: cat.children ? buildNewCategories(cat.children, category, Id) : [] // chilren exist for a category, then calling function recursively
-            })
-        }
-    }
+//         else
+//         {
+//             myCategories.push({
+//                 ...cat, // existing category as it is push
+//                 children: cat.children ? buildNewCategories(cat.children, category, Id) : [] // chilren exist for a category, then calling function recursively
+//             })
+//         }
+//     }
 
-    return myCategories;
-}
+//     return myCategories;
+// }
 
+// get all categories async action:
 export const getAllCategories = createAsyncThunk('getInitialData', async () => {
     const res = await axiosInstance.post('/initialdata')
     console.log(res)
@@ -68,11 +69,12 @@ export const addCategory = createAsyncThunk('addCategory', async (form) => {
     try
     {
         const res = await axiosInstance.post('/category/create', form);
-    
-        console.log(res , "add category")
-    
         return res;
+
+        if(res.status === 200) return true;
+        else return false;
     }
+
     catch(error)
     {
         console.log(error.message);
@@ -136,11 +138,8 @@ const categorySlice = createSlice({
             state.loading = false
             if(action.payload.status === 200)
             {
-                state.categories = action.payload.data.categoryList
+                state.categories = action.payload.data.categoryList // from here categories[] state array is filled
             }
-
-            // state.loading = false
-            // state.categories = action.payload.categoryList
         })
 
         builder.addCase(getAllCategories.rejected, (state, action) => {
@@ -155,25 +154,55 @@ const categorySlice = createSlice({
         builder.addCase(addCategory.fulfilled, (state, action) => {
             state.loading = false
 
-            // if new category is succesfully created:
-            if(action.payload.status == 200)
+            if(action.payload == false) 
             {
-                const newCat = buildNewCategories(state.categories, action.payload.data._category, action.payload.data._category.parentId);
-                console.log(newCat);
-                state.categories = newCat
-                state.loading = false
+                state.error = "Category Aready Exist!"
             }
 
-            // if category already exist:
-            if(action.payload.status == 400)
-            {
-                state.error = action.payload.data.error
-            }
+            // if new category is succesfully created:
+            // if(action.payload.status == 200)
+            // {
+            //     const newCat = buildNewCategories(state.categories, action.payload.data._category, action.payload.data._category.parentId);
+            //     console.log(newCat);
+            //     state.categories = newCat
+            // }
+
+            // // if category already exist:
+            // if(action.payload.status == 400)
+            // {
+            //     state.error = action.payload.data.error
+            // }
         })
 
         builder.addCase(addCategory.rejected, (state, action) => {
             state.loading = false
             state.error = "addCategory failed due to some problem"
+        })
+
+        builder.addCase(updateCategoryAsyncAction.pending, (state) => {
+            state.loading = true
+        })
+
+        builder.addCase(updateCategoryAsyncAction, (state, action) => {
+            state.loading = false
+        })
+
+        builder.addCase(updateCategoryAsyncAction.rejected, (state, action) => {
+            state.loading = false
+            state.error = "Updating error failed!"
+        })
+
+        builder.addCase(deleteCategoryAsyncAction.pending, (state) => {
+            state.loading = true
+        })
+
+        builder.addCase(deleteCategoryAsyncAction.fulfilled, (state, action) => {
+            state.loading = false
+        })
+
+        builder.addCase(deleteCategoryAsyncAction.rejected, (state, action) => {
+            state.loading = false
+            state.error = "Deleting category failed!"
         })
     }
 })

@@ -31,6 +31,7 @@ function getCategoriesFunction(categories, parentId = null)
             name: catt.name,
             parentId: catt.parentId,
             slug: catt.slug,
+            type: catt.type,
             children: getCategoriesFunction(categories, catt._id) // Recursively calling the function to fetch all the subcategories of a category
         });
     }
