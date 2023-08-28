@@ -173,7 +173,7 @@ function Category() {
             form.append('_id', item.value); // expanded array contains value field for id, name for name and parentId for parnetId int the array of expanded categories:
             form.append('name', item.name);
             form.append('parentId', item.parentId ? item.parentId : ""); // if parentId is present in expanded array, push it in form otherwise append "" in value field of key parentId as in backend logic , you have applied "" for absent of parentId
-            form.append('type', item.type)
+            form.append('type', item.type);
         })
 
         checkedArray.forEach((item, index) => {
