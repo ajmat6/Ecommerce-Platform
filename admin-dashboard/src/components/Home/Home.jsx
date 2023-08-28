@@ -10,7 +10,7 @@ function Home(props) {
   const auth = useSelector((state) => state.auth)
   
   return (
-    <Layout sidebar>
+    <Layout sidebar="true">
       Container
       {/* Jumbtron in Bootstrap 5
       <div className="jumbotron container text-center" style={{margin: '5rem', background: 'white'}}>

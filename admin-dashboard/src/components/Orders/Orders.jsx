@@ -4,7 +4,7 @@ import Layout from '../Layout/Layout'
 function Orders() {
 
   return (
-    <Layout sidebar>
+    <Layout sidebar="true">
         Order
     </Layout>
   )

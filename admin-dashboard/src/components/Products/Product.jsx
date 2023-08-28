@@ -259,7 +259,7 @@ function Product() {
   };
 
   return (
-    <Layout sidebar>
+    <Layout sidebar="true">
       <div className="container">
         <div className="row">
           <div className="col-md-12">

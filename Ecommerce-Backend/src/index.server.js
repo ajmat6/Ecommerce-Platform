@@ -11,6 +11,7 @@ const categoryRoutes = require('./routes/categories');
 const productRoutes = require('./routes/product');
 const cartRoutes = require('./routes/cart');
 const initialDataRoutes = require('./routes/initialData');
+const pageRoutes = require('./routes/page')
 
 // Using env variable (Port no)
 env.config();
@@ -37,6 +38,7 @@ app.use('/api', categoryRoutes);
 app.use('/api', productRoutes);
 app.use('/api', cartRoutes);
 app.use('/api', initialDataRoutes)
+app.use('/api', pageRoutes)
 
 app.listen(process.env.PORT, () => {
     console.log(`Server Chal Raha He Bhai at ${process.env.PORT}`);

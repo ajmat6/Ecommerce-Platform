@@ -223,7 +223,7 @@ function Category() {
 
     return (
         // Passing sidebar as prop
-        <Layout sidebar>
+        <Layout sidebar="true">
             <div className="container">
                 <div className="row">
                     <div className='col-md-12'>
