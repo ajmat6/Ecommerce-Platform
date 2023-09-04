@@ -40,6 +40,6 @@ app.use('/api', cartRoutes);
 app.use('/api', initialDataRoutes)
 app.use('/api', pageRoutes)
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, () => {    
     console.log(`Server Chal Raha He Bhai at ${process.env.PORT}`);
 })

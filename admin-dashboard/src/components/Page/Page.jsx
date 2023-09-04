@@ -7,6 +7,7 @@ import { createPage } from '../../reducers/pageReducer'
 
 const Page = () => {
     const category = useSelector((state) => state.category);
+    const page = useSelector((state) => state.page);
     const dispatch = useDispatch();
 
     const [categories, setcategories] = useState([]);
@@ -25,11 +26,27 @@ const Page = () => {
         console.log(categories)
     }, [category]) // as initially category is empty and it takes some time to get category using useState, so it will give empty in console of categories. So use category as dependency
 
+    // useEffect(() => {
+    //     console.log(page)
+    // }, [page])
+
 
 
     const handleCreatePageModalSubmit = (e) => {
         e.preventDefault();
         const form = new FormData();
+
+        if(title.length ===  0)
+        {
+            alert("Title is required");
+            return;
+        }
+
+        if(categoryId.length === 0)
+        {
+            alert("Category is required");
+            return;
+        }
 
         form.append('title', title);
         form.append('description', description);
@@ -139,6 +156,7 @@ const Page = () => {
                     type="text" 
                     className='form-control mt-3'
                     value={type}
+                    // onChange={(e) => settype(e.target.value)}
                     placeholder='Select Category for Type of Page'
                 />
             </Modal>
@@ -147,9 +165,16 @@ const Page = () => {
 
     return (
         <Layout sidebar="true">
-            <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPage">
-                Create Page
-            </button>
+            {
+                page.loading ? 
+                <p>Creating Page.... Please Wait</p>
+                :
+                <>
+                    <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPage">
+                        Create Page
+                    </button>
+                </>
+            }
 
             {renderCreatePageModal()}
         </Layout>

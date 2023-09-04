@@ -30,11 +30,13 @@ function App() {
       dispatch(isUserLoggedIn());
     }
 
-    // fetching all the categories:
-    console.log("fetching all categories")
-    dispatch(getAllCategories());
-    dispatch(getallProducts());
-  }, [])
+    // fetching all the categories: if user is logged in
+    if(auth.authenticate)
+    {
+      dispatch(getAllCategories());
+      dispatch(getallProducts());
+    }
+  }, [auth.authenticate])
   
   return (
     <div className="App">

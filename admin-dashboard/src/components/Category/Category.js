@@ -142,10 +142,11 @@ function Category() {
     const handleCategorySelection = (e) => {
         const form = new FormData(); // this provides an easy method to create key-value pairs of the form fields and their input values which will make it easy to send them to backend
 
-        // if(categoryName.length === 0)
-        // {
-        //     alert("Please Enter Name")
-        // }
+        if(categoryName.length === 0)
+        {
+            alert("Please Enter Name")
+            return;
+        }
 
         form.append('name', categoryName); // name is the key field in the postman that backend will access as req.body.name as the category name
         form.append('parentId', parentCategoryId); // first is key and second is value same as like postman
@@ -231,7 +232,7 @@ function Category() {
                             <h3>Category</h3>
                             <div className='actionButtons' style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                                 <span style={{fontSize: '20px'}}>Actions:</span>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><AiOutlinePlus style={{marginRight: '4px'}}/><span style={{textAlign: 'center'}}>Add Category</span></button>
+                                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><AiOutlinePlus style={{marginRight: '4px'}}/><span style={{textAlign: 'center'}}>Add Category</span></button>
                                 <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" onClick={deleteCategory}><AiTwotoneDelete style={{marginRight: '4px'}}/><span>Delete</span></button>
                                 <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" onClick={editCategory}><GrUpdate style={{marginRight: '4px'}}/><span>Edit</span></button>
                             </div>
