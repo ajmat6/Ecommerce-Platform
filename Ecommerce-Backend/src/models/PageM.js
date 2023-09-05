@@ -10,7 +10,8 @@ const pageSchema = mongoose.Schema({
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
-        required: true
+        required: true,
+        unique: true // you can have only one page for one category/brand
     },
 
     description: {

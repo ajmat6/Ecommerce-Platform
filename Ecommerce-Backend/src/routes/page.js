@@ -36,19 +36,49 @@ router.post('/create/page', fetchuser, adminMiddleware, upload.fields([ // if yo
         // adding user to request:
         req.body.createdBy = req.user.id;
 
-        const page = await new Page(req.body);
-        page.save()
-        .then(() => {
-            res.status(200).json({page});
-        })
-        .catch((error) => {
-            res.status(400).json({error})
-        })
+        // checking if current brand already have a page:
+        const alreadyPage = await Page.findOne({categoryId: req.body.categoryId});
+
+        // if page found
+        if(alreadyPage)
+        {
+            // updating the page:
+            const updatedPage = await Page.findOneAndUpdate({categoryId: req.body.categoryId}, req.body)
+            if(updatedPage)
+            {
+                res.status(201).json({page: updatedPage});
+            }
+        }
+
+        else
+        {
+            const page = await new Page(req.body);
+            page.save()
+            .then(() => {
+                res.status(201).json({page});
+            })
+            .catch((error) => {
+                res.status(400).json({error})
+            })
+
+        }
     }
     catch(error)
     {
         console.log(error.message);
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");  
+    }
+})
+
+// router to get a page
+router.get('/page/:cid/:type', async (req, res) => {
+    const {cid, type} = req.params
+
+    if(type === "page")
+    {
+        const page = await Page.findOne({categoryId: cid})
+        if(page) return res.status(200).json({page: page})
+        else return res.status(400).json({error: "Page not found"})
     }
 })
 

@@ -3,6 +3,8 @@ import axiosInstance from "../helpers/axios";
 
 const initialState = {
     loading: false,
+    error: null,
+    page: {}
 }
 
 export const createPage = createAsyncThunk('createPage', async (form) => {
@@ -20,6 +22,13 @@ export const createPage = createAsyncThunk('createPage', async (form) => {
     {
         console.log(error.message);
     }
+})
+
+export const getProductPage = createAsyncThunk('getProductPage', async (payload) => {
+    const {categoryId, type} = payload;
+    const res = await axiosInstance.post(`/page/${categoryId}/${type}`)
+    console.log(res);
+    // return res;
 })
 
 const pageSlice = createSlice({
