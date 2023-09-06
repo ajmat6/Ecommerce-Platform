@@ -18,7 +18,7 @@ router.post('/create/page', fetchuser, adminMiddleware, upload.fields([ // if yo
             req.body.bannerImages = bannerImages.map((banner, index) => 
                 ({
                     img: `${process.env.CATEGORY_PICURL}/public/${banner.filename}`,
-                    navigateTo: `/bannerClicked?categoryId:${req.body.categoryId}&type=${req.body.type}`
+                    navigateTo: `/bannerClicked?cid=${req.body.categoryId}&type=${req.body.type}`
                 })
             )
         }

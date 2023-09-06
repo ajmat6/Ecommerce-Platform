@@ -48,7 +48,7 @@ const getProductPageSlice = createSlice({
 
         builder.addCase(getProductPage.rejected, (state, action) => {
             state.pageRequest = false
-            state.error = action.payload.error
+            // state.error = action.payload.error
         })
     }
 })
