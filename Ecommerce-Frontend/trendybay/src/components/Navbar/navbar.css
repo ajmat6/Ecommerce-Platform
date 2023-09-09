@@ -20,25 +20,29 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-end;
+    margin-bottom: 5px;
 }
 .logo .logoimage{
-    width: 75px;
+    width: 90px;
+    /* filter: invert(1); */
 }
 .exploreText{ 
-    font-size: 10px;
+    font-size: 11px;
     font-style: italic; 
+    color: white;
 }
 .plusText{ 
-    font-size: 10px; 
+    font-size: 11px; 
     margin: 0 2px; 
     text-transform: capitalize;
     font-style: italic;
     color: yellow;
   }
-/* .logo .goldenStar{
+.logo .goldenStar{
     width: 10px;
     height: 10px;
-} */
+    margin-bottom: 4px;
+}
 
 .searchInputContainer {
     width: 560px;
@@ -80,13 +84,17 @@
     font-weight: 500;
     font-size: 16px;
     cursor: pointer;
+    text-decoration: none;
+    margin-right: 27px;
   }
+
 .more, .fullName {
     font-weight: bold;
     color: #fff;
     display: flex;
     align-items: center;
     margin: 0 20px;
+    text-decoration: none;
     cursor: pointer;
   }
 .cart {
@@ -95,7 +103,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 20px
+    margin: 0 20px;
+    text-decoration: none;
   }
 
 .authContainer{

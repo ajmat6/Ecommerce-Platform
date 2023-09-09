@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from "../Layout/Layout";
-import "./productList.css";
+// import "./productList.css";
 import ProductStore from "./productStore/ProductStore";
 import { useLocation } from "react-router-dom";
 import getQueryParams from "../../utils/getQueryParams";

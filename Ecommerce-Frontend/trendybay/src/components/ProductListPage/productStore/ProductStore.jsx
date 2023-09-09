@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { productBySlug } from "../../../reducers/productBySlugReducer";
 import { useParams } from "react-router-dom";
 import { generatePublicURL } from "../../../urlConfig";
+import {Link} from 'react-router-dom'
+import './productStore.css'
+import Card from "../../../UI/Card/Card";
 
 const ProductStore = () => {
     const dispatch = useDispatch();
@@ -40,16 +43,26 @@ const ProductStore = () => {
                 Object.keys(allProducts.productsByPrice).map((key, index) => {
                     // key is under5k, etc
                     return (
-                        <div className="card">
-                            <div className="card-header">
+                        <Card
+                            // Passing headerLeft and headerRight and style as props to Card component
+                            headerLeft = {`${categoryName} Mobile under ${priceRange[key]}`}
+                            headerRight = {<button className="btn btn-primary">View All</button>}
+                            style = {{width: 'calc(100% - 40px)', margin: '20px'}}
+                        >
+                            {/* <div className="card-header">
                                 <div>{categoryName} Mobile under {priceRange[key]}</div>
                                 <button className="btn btn-primary">View All</button>
-                            </div>
+                            </div> */}
+
                             <div style={{ display: 'flex' }}>
                                 {
                                     // here mapping is on the products of a particular category like under5k:
                                     allProducts.productsByPrice[key].map((product) => (
-                                        <div className="product-container">
+                                        <Link
+                                            className="product-container" 
+                                            style={{display: 'block'}}
+                                            to={`/${product.slug}/${product._id}/p`}
+                                        >
                                             <div className="product-img-container">
                                                 <img
                                                     src={generatePublicURL(product.productPic[0].img)}
@@ -65,11 +78,11 @@ const ProductStore = () => {
                                                 </div>
                                                 <div className="product-price">{product.price}</div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     ))
                                 }
                             </div>
-                        </div>
+                        </Card>
                     );
                 })
             }

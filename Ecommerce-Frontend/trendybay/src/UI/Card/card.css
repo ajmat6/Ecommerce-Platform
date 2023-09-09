@@ -4,3 +4,11 @@
     border: 1px solid #cecece;
     box-shadow: 0 0 2px 2px #cecece;
 }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #cecece;
+}

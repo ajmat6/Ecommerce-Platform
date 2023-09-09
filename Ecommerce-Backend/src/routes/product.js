@@ -80,7 +80,7 @@ router.post('/product/create', fetchuser, adminMiddleware, upload.array('product
     }
 });
 
-// end point to fetch a product:
+// end point to fetch products by slug:
 router.get('/product/:slug', async (req, res) => {
     try
     {
@@ -126,6 +126,34 @@ router.get('/product/:slug', async (req, res) => {
         console.log(error.message);
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
     }
+})
+
+// api end point to fetch a single product's details:
+router.get('/product/productDetails/:productId', async (req, res) => {
+    try
+    {
+        const {productId} = req.params;
+    
+        // find a product if exist of the same id:
+        const product = await Product.findOne({_id: productId});
+    
+        if(product)
+        {
+            res.status(200).json(product);
+        }
+
+        else
+        {
+            res.status(400).json({error: "Enter valid Parameters"})
+        }
+
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+
 })
 
 

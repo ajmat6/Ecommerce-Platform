@@ -41,7 +41,8 @@ router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res
             lastName,
             email,
             hash_password,
-            username: shortid.generate() 
+            username: shortid.generate(),
+            role: 'user'
         })
     
         // Saving the document(a particular of the users collection) in the DB:
@@ -76,7 +77,7 @@ router.post('/signin', validateSigninRequest, isRequestValidated, async (req,res
         const user = await User.findOne({email: req.body.email});
     
         // if user not exist:
-        if(!user)
+        if(!user || user.role !== 'user')
         {
             return res.status(400).json({
                 message: "Please enter valid credentials!"
@@ -221,7 +222,7 @@ router.post('/admin/signin', validateSigninRequest, isRequestValidated, async (r
         const user = await User.findOne({email: req.body.email});
     
         // if user not exist:
-        if(!user)
+        if(!user || user.role !== 'admin')
         {
             return res.status(400).json({
                 message: "Please enter valid credentials!"

@@ -18,12 +18,13 @@ const initialState = {
 
 // createAsyncThunk for handling async actions, it takes type of action as its first argument
 export const authCredentials = createAsyncThunk('authCredentials', async (user) => {
-    const res = await axiosInstance.post('/admin/signin', {...user}) // splitting up email and password coming as argument
+    const res = await axiosInstance.post('/signin', {...user}) // splitting up email and password coming as argument
 
     // if sign in details were correct:
     if(res.status === 200)
     {
         // extracting token and user from the response:
+        console.log(res, "bhai fronted ka login");
         const {token, user} = res.data
         localStorage.setItem('token', token) // storing token in localStorage
         localStorage.setItem('user', JSON.stringify(user)); // storing user in localStorage in the form of string 
@@ -41,7 +42,7 @@ export const authCredentials = createAsyncThunk('authCredentials', async (user) 
 
 // sign up async action:
 export const signUpCredentials = createAsyncThunk('signupCredentials', async (user) => {
-    const res = await axiosInstance.post('/admin/signup', {...user}) // splitting up firstName, lastName, email and password coming as argument
+    const res = await axiosInstance.post('/signup', {...user}) // splitting up firstName, lastName, email and password coming as argument
 
     // if sign in details were correct:
     if(res.status === 200)
@@ -84,7 +85,7 @@ export const signoutAction = createAsyncThunk('signout', async () => {
     }
 })
 
-const authSlice = createSlice({
+const userAuthSlice = createSlice({
     name: "auth",
     initialState: initialState,
 
@@ -156,5 +157,5 @@ const authSlice = createSlice({
     }
 })
 
-export default authSlice.reducer
-export const { logout, isUserLoggedIn } = authSlice.actions
+export default userAuthSlice.reducer
+export const { logout, isUserLoggedIn } = userAuthSlice.actions

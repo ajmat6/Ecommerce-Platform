@@ -1,9 +1,9 @@
-.card {
-    width: calc(100% - 20px); /* 100% minus 20px from sides total */
-    margin: 10px 10px;
+/* .cardContainer {
+    /* width: calc(100% - 20px); */
+    /* margin: 10px 10px;
     border: 1px solid #cecece;
     box-shadow: 0 0 2px -2px grey;
-}
+} */ */
 
 .card-header {
     display: flex;
@@ -17,6 +17,8 @@
 {
     width: 200px;
     margin: 0 10px;
+    text-decoration: none;
+    color: black;
 }
 
 .product-container .product-img-container {
