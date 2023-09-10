@@ -10,7 +10,8 @@ import {
   DropdownMenu,
 } from "../MaterialUi/MaterialUi";
 import { useDispatch, useSelector } from "react-redux";
-import { authCredentials, logout } from "../../reducers/userAuthReducer";
+import { authCredentials, logout, signoutAction } from "../../reducers/userAuthReducer";
+import { resetCart } from "../../reducers/cartReducer";
 
 const Header = (props) => {
   const dispatch = useDispatch();
@@ -27,7 +28,8 @@ const Header = (props) => {
 
   // function to dispatch logout action:
   const userLogOut = () => {
-    dispatch(logout());
+    dispatch(signoutAction());
+    dispatch(resetCart());
   }
 
   useEffect(() => {

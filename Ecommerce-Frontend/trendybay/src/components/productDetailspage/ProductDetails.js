@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 const ProductDetails = () => {
     const dispatch = useDispatch();
     const productDetail = useSelector((state) => state.productDetails)
+    const auth = useSelector((state) => state.auth)
 
     const location = useLocation();
     const productId = location.pathname.split("/")[2] // getting the id of the product
@@ -62,7 +63,9 @@ const ProductDetails = () => {
                                 onClick = {() => {
                                     const { _id, name, price } = productDetail.details;
                                     const img = productDetail.details.productPic[0].img;
-                                    dispatch(addToCart({_id, name, price, img}))
+
+                                    const product = {_id, name, price, img};
+                                    dispatch(addToCart({product, qty: 1, logIn: auth.authenticate}))
                                     navigate('/cart')
                                 }}
                             />

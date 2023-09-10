@@ -1,10 +1,24 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { generatePublicURL } from '../../urlConfig';
 import './cartItem.css'
 
 const CartItem = (props) => {
+    const [quantity, setQuantity] = useState(props.cartItem.quantity);
+
     // extracting cart item details passed as props
-    const {_id, name, price, quantity, img} = props.cartItem;
+    const {_id, name, price, img} = props.cartItem;
+
+    // functions to set the quantity of useState quantity and passing it as prop to cartPage as prop argument
+    const onQuantityIncreament = () => {
+        setQuantity(quantity + 1);
+        props.onQuantityInc(_id, quantity + 1); // passing argument to props function
+    }
+
+    const onQuantityDecreament = () => {
+        if(quantity == 1) return; // if quantity is one, you cannot decrease it more
+        setQuantity(quantity - 1);
+        props.onQuantityDec(_id, quantity - 1); // passing argument to props function
+    }
 
     return (
         <div className='cartItemContainer'>
@@ -26,9 +40,9 @@ const CartItem = (props) => {
 
             <div style={{display: 'flex', margin: '7px 0'}}>
                 <div className='quantityControl'>
-                    <button>-</button>
+                    <button onClick={onQuantityDecreament}>-</button>
                     <input value={quantity} readOnly/>
-                    <button>+</button>
+                    <button onClick={onQuantityIncreament}>+</button>
                 </div>
 
                 <button className='cartActionBtn'>Save for later</button>

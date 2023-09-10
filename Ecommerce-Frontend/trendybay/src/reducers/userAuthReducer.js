@@ -68,11 +68,10 @@ export const signUpCredentials = createAsyncThunk('signupCredentials', async (us
 export const signoutAction = createAsyncThunk('signout', async () => {
     try
     {
-        console.log("singout")
-        const res = axiosInstance.post('/admin/signout');
+        const res = axiosInstance.post('/signout');
         if(res.status == 200)
         {
-            localStorage.clear();
+            localStorage.clear()
         }
         else
         {
@@ -93,6 +92,7 @@ const userAuthSlice = createSlice({
     reducers: {
         logout: (state, action) => {
             localStorage.removeItem('token');
+            localStorage.removeItem('user')
             state.userToken = null
             state.authenticate = false
         },
@@ -149,6 +149,28 @@ const userAuthSlice = createSlice({
         })
 
         builder.addCase(signUpCredentials.rejected, (state, action) => {
+            state.authenticating = false
+            state.authenticate = false
+            // state.error = action.payload.message
+        })
+
+        builder.addCase(signoutAction.pending, (state) => {
+            state.authenticating = true
+        })
+
+        builder.addCase(signoutAction.fulfilled, (state, action) => {
+            state.authenticate = false
+            state.userToken = null
+            state.userInfo = {
+                firstName: '',
+                lastName: '',
+                email: '',
+                picture: ''
+            }
+            localStorage.clear()
+        })
+
+        builder.addCase(signoutAction.rejected, (state, action) => {
             state.authenticating = false
             state.authenticate = false
             // state.error = action.payload.message

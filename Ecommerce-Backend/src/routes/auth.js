@@ -125,6 +125,23 @@ router.post('/signin', validateSigninRequest, isRequestValidated, async (req,res
     }
 })
 
+// API end point to sign out an admin:
+router.post('/signout', async (req ,res) => {
+    try
+    {
+       res.clearCookie('token') // clearing cookie named token
+       res.status(200).json({
+        message: "Sign Out Successfully"
+       })
+    }
+
+    catch
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");
+    }
+})
+
 
 // API end point for signin: POST Request -> to login
 router.post('/profile', fetchuser, async (req, res) => {
