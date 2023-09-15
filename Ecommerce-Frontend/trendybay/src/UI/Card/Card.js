@@ -3,10 +3,19 @@ import './card.css'
 
 const Card = (props) => {
     return (
-        <div className='card' {...props}>
+        <div className='myCard' {...props}>
             <div className="card-header">
                 {
-                    props.headerLeft && <div>{props.headerLeft}</div>
+                    props.headerLeft &&
+                    <div
+                        style={{
+                            alignSelf: "center",
+                            fontSize: "20px",
+                            fontWeight: "500",
+                        }}
+                    >
+                        {props.headerLeft}
+                    </div>
                 }
 
                 {
@@ -15,7 +24,7 @@ const Card = (props) => {
             </div>
 
             {props.children}
-            
+
         </div>
     )
 }

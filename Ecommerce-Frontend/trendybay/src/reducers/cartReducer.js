@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../helpers/axios";
-import { useDispatch, useSelector } from "react-redux";
 
-const dispatch = useDispatch();
 
 const initialState = {
     loading: false,
@@ -16,50 +14,62 @@ const initialState = {
     error: null
 }
 
-// export const getCartItems = createAsyncThunk('getCartItems', async () => {
-//     try {
-//         const res = await axiosInstance.post('/user/cart/getCartItems');
+export const getCartItems = createAsyncThunk('getCartItems', async () => {
+    try {
+        const res = await axiosInstance.post('/user/cart/getCartItems');
 
-//         if (res.status === 200) {
-//             const { cartItems } = res.data;
-//             console.log(cartItems);
-//             return cartItems
-//         }
-//     }
-//     catch (error) {
-//         console.log(error);
-//     }
-// })
+        if (res.status === 200)
+        {
+            const { cartItems } = res.data;
+            console.log(cartItems);
+            return cartItems
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+})
 
-// export const addToCart = createAsyncThunk('getCartItems', async ({product, qty, logIn}) => {
-//     // const cartItems = { ...state.cartItems }; // making o copy of the cartitems
-//     // const { product, qty, logIn } = action.payload; // argument you were passing while dispatching (two arguments are there)
+export const addToCartDatabase = createAsyncThunk('addToCartDB', async (payload) => {
+    const res = axiosInstance.post('/user/cart/add-to-cart', payload);
+    console.log(res);
+    if(res.status === 201)
+    {
+        return true;
+    }
+})
 
-//     // if user is logged in:
-//     if (logIn)
-//     {
-//         // if the product is already in the cart
-//         if (cartItems[product._id]) {
-//             cartItems[product._id].quantity += qty;
-//         }
+export const updateCart = createAsyncThunk('updateCart', async () => {
+    let cartItems = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : null
+
+    localStorage.removeItem('cart');
     
-//         // if not in cart insert it
-//         else {
-//             cartItems[product._id] = { ...product, quantity: 1 };
-//         }
+    // if items are there in the localstorage which were stored when you were logged out, then include them in db:
+    if(cartItems)
+    {
+        const payload = {
+            cartItems: Object.keys(cartItems).map((key, index) => {
+                return {
+                    productId: cartItems[key]._id,
+                    quantity: cartItems[key].quantity
+                }
+            })
+        }
 
-//     }
+        console.log(payload)
 
-//     // if user is not logged in, add cartitems to localStorage:
-//     else
-//     {
-//         localStorage.setItem('cart', JSON.stringify(cartItems));
-//     }
-
-
-
-//     state.cartItems = cartItems
-// })
+        if(Object.keys(cartItems).length > 0)
+        {
+            const res = await axiosInstance.post('/user/cart/add-to-cart', payload);
+            if(res.status == 201)
+            {
+                const res2 = await axiosInstance.post('/user/cart/getCartItems')
+                const {cartItems} = res2.data;
+                return cartItems;
+            }
+        }
+    }
+})
 
 
 const cartSlice = createSlice({
@@ -69,12 +79,6 @@ const cartSlice = createSlice({
         addToCart: (state, action) => {
             const cartItems = { ...state.cartItems }; // making o copy of the cartitems
             const { product, qty, logIn } = action.payload; // argument you were passing while dispatching (two arguments are there)
-
-            // if user is logged in:
-            if (logIn)
-            {
-
-            }
 
             // if the product is already in the cart
             if (cartItems[product._id]) {
@@ -86,9 +90,14 @@ const cartSlice = createSlice({
                 cartItems[product._id] = { ...product, quantity: 1 };
             }
 
-            localStorage.setItem('cart', JSON.stringify(cartItems));
+            if(logIn == false)
+            {
+                localStorage.setItem('cart', JSON.stringify(cartItems));
+            }
 
             state.cartItems = cartItems
+
+            // return true;
         },
 
         refreshAndGetCart: (state, action) => {
@@ -123,6 +132,23 @@ const cartSlice = createSlice({
 
         builder.addCase(getCartItems.rejected, (state, action) => {
             state.loading = false
+            // state.error = action.payload.error
+        })
+
+        builder.addCase(updateCart.pending, (state) => {
+            state.updatingCart = true
+        })
+
+        builder.addCase(updateCart.fulfilled, (state, action) => {
+            state.updatingCart = false
+            state.cartItems = action.payload
+            // state.productsByPrice = {
+            //     ...action.payload.productsByPrice
+            // }
+        })
+
+        builder.addCase(updateCart.rejected, (state, action) => {
+            state.updatingCart = false
             // state.error = action.payload.error
         })
     }

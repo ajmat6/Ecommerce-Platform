@@ -70,7 +70,6 @@ router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res
 
 // API end point for signin: POST Request -> to login
 router.post('/signin', validateSigninRequest, isRequestValidated, async (req,res) => {
-
     try
     {
         // Find user if exist:
@@ -101,7 +100,7 @@ router.post('/signin', validateSigninRequest, isRequestValidated, async (req,res
             }
         }
 
-        const token = jwt.sign(data, process.env.JWT_SECRET, {expiresIn: '1hr'});
+        const token = jwt.sign(data, process.env.JWT_SECRET, {expiresIn: '6hr'});
 
         // sending response to the user: Here fullName will be set by virtual
         const { firstName, lastName, email, role, fullname, _id} = user;

@@ -5,10 +5,10 @@ import axiosInstance from "../helpers/axios"
 const initialState = {
     userToken: null,
     userInfo: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        picture: ''
+        // firstName: '',
+        // lastName: '',
+        // email: '',
+        // picture: ''
     },
     authenticate: false,
     authenticating: false,

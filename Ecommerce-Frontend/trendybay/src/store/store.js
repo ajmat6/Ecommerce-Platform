@@ -5,6 +5,7 @@ import getPageReducer from '../reducers/getPageReducer';
 import userAuthReducer from '../reducers/userAuthReducer';
 import productDetailsReducer from '../reducers/productDetailsReducer';
 import cartReducer from '../reducers/cartReducer';
+import addressReducer from '../reducers/addressReducer';
 
 const store = configureStore({
     reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
         getProductPage: getPageReducer,
         auth: userAuthReducer,
         productDetails: productDetailsReducer,
-        cart: cartReducer
+        cart: cartReducer,
+        address: addressReducer
     }
 })
 

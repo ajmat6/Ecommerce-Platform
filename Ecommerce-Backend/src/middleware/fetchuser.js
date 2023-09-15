@@ -7,7 +7,7 @@ const fetchuser = (req, res, next) => {
     // checking for the token:
     if(!token)
     {
-        res.status(401).send("Please enter valid auth-token");
+        return res.status(401).send("Please enter valid auth-token");
     }
 
     // if token is a valid token then verify user with the jwt secret of the authtoken send by the user:

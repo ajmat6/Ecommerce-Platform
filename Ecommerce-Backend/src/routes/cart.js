@@ -5,7 +5,7 @@ const fetchuser = require('../middleware/fetchuser'); // to check for signed in 
 const { userMiddleware } = require('../middleware/categoryMiddleware');
 
 // function used to form promise array:
-function runUpdate(condition, updatedData)
+function  runUpdate(condition, updatedData)
 {
     return new Promise((resolve, reject) => {
         Cart.findOneAndUpdate(condition, updatedData, {upsert: true})
@@ -39,7 +39,7 @@ router.post('/user/cart/add-to-cart', fetchuser, userMiddleware, async (req, res
                 {
                     // condition to add an item into the cart if it is already present in the cart:
                     condition = {
-                        "user": req.user.id,
+                        "userId": req.user.id,
                         "cartItems.productId": productId
                     }
 
@@ -54,7 +54,7 @@ router.post('/user/cart/add-to-cart', fetchuser, userMiddleware, async (req, res
                 else
                 {
                     condition = {
-                        "user": req.user.id
+                        "userId": req.user.id
                     }
 
                     update = {
@@ -67,11 +67,12 @@ router.post('/user/cart/add-to-cart', fetchuser, userMiddleware, async (req, res
                 // pushing into promise array for checking resolve and reject status of product:
                 promiseArray.push(runUpdate(condition, update));
             });
-
+            
             // resolving all the promises:
             Promise.all(promiseArray)
             .then(response => res.status(201).json({response}))
             .catch(error => res.status(400).json({error}));
+            console.log(promiseArray)
 
 
             // // Modify the cart by changing the quantity or by adding new products into it:
@@ -93,18 +94,6 @@ router.post('/user/cart/add-to-cart', fetchuser, userMiddleware, async (req, res
             //     })
             //     res.status(200).json({updateCart})
             // }
-
-            // // if not in cart then add in cart:
-            // else
-            // {
-            //     const updateCart = await Cart.findOneAndUpdate({ userId: req.user.id }, { // first one is condition to find and second is all the stuff that you want to update
-            //         "$push": { // to change/push values into the document
-            //             "cartItems": req.body.cartItems
-            //         }
-            //     })
-            //     res.status(200).json({updateCart})
-            // }
-
         }
 
         // if cart doest not exist then create it:
@@ -117,7 +106,7 @@ router.post('/user/cart/add-to-cart', fetchuser, userMiddleware, async (req, res
     
             cart.save()
             .then(() => {
-                res.status(200).json({cart});
+                res.status(201).json({cart});
             })
             .catch((error) => {
                 console.log(error.message);
@@ -137,7 +126,7 @@ router.post('/user/cart/getCartItems', fetchuser, userMiddleware, async (req, re
     try
     {
         // finding cart of the user:
-        const cart = await Cart.findOne({user: req.user.id}).populate('cartItems.productId', '_id name price productPic'); // populating productId in Modal's cartItems with id, name, price and productPic from Product Modal:
+        const cart = await Cart.findOne({userId: req.user.id}).populate('cartItems.productId', '_id name price productPic'); // populating productId in Modal's cartItems with id, name, price and productPic from Product Modal:
     
         // if cart of user exist exist then:
         if(cart)

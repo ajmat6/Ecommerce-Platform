@@ -11,10 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { isUserLoggedIn } from './reducers/userAuthReducer';
 import ProductDetails from './components/productDetailspage/ProductDetails';
 import CartPage from './components/Cart/CartPage';
-import { refreshAndGetCart } from './reducers/cartReducer';
+import { refreshAndGetCart, updateCart } from './reducers/cartReducer';
+import Checkout from './components/Checkout/Checkout';
 
 function App(props) {
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth)
 
   useEffect(() => {
     dispatch(isUserLoggedIn());
@@ -24,12 +26,17 @@ function App(props) {
     dispatch(refreshAndGetCart());
   }, [])
 
+  useEffect(() => {
+    dispatch(updateCart());
+  }, [auth.authenticate])
+
   return (
     <div className="App">
       {/* <BrowserRouter> */}
         <Routes>
           <Route path='/' exact element={<HomePage />}/>
           <Route path='/cart' exact element={<CartPage />}/>
+          <Route path='/checkout' exact element={<Checkout />}/>
           <Route path='/:productSlug/:productId/p' element={<ProductDetails />}/>
           <Route path='/:slug' element={<ProductListPage />}/>
         </Routes>

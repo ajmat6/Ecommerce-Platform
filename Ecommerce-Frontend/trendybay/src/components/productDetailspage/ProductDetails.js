@@ -9,13 +9,14 @@ import { AiFillThunderbolt } from "react-icons/ai";
 import { MaterialButton } from "../../components/MaterialUi/MaterialUi";
 import "./productDetails.css";
 import { generatePublicURL } from '../../urlConfig';
-import { addToCart } from '../../reducers/cartReducer';
+import { addToCart, addToCartDatabase, getCartItems } from '../../reducers/cartReducer';
 import { useNavigate } from 'react-router-dom';
 
 const ProductDetails = () => {
     const dispatch = useDispatch();
     const productDetail = useSelector((state) => state.productDetails)
     const auth = useSelector((state) => state.auth)
+    const cart = useSelector((state) => state.cart)
 
     const location = useLocation();
     const productId = location.pathname.split("/")[2] // getting the id of the product
@@ -60,13 +61,46 @@ const ProductDetails = () => {
                                     marginTop: "10px"
                                 }}
                                 icon={<IoMdCart />}
-                                onClick = {() => {
+                                onClick={() => {
                                     const { _id, name, price } = productDetail.details;
                                     const img = productDetail.details.productPic[0].img;
 
-                                    const product = {_id, name, price, img};
-                                    dispatch(addToCart({product, qty: 1, logIn: auth.authenticate}))
-                                    navigate('/cart')
+                                    const product = { _id, name, price, img };
+                                    const isLoggedIn = auth.authenticate;
+
+                                    // cart Details:
+                                    const cartItems = cart.cartItems
+                                    console.log(cartItems, "cartitems")
+
+                                    // if user is logged in, then dispatch action of add to cart action of database:
+                                    if (isLoggedIn)
+                                    {
+                                        dispatch(addToCart({ product, qty: 1, logIn: auth.authenticate }))
+                                        const payload = {
+                                            cartItems: [
+                                                {
+                                                    productId: product._id,
+                                                    quantity: 1
+                                                }
+                                            ]
+                                        }
+
+                                        dispatch(addToCartDatabase(payload))
+                                        .then((result) => {
+                                            if(result)
+                                            {
+                                                dispatch(getCartItems())
+                                                .then(() => {
+                                                    navigate('/cart')
+                                                })
+                                            }
+                                        })
+                                    }
+
+                                    else {
+                                        dispatch(addToCart({ product, qty: 1, logIn: auth.authenticate }))
+                                        navigate('/cart')
+                                    }
                                 }}
                             />
 
@@ -83,7 +117,7 @@ const ProductDetails = () => {
                         </div>
                     </div>
                 </div>
-                <div style={{marginLeft: '15px'}}>
+                <div style={{ marginLeft: '15px' }}>
                     {/* home > category > subCategory > productName */}
                     <div className="breed">
                         <ul>
