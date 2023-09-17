@@ -51,6 +51,25 @@ const CartPage = (props) => {
         dispatch(addToCart({product, qty: -1})) // quantity is one to sub (-)
     }
 
+    if(props.onlyCartItems)
+    {
+        return (
+            <>
+                {
+                    cartItems !== null &&
+                    Object.keys(cartItems).map((key, index) => 
+                        <CartItem 
+                            key = {index}
+                            cartItem = {cartItems[key]} // passing cart item details as props
+                            onQuantityInc = {onQuantityIncrement}
+                            onQuantityDec = {onQuantityDecrement}
+                        />
+                    )
+                }
+            </>
+        )
+    }
+
   return (
     <Layout>
         <div className='cartContainer'>

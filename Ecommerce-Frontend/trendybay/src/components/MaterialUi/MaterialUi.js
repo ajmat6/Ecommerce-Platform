@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import './materialUI.css'
+import { Link } from "react-router-dom";
 
 const Modal = (props) => {
     if (!props.visible) {
@@ -114,17 +115,17 @@ const Modal = (props) => {
               {props.menus &&
                 props.menus.map((item, index) => (
                   <li key={index}>
-                    <a
+                    <Link
                       onClick={(e) => {
                         if (item.onClick) {
                           e.preventDefault();
                           item.onClick && item.onClick();
                         }
                       }}
-                      href={`${item.href}`}
+                      to={`${item.href}`}
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
             </ul>

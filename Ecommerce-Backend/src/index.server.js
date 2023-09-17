@@ -3,7 +3,7 @@ const app = express();
 const env = require('dotenv'); // importing dotenv for the port as an environment variable
 const mongoose = require('mongoose');
 const path = require('path');
-const cors = require('cors')
+const cors = require('cors');
 
 // Routes Import:
 const userRoutes = require('./routes/auth');
@@ -11,8 +11,9 @@ const categoryRoutes = require('./routes/categories');
 const productRoutes = require('./routes/product');
 const cartRoutes = require('./routes/cart');
 const initialDataRoutes = require('./routes/initialData');
-const pageRoutes = require('./routes/page')
-const addressRoutes = require('./routes/address')
+const pageRoutes = require('./routes/page');
+const addressRoutes = require('./routes/address');
+const orderRoutes = require('./routes/orders');
 
 // Using env variable (Port no)
 env.config();
@@ -41,6 +42,7 @@ app.use('/api', cartRoutes);
 app.use('/api', initialDataRoutes);
 app.use('/api', pageRoutes);
 app.use('/api', addressRoutes);
+app.use('/api', orderRoutes);
 
 app.listen(process.env.PORT, () => {    
     console.log(`Server Chal Raha He Bhai at ${process.env.PORT}`);

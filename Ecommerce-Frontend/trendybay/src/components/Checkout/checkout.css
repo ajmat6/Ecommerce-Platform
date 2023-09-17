@@ -47,8 +47,9 @@
 }
 
 .loggedInId {
-    font-size: 12px;
-    margin: 0px 0 10px 60px;
+    /* font-size: 12px; */
+    margin-left: 53px;
+    margin-top: -6px
 }
 
 .addressContainer {

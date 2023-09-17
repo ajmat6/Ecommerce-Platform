@@ -6,6 +6,7 @@ import userAuthReducer from '../reducers/userAuthReducer';
 import productDetailsReducer from '../reducers/productDetailsReducer';
 import cartReducer from '../reducers/cartReducer';
 import addressReducer from '../reducers/addressReducer';
+import orderReducer from '../reducers/orderReducer';
 
 const store = configureStore({
     reducer: {
@@ -15,7 +16,8 @@ const store = configureStore({
         auth: userAuthReducer,
         productDetails: productDetailsReducer,
         cart: cartReducer,
-        address: addressReducer
+        address: addressReducer,
+        orders: orderReducer
     }
 })
 

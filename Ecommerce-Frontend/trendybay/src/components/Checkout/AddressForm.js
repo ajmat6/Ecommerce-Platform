@@ -4,20 +4,50 @@ import { MaterialButton, MaterialInput } from "../../components/MaterialUi/Mater
 import { createAddress } from "../../reducers/addressReducer";
 
 const AddressForm = (props) => {
-  const [name, setName] = useState('');
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [pinCode, setPinCode] = useState('');
-  const [locality, setLocality] = useState('');
-  const [address, setAddress] = useState('');
-  const [cityDistrictTown, setCityDistrictTown] = useState('');
-  const [state, setState] = useState('');
-  const [landmark, setLandmark] = useState('');
-  const [alternatePhone, setAlternatePhone] = useState('');
-  const [addressType, setAddressType] = useState('');
+  // checking if this addressform is currently used to edit a address and there is data in props:
+  const {initialData} = props;
+  if(initialData)
+  {
+    console.log(initialData)
+  }
+
+  const [name, setName] = useState(
+    initialData ? initialData.name : ''
+  );
+  const [mobileNumber, setMobileNumber] = useState(
+    initialData ? initialData.mobileNumber : ''
+  );
+  const [pinCode, setPinCode] = useState(
+    initialData ? initialData.pinCode : ''
+  );
+  const [locality, setLocality] = useState(
+    initialData ? initialData.locality : ''
+  );
+  const [address, setAddress] = useState(
+    initialData ? initialData.address : ''
+  );
+  const [cityDistrictTown, setCityDistrictTown] = useState(
+    initialData ? initialData.cityDistrictTown : ''
+  );
+  const [state, setState] = useState(
+    initialData ? initialData.state : ''
+  );
+  const [landmark, setLandmark] = useState(
+    initialData ? initialData.landmark : ''
+  );
+  const [alternatePhone, setAlternatePhone] = useState(
+    initialData ? initialData.alternatePhone : ''
+  );
+  const [addressType, setAddressType] = useState(
+    initialData ? initialData.addressType : ''
+  );
 
   const dispatch = useDispatch();
   const userAddress = useSelector((state) => state.address);
   const [submitFlag, setSubmitFlag] = useState(false);
+  const [id, setId] = useState(
+    initialData ? initialData._id : ''
+  )
 
   const inputContainer = {
     width: "100%",
@@ -42,6 +72,13 @@ const AddressForm = (props) => {
       }
     };
     console.log(form);
+
+    // if address is for edit, sending also with payload:
+    if(id)
+    {
+      form.payload.address._id = id
+    }
+
     dispatch(createAddress(form));
     setSubmitFlag(true)
   };
@@ -50,10 +87,33 @@ const AddressForm = (props) => {
     // when we will submit a form then we have to confirm that address becoz this form is filled either to add a new address or to edit a address for delivery:
     if(submitFlag)
     {
-      // we have to send the added address back as prop: the added address is last in allAddress state
-      const address = userAddress.allAddress.slice(userAddress.allAddress.length - 1)[0];
-      console.log(address, "new address")
-      props.onSubmitForm(address) // sending this address as prop
+      let _address = {}
+
+      // if this form is form updating the address, then we have to send the updated address: As it is not last in the state, we are sending useState's values
+      if(id !== '')
+      {
+        _address = {
+          _id: id,
+          name,
+          mobileNumber,
+          pinCode,
+          locality,
+          address,
+          cityDistrictTown,
+          state,
+          landmark,
+          alternatePhone,
+          addressType
+        }
+      }
+
+      else
+      {
+        // if the address is newly added  then the added address is last in allAddress state
+        _address = userAddress.allAddress.slice(userAddress.allAddress.length - 1)[0];
+      }
+      console.log(_address, "new address")
+      props.onSubmitForm(_address) // sending this address as prop
     }
   }, [userAddress.allAddress])
 
@@ -140,9 +200,9 @@ const AddressForm = (props) => {
             <div>
               <input
                 type="radio"
-                onClick={() => setAddressType("home")}
+                onClick={(e) => setAddressType(e.target.value)}
                 name="addressType"
-                value="home"
+                value={addressType}
               />
               <span>Home</span>
             </div>

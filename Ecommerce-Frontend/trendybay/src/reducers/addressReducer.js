@@ -11,14 +11,17 @@ export const createAddress = createAsyncThunk('createAddress', async (payload) =
     const res = await axiosInstance.post('/user/address/create', payload);
     console.log(res, "add address");
     
-    const {
-        addAddress: {
-            address
-        }
-    } = res.data
+    if(res.status == 201)
+    {
+        const {
+            addAddress: {
+                address
+            }
+        } = res.data
 
-    console.log(address, "get address")
-    return address;
+        console.log(address, "get address")
+        return address;
+    }
 })
 
 export const getUserAddress = createAsyncThunk('getUserAddress', async () => {

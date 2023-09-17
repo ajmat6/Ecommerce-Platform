@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { authCredentials, logout, signoutAction } from "../../reducers/userAuthReducer";
 import { resetCart } from "../../reducers/cartReducer";
+import { Link } from "react-router-dom";
 
 const Header = (props) => {
   const dispatch = useDispatch();
@@ -64,11 +65,8 @@ const Header = (props) => {
           { label: "SuperCoin Zone", href: "", icon: null },
           {
             label: "Orders",
-            href: "#",
-            icon: null,
-            onClick: () => {
-              setLoginModal(true);
-            },
+            href: "/account/orders",
+            icon: null
           },
           { label: "Wishlist", href: "", icon: null },
           { label: "My Charts", href: "", icon: null },
@@ -175,7 +173,9 @@ const Header = (props) => {
                   }}
                   onClick={userLogin}
                 />
+
                 <p style={{ textAlign: "center" }}>OR</p>
+                
                 <MaterialButton
                   title="Request OTP"
                   bgColor="#ffffff"
@@ -248,10 +248,10 @@ const Header = (props) => {
             ]}
           />
           <div>
-            <a className="cart">
+            <Link className="cart" to={'/cart'}>
               <span style={{ fontSize: '23px', marginBottom: '4px', marginRight: '-6px' }}><IoIosCart /></span>
               <span style={{ margin: "0 10px" }}>Cart</span>
-            </a>
+            </Link>
           </div>
         </div>
         {/* right side menu ends here */}

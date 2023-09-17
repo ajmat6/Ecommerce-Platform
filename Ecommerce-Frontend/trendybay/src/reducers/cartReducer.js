@@ -15,18 +15,13 @@ const initialState = {
 }
 
 export const getCartItems = createAsyncThunk('getCartItems', async () => {
-    try {
-        const res = await axiosInstance.post('/user/cart/getCartItems');
+    const res = await axiosInstance.post('/user/cart/getCartItems');
 
-        if (res.status === 200)
-        {
-            const { cartItems } = res.data;
-            console.log(cartItems);
-            return cartItems
-        }
-    }
-    catch (error) {
-        console.log(error);
+    if (res.status === 200)
+    {
+        const { cartItems } = res.data;
+        console.log(cartItems);
+        return cartItems
     }
 })
 
@@ -64,11 +59,15 @@ export const updateCart = createAsyncThunk('updateCart', async () => {
             if(res.status == 201)
             {
                 const res2 = await axiosInstance.post('/user/cart/getCartItems')
-                const {cartItems} = res2.data;
-                return cartItems;
+                if(res2.status === 200)
+                {
+                    return res2
+                }
             }
         }
     }
+
+    else return {}
 })
 
 
@@ -132,6 +131,7 @@ const cartSlice = createSlice({
 
         builder.addCase(getCartItems.rejected, (state, action) => {
             state.loading = false
+            state.cartItems = {}
             // state.error = action.payload.error
         })
 
@@ -141,14 +141,16 @@ const cartSlice = createSlice({
 
         builder.addCase(updateCart.fulfilled, (state, action) => {
             state.updatingCart = false
-            state.cartItems = action.payload
-            // state.productsByPrice = {
-            //     ...action.payload.productsByPrice
-            // }
+            if(action.payload.status === 200)
+            {
+                state.cartItems = action.payload.cartItems
+            }
+            else state.cartItems = {}
         })
 
         builder.addCase(updateCart.rejected, (state, action) => {
             state.updatingCart = false
+            state.cartItems = {}
             // state.error = action.payload.error
         })
     }

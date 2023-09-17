@@ -88,32 +88,41 @@ router.get('/product/:slug', async (req, res) => {
         const {slug} = req.params; 
 
         // finding category of the slug:
-        const category = await Category.findOne({slug: slug}).select('_id');
+        const category = await Category.findOne({slug: slug}).select('_id type');
 
         // if category is found then fetch all the products of the category:
         if(category)
         {
             const products = await Product.find({category: category._id})
 
-            if(products.length > 0)
+            if(category.type)
             {
-                // sending response of the products by filtering them according to the price range:
-                res.status(200).json({
-                    products,
-                    productsByPrice: {
-                        under5k: products.filter(product => product.price <= 5000),
-                        under10k: products.filter(product => product.price <= 10000 && product.price > 5000),
-                        under20k: products.filter(product => product.price <= 20000 && product.price > 10000),
-                        under30k: products.filter(product => product.price <= 30000 && product.price > 20000),
-                        under50k: products.filter(product => product.price <= 50000 && product.price > 30000),
-                        under100k: products.filter(product => product.price <= 100000 && product.price > 50000),
-                        above100k: products.filter(product => product.price > 100000),
-                    }
-                });
+                if(products.length > 0)
+                {
+                    // sending response of the products by filtering them according to the price range:
+                    res.status(200).json({
+                        products,
+                        productsByPrice: {
+                            under5k: products.filter(product => product.price <= 5000),
+                            under10k: products.filter(product => product.price <= 10000 && product.price > 5000),
+                            under20k: products.filter(product => product.price <= 20000 && product.price > 10000),
+                            under30k: products.filter(product => product.price <= 30000 && product.price > 20000),
+                            under50k: products.filter(product => product.price <= 50000 && product.price > 30000),
+                            under100k: products.filter(product => product.price <= 100000 && product.price > 50000),
+                            above100k: products.filter(product => product.price > 100000),
+                        }
+                    });
+                }
+                else
+                {
+                    res.status(200).json({error: "No! Products of the this category"})
+                }
             }
+
+            // when there is no type of the category, then we will not send products by price in response:
             else
             {
-                res.status(200).json({error: "No! Products of the this category"})
+                return res.status(200).json({products});
             }
         }
         else

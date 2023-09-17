@@ -14,14 +14,30 @@ router.post('/user/address/create', fetchuser, userMiddleware, async (req, res) 
         // if address exist in payload:
         if(payload.address)
         {
-            // finding specific user by id and adding another address in it:
-            const addAddress = await Address.findOneAndUpdate({user: req.user.id}, {
-                "$push": {
-                    "address": payload.address
-                }
-            }, {new: true, upsert: true})
+            // is a address already exist and request is for editing the address:
+            if(payload.address._id)
+            {
+                // find address by user and address id and then set it to payload address:
+                const addAddress = await Address.findOneAndUpdate({user: req.user.id, "address._id": payload.address._id}, {
+                    "$set": {
+                        "address.$": payload.address
+                    }
+                })
 
-            return res.status(201).json({addAddress});
+                return res.status(201).json({addAddress})
+            }
+
+            else
+            {
+                // if address is new address, finding specific user by id and adding another address in it:
+                const addAddress = await Address.findOneAndUpdate({user: req.user.id}, {
+                    "$push": {
+                        "address": payload.address
+                    }
+                }, {new: true, upsert: true})
+    
+                return res.status(201).json({addAddress});
+            }
         }
 
         else
