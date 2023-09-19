@@ -41,7 +41,32 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'completed', 'cancelled', 'refund'],
         required: true
-    }
+    },
+
+    paymentType: {
+        type: String,
+        enum: ['cod', 'card'],
+        required: true
+    },
+
+    orderStatus: [
+        {
+            type: {
+                type: String,
+                enum: ['ordered', 'packed', 'shipped', 'delivered'],
+                default: 'ordered'
+            },
+
+            date: { // date will be available when required like when order is shipped
+                type: Date,
+            },
+
+            isCompleted: {
+                type: Boolean,
+                default: false
+            }
+        }
+    ]
     
 },
 

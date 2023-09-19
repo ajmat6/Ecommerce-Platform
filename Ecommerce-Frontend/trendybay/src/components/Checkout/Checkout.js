@@ -130,7 +130,8 @@ const CheckoutPage = (props) => {
       addressId: deliveryAddress._id,
       totalAmount: totalPrice,
       items: items,
-      paymentStatus: 'pending'
+      paymentStatus: 'pending',
+      paymentType: "cod"
     }
 
     console.log(payload)

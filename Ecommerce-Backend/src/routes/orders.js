@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fetchuser = require('../middleware/fetchuser');
-const { userMiddleware } = require('../middleware/categoryMiddleware');
+const { userMiddleware, adminMiddleware } = require('../middleware/categoryMiddleware');
 const Orders = require('../models/Orders');
 const Cart = require('../models/Cart');
 
@@ -13,6 +13,30 @@ router.post('/user/addOrder', fetchuser, userMiddleware, async (req, res) => {
 
         // adding userId into the req body:
         req.body.userId = req.user.id;
+
+        // adding order status:
+        req.body.orderStatus = [
+            {
+                type: 'ordered',
+                date: new Date(),
+                isCompleted: true
+            },
+
+            {
+                type: 'packed',
+                isCompleted: false
+            },
+
+            {
+                type: 'shipped',
+                isCompleted: false
+            },
+
+            {
+                type: 'delivered',
+                isCompleted: false
+            }
+        ]
     
         const order = await new Orders(req.body);
     
@@ -45,6 +69,25 @@ router.get('/user/getOrders', fetchuser, userMiddleware, async (req, res) => {
         }
 
         else return res.status(400).json({error: "Some error occured"})
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+})
+
+router.post('/admin/updateorder', fetchuser, adminMiddleware, async (req, res) => {
+    try
+    {
+
+        const updatedOrder = await Orders.updateOne({_id: req.body.orderId, "orderStatus.type": req.body.type}, {
+            $set: {
+                "orderStatus.$": [{type: req.body.type, date: new Date(), isCompleted: true}]
+            }
+        })
+    
+        return res.status(201).json({updatedOrder})
     }
     catch (error)
     {

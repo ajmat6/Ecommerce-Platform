@@ -1,0 +1,12 @@
+.myCard {
+    width: 100%;
+    background: #ffff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px !important
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 20px;
+    border-bottom: 1px solid #cecece;
+}

@@ -4,6 +4,7 @@ const router = express.Router();
 // importing models:
 const category = require('../models/Category');
 const product = require('../models/Product');
+const Orders = require('../models/Orders');
 
 // function to get all the categories: Initially parentId will be null and then recursively all their children will be fetched:
 function getCategoriesFunction(categories, parentId = null)
@@ -50,10 +51,12 @@ router.post('/initialdata', async (req, res) => {
         const products = await product.find({})
                                               .select('_id name quantity price description slug productPic category') // selecting what to fetch (here only id name and category which is category id)
                                               .populate({path: 'category', select: '_id name'}) // will populate category details using category id
+        const orders = await Orders.find({})
     
         res.status(200).json({
             categoryList: getCategoriesFunction(categories),
-            products
+            products,
+            orders
         })
     }
     catch(error)
