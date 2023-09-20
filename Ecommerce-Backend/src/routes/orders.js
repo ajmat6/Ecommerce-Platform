@@ -4,6 +4,7 @@ const fetchuser = require('../middleware/fetchuser');
 const { userMiddleware, adminMiddleware } = require('../middleware/categoryMiddleware');
 const Orders = require('../models/Orders');
 const Cart = require('../models/Cart');
+const Address = require('../models/Address');
 
 router.post('/user/addOrder', fetchuser, userMiddleware, async (req, res) => {
     try
@@ -77,6 +78,52 @@ router.get('/user/getOrders', fetchuser, userMiddleware, async (req, res) => {
     }
 })
 
+
+// end point to fetch all details of a single order with its address details:
+router.get('/user/orderDetails', fetchuser, userMiddleware, async (req, res) => {
+    try
+    {
+        // finding the order:
+        // lean is used to address property to order below. Becoz without it, it is mongoose document and it does not allow to modify it. Using lean document is converted into plaibn js object and now you can add more properties to it.
+        const order = Orders.findOne({_id: req.body.orderId}).lean(); 
+
+        // if order is found, find the address of that order:
+        if(order)
+        {
+            const address = Address.findOne({user: req.user.id});
+
+            // if all the addresses of the that order user is found, find the address which the user has requested for delivery and adding it to order:
+            if(address)
+            {
+                // order.address = address.address.find((add) => add._id.toString() === order.addressId.toString());
+                order.address = address.address[0]
+            }
+
+            res.status(200).json({order});
+        }
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+})
+
+// API end point to fetch all customer orders details with their name:
+router.get('/admin/getCustomerOrders', fetchuser, adminMiddleware, async (req, res) => {
+    try
+    {
+        const orders = await Orders.find({}).populate('items.productId', 'name');
+        res.status(200).json({orders});
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+})
+
+// API end point to update the status of the order:
 router.post('/admin/updateorder', fetchuser, adminMiddleware, async (req, res) => {
     try
     {

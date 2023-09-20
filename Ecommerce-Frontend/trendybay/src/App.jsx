@@ -14,6 +14,7 @@ import CartPage from './components/Cart/CartPage';
 import { refreshAndGetCart, updateCart } from './reducers/cartReducer';
 import Checkout from './components/Checkout/Checkout';
 import Orders from './components/Orders/Orders';
+import OrderDetails from './components/OrderDetails/OrderDetails';
 
 function App(props) {
   const dispatch = useDispatch();
@@ -36,9 +37,10 @@ function App(props) {
       {/* <BrowserRouter> */}
         <Routes>
           <Route path='/' exact element={<HomePage />}/>
-          <Route path='/cart' exact element={<CartPage />}/>
-          <Route path='/checkout' exact element={<Checkout />}/>
-          <Route path='/account/orders' exact element={<Orders />}/>
+          <Route path='/cart'  element={<CartPage />}/>
+          <Route path='/checkout' element={<Checkout />}/>
+          <Route path='/account/orders' element={<Orders />}/>
+          <Route path='/orderDetails/:order_id' element={<OrderDetails />}/>
           <Route path='/:productSlug/:productId/p' element={<ProductDetails />}/>
           <Route path='/:slug' element={<ProductListPage />}/>
         </Routes>

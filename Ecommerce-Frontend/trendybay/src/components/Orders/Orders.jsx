@@ -8,6 +8,7 @@ import './orders.css'
 import { Breed } from '../MaterialUi/MaterialUi'
 import { IoIosArrowForward } from 'react-icons/io'
 import { BiRupee } from 'react-icons/bi'
+import { Link } from 'react-router-dom'
 
 const Orders = () => {
     const dispatch = useDispatch();
@@ -37,7 +38,11 @@ const Orders = () => {
                                 margin: '5px auto'
                             }}
                         >
-                            <div className='orderItemContainer'>
+                            <Link 
+                                className='orderItemContainer'
+                                to={`/orderDetails/${order._id}`}
+                                style={{textDecoration: 'none', color: 'black'}}
+                            >
                                 <div className='orderImgContainer'>
                                     <img className='orderImg'
                                         src={generatePublicURL(item.productId.productPic[0].img)}
@@ -51,7 +56,7 @@ const Orders = () => {
                                     </div>
                                     <div>{order.paymentStatus}</div>
                                 </div>
-                            </div>
+                            </Link>
                         </Card>
                     )
                 )

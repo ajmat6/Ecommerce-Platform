@@ -4,7 +4,8 @@ import axiosInstance from "../helpers/axios";
 const initialState = {
     loading: false,
     orders: [],
-    error: ''
+    error: '',
+    orderDetails: {}
 }
 
 export const addOrders = createAsyncThunk('addOrders', async (payload) => {
@@ -18,6 +19,12 @@ export const addOrders = createAsyncThunk('addOrders', async (payload) => {
 
 export const getOrders = createAsyncThunk('getOrders', async () => {
     const res = await axiosInstance.get('/user/getOrders');
+    console.log(res)
+    return res.data
+})
+
+export const orderDetail = createAsyncThunk('orderDetails', async (payload) => {
+    const res = await axiosInstance.get('/user/orderDetails', payload);
     console.log(res)
     return res.data
 })
@@ -53,6 +60,19 @@ const orderSlice = createSlice({
         })
 
         builder.addCase(getOrders.rejected, (state, action) => {
+            state.loading = false
+        })
+
+        builder.addCase(orderDetail.pending, (state) => {
+            state.loading = true
+        })
+
+        builder.addCase(orderDetail.fulfilled, (state, action) => {
+            state.loading = false
+            state.orderDetails = action.payload.order
+        })
+
+        builder.addCase(orderDetail.rejected, (state, action) => {
             state.loading = false
         })
     }

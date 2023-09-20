@@ -25,6 +25,12 @@ function Orders() {
     }
 
     dispatch(orderUpdate(payload))
+    .then((result) => {
+      if(result)
+      {
+        dispatch(getOrders())
+      }
+    })
   }
 
   return (
@@ -37,6 +43,7 @@ function Orders() {
               margin: '10px 0'
             }}
           >
+            {/* Div that will show order details */}
             <div
               style={{
                 display: "flex",
@@ -45,48 +52,73 @@ function Orders() {
                 alignItems: "center",
               }}
             >
-              <div className='orderTrack'>
-                <div className='orderStatus'>
-                  <div className='point'></div>
-                  <div className='orderInfo'>
-                    <div className='status '>Ordered</div>
-                    <div className='date'>Fri, 2020</div>
-                  </div>
-                </div>
+              <div> 
+                {/* To show names of the ordered items */}
+                <div className='title'>Items</div>
+                {
+                  order.items.map((item, index) => (
+                    <div key={index} className='value'>
+                      {item.productId.name}
+                    </div>
+                  ))
+                }
               </div>
-
-              <div className='orderTrack'>
-                <div className='orderStatus'>
-                  <div className='point'></div>
-                  <div className='orderInfo'>
-                    <div className='status '>Packed</div>
-                    <div className='date'>Sat, 2020</div>
-                  </div>
-                </div>
+              <div>
+                <span className='title'>TotalPrice</span>
+                <br />
+                <span className='value'>{order.totalAmount}</span>
               </div>
-
-              <div className='orderTrack'>
-                <div className='orderStatus'>
-                  <div className='point'></div>
-                  <div className='orderInfo'>
-                    <div className='status '>Shipped</div>
-                    <div className='date'>Sat, 2020</div>
-                  </div>
-                </div>
+              <div>
+                <span className='title'>Payment Type</span>
+                <br />
+                <span className='value'>{order.paymentType}</span>
               </div>
+              <div>
+                <span className='title'>Payment Status</span>
+                <br />
+                <span className='value'>{order.paymentStatus}</span>
+              </div>
+            </div>
 
-              <div className='orderTrack'>
-                <div className='orderStatus'>
-                  <div className='point'></div>
-                  <div className='orderInfo'>
-                    <div className='status '>Delivered</div>
-                    <div className='date'>Sun, 2020</div>
-                  </div>
-                </div>
+            <div
+              style={{
+                boxSizing: 'border-box',
+                padding: '100px',
+                display: 'flex',
+                alignItems: 'center',
+                marginLeft: '22px'
+              }}
+            >
+              {/* div that will show order track */}
+              <div 
+                className='orderTrack'
+              >
+                {
+                  order.orderStatus.map((status, index) => (
+                    <div
+                      className={`orderStatus ${status.isCompleted ? 'active' : ''}`}
+                    >
+                      <div
+                        className={`point ${status.isCompleted ? 'active' : ''}`}
+                      >
+
+                      </div>
+                      <div className='orderInfo'>
+                        <div className='status'>{status.type}</div>
+                        <div className='date'>{status.date}</div>
+                      </div>
+                    </div>
+                  ))
+                }       
               </div>
 
               {/* input to apply order action */}
-              <div>
+              <div
+                style={{
+                  padding: '0 30px',
+                  boxSizing: 'border-box'
+                }}
+              >
                 <select onChange={(e) => setType(e.target.value)}>
                   <option value="0">Select Order Status</option>
                   {
@@ -103,8 +135,9 @@ function Orders() {
                   }
                 </select>
               </div>
-              <div>
-                <button className='btn btn-primary' style={{ marginLeft: '10px' }} onClick={() => orderAction(order._id, order.userId)}>Confirm</button>
+              <div
+              >
+                <button className='btn btn-primary' onClick={() => orderAction(order._id, order.userId)}>Confirm</button>
               </div>
             </div>
           </Card>

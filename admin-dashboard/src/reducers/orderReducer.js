@@ -15,7 +15,7 @@ export const getOrders = createAsyncThunk('customerOrders', async () => {
 export const orderUpdate = createAsyncThunk('orderUpate', async (payload) => {
     const res = await axiosInstance.post('/admin/updateorder', payload);
     console.log(res)
-    // return res.data;
+    return true
 })
 
 const pageSlice = createSlice({

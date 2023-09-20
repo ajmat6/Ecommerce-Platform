@@ -52,6 +52,7 @@ router.post('/initialdata', async (req, res) => {
                                               .select('_id name quantity price description slug productPic category') // selecting what to fetch (here only id name and category which is category id)
                                               .populate({path: 'category', select: '_id name'}) // will populate category details using category id
         const orders = await Orders.find({})
+                                            .populate('items.productId', 'name')
     
         res.status(200).json({
             categoryList: getCategoriesFunction(categories),

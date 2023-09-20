@@ -19,8 +19,11 @@ const Header = (props) => {
   const auth = useSelector((state) => state.auth);
 
   const [loginModal, setLoginModal] = useState(false);
+  const [signupModal, setSignupModal] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   // function to dipatch signin action:
   const userLogin = () => {
@@ -101,7 +104,7 @@ const Header = (props) => {
           <a
             className="loginButton"
             onClick={() => {
-              // setSignup(false);
+              setSignupModal(false);
               setLoginModal(true);
             }}
           >
@@ -127,8 +130,8 @@ const Header = (props) => {
             <span>New Customer?</span>
             <a
               onClick={() => {
-                setLoginModal(true);
-                // setSignup(true);
+                setSignupModal(true);
+                setLoginModal(false)
               }}
               style={{ color: "#2874f0", cursor: 'pointer' }}
             >
@@ -142,6 +145,8 @@ const Header = (props) => {
 
   return (
     <div className="header">
+
+      {/* Login modal */}
       <Modal visible={loginModal} onClose={() => setLoginModal(false)}>
         <div className="authContainer">
           <div className="row">
@@ -189,6 +194,67 @@ const Header = (props) => {
           </div>
         </div>
       </Modal>
+
+      {/* sign up modal */}
+      <Modal visible={signupModal} onClose={() => setSignupModal(false)}>
+        <div className="authContainer">
+          <div className="row">
+            <div className="leftspace">
+              <h2>Sign Up</h2>
+              <p>Get access to your Orders, Wishlist and Recommendations</p>
+            </div>
+            <div className="rightspace">
+              <div className="loginInputContainer">
+                <MaterialInput
+                  type="text"
+                  label="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                <MaterialInput
+                  type="text"
+                  label="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+                <MaterialInput
+                  type="text"
+                  label="Email/Mobile Number"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <MaterialInput
+                  type="password"
+                  label="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <MaterialButton
+                  title="Sign Up"
+                  bgColor="#fb641b"
+                  textColor="#ffffff"
+                  style={{
+                    margin: "40px 0 20px 0",
+                  }}
+                  // onClick={userLogin}
+                />
+
+                <p style={{ textAlign: "center" }}>OR</p>
+                
+                <MaterialButton
+                  title="Request OTP"
+                  bgColor="#ffffff"
+                  textColor="#2874f0"
+                  style={{
+                    margin: "20px 0",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
       <div className="subHeader">
         {/* Logo  */}
         <div className="logo">

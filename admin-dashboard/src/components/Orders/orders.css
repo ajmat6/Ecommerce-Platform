@@ -11,6 +11,10 @@
     font-size: 15px;
 }
 
+.orderStatus .active {
+    background: #26A541;
+}
+
 .orderStatus:last-child {
     width: 0;
 }
@@ -32,4 +36,14 @@
     position: absolute;
     top: -26px;
     transform: translateX(-50%);
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.value {
+    font-size: 14px;
+    text-transform: capitalize;
 }
