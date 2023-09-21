@@ -24,7 +24,7 @@ export const getOrders = createAsyncThunk('getOrders', async () => {
 })
 
 export const orderDetail = createAsyncThunk('orderDetails', async (payload) => {
-    const res = await axiosInstance.get('/user/orderDetails', payload);
+    const res = await axiosInstance.post('/user/orderDetails', payload);
     console.log(res)
     return res.data
 })

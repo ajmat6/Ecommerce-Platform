@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose')
 const fetchuser = require('../middleware/fetchuser');
 const { userMiddleware, adminMiddleware } = require('../middleware/categoryMiddleware');
 const Orders = require('../models/Orders');
@@ -80,27 +81,29 @@ router.get('/user/getOrders', fetchuser, userMiddleware, async (req, res) => {
 
 
 // end point to fetch all details of a single order with its address details:
-router.get('/user/orderDetails', fetchuser, userMiddleware, async (req, res) => {
+router.post('/user/orderDetails', fetchuser, userMiddleware, async (req, res) => {
     try
     {
         // finding the order:
+        // Convert the req.body.orderId to an ObjectId
+        const orderId = new mongoose.Types.ObjectId(req.body.orderId);
+
         // lean is used to address property to order below. Becoz without it, it is mongoose document and it does not allow to modify it. Using lean document is converted into plaibn js object and now you can add more properties to it.
-        const order = Orders.findOne({_id: req.body.orderId}).lean(); 
+        const order = await Orders.findOne({_id: orderId}).lean()
 
         // if order is found, find the address of that order:
         if(order)
         {
-            const address = Address.findOne({user: req.user.id});
+            const address = await Address.findOne({user: req.user.id});
 
             // if all the addresses of the that order user is found, find the address which the user has requested for delivery and adding it to order:
             if(address)
             {
-                // order.address = address.address.find((add) => add._id.toString() === order.addressId.toString());
-                order.address = address.address[0]
+                order.address = address.address.find((add) => add._id.toString() === order.addressId.toString());
             }
 
-            res.status(200).json({order});
         }
+        res.status(200).json({order});
     }
     catch (error)
     {

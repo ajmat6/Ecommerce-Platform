@@ -34,6 +34,21 @@ export const addToCartDatabase = createAsyncThunk('addToCartDB', async (payload)
     }
 })
 
+export const removeCartItem = createAsyncThunk('removeCartItem', async (payload) => {
+    const res = axiosInstance.post('/user/cart/remove-item', payload);
+    console.log(res);
+    if(res.status === 201)
+    {
+        const res2 = await axiosInstance.post('/user/cart/getCartItems');
+
+        if (res.status === 200)
+        {
+            const { cartItems } = res.data;
+            return cartItems
+        }
+    }
+})
+
 export const updateCart = createAsyncThunk('updateCart', async () => {
     let cartItems = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : null
 
@@ -150,6 +165,21 @@ const cartSlice = createSlice({
 
         builder.addCase(updateCart.rejected, (state, action) => {
             state.updatingCart = false
+            state.cartItems = {}
+            // state.error = action.payload.error
+        })
+
+        builder.addCase(removeCartItem.pending, (state) => {
+            state.loading = true
+        })
+
+        builder.addCase(removeCartItem.fulfilled, (state, action) => {
+            state.loading = false
+            state.cartItems = action.payload
+        })
+
+        builder.addCase(removeCartItem.rejected, (state, action) => {
+            state.loading = false
             state.cartItems = {}
             // state.error = action.payload.error
         })

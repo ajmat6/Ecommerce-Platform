@@ -7,20 +7,24 @@ import { generatePublicURL } from "../../../urlConfig";
 import {Link} from 'react-router-dom'
 import './productStore.css'
 import Card from "../../../UI/Card/Card";
+import Rating from "../../Rating/Rating";
+import Price from "../../Price/Price";
 
 const ProductStore = () => {
     const dispatch = useDispatch();
     const allProducts = useSelector((state) => state.productBySlug);
 
-    const [priceRange, setpriceRange] = useState({
-        under5k: 5000,
-        under10k: 10000,
-        under20k: 20000,
-        under30k: 30000,
-        under50k: 50000,
-        under100k: 100000,
-        above100k: 100000,
-    })
+    // const [priceRange, setpriceRange] = useState({
+    //     under5k: 5000,
+    //     under10k: 10000,
+    //     under20k: 20000,
+    //     under30k: 30000,
+    //     under50k: 50000,
+    //     under100k: 100000,
+    //    above100k: 100000,
+    // })
+
+    const priceRange = allProducts.priceRange;
 
     // useParams hook is used to identify last parameter in the routes -> eg: /product/realme , then useParams will give realme
     const slug = useParams();
@@ -45,7 +49,7 @@ const ProductStore = () => {
                     return (
                         <Card
                             // Passing headerLeft and headerRight and style as props to Card component
-                            headerLeft = {`${categoryName} Mobile under ${priceRange[key]}`}
+                            headerLeft = {`${categoryName} Mobile ${key === 'above100k' ? 'above' : 'under'} ${priceRange[key]}`}
                             headerRight = {<button className="btn btn-primary">View All</button>}
                             style = {{width: 'calc(100% - 40px)', margin: '20px'}}
                         >
@@ -71,12 +75,22 @@ const ProductStore = () => {
                                             </div>
                                             <div className="product-info">
                                                 <div>{product.name}</div>
-                                                <div>
+                                                <div style={{marginTop: '5px'}}>
                                                     {/* nbsp stands for non breaking space */}
-                                                    <span>4.3</span> &nbsp;
-                                                    <span>3334</span>
+                                                    <Rating value = {4.3}/>
+                                                    <span
+                                                        style={{
+                                                            color: '#777',
+                                                            fontWeight: '500',
+                                                            fontSize: '14px',
+                                                            marginLeft: '10px'
+                                                        }}
+                                                    >
+                                                        (3334)
+                                                    </span>
                                                 </div>
-                                                <div className="product-price">{product.price}</div>
+                                                {/* <div className="product-price">{product.price}</div> */}
+                                                <Price style = {{marginTop: '100px'}} value = {product.price}/>
                                             </div>
                                         </Link>
                                     ))

@@ -10,13 +10,15 @@ import {
   DropdownMenu,
 } from "../MaterialUi/MaterialUi";
 import { useDispatch, useSelector } from "react-redux";
-import { authCredentials, logout, signoutAction } from "../../reducers/userAuthReducer";
+import { authCredentials, logout, signUpCredentials, signoutAction } from "../../reducers/userAuthReducer";
 import { resetCart } from "../../reducers/cartReducer";
 import { Link } from "react-router-dom";
+import Cart from "../CartButton/CartButton";
 
 const Header = (props) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
+  const cart = useSelector((state) => state.cart)
 
   const [loginModal, setLoginModal] = useState(false);
   const [signupModal, setSignupModal] = useState(false);
@@ -28,36 +30,52 @@ const Header = (props) => {
   // function to dipatch signin action:
   const userLogin = () => {
     dispatch(authCredentials({ email, password }));
-  }
 
+    setEmail('');
+    setPassword('');
+  }
+  
   // function to dispatch logout action:
   const userLogOut = () => {
     dispatch(signoutAction());
     dispatch(resetCart());
   }
-
+  
   useEffect(() => {
     if(auth.authenticate)
     {
       setLoginModal(false)
+      setSignupModal(false)
     }
   }, [auth.authenticate])
-
+  
   const capitalize = (fullname) => {
     const fullNameArray = fullname.split(" ");
     const capitalizedName = fullNameArray.map((name, index) => 
-       name[0].toUpperCase + name.slice(1)
+    name[0].toUpperCase + name.slice(1)
     )
-
+    
     return capitalizedName;
   }
+  
+  const userSignUp = () => {
+    const user = {firstName, lastName, email, password};
 
+    if(firstName === "" || lastName === "" || email === "" || password === "") return;
+
+    dispatch(signUpCredentials(user));
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setPassword('');
+  }
+  
   // when user is logged in, show this drop down menu:
   const renderLoggedInMenu = () => {
     return (
       <DropdownMenu
-        menu={
-          <a className="fullName">
+      menu={
+        <a className="fullName">
             {/* {capitalize(auth.userInfo.fullname)} */}
             {auth.userInfo.fullname}
           </a>
@@ -78,20 +96,6 @@ const Header = (props) => {
           { label: "Notifications", href: "", icon: null },
           { label: "Log Out", href: "", icon: null, onClick: userLogOut },
         ]}
-        firstMenu={
-          <div className="firstmenu">
-            <span>New Customer?</span>
-            <a
-              onClick={() => {
-                setLoginModal(true);
-                // setSignup(true);
-              }}
-              style={{ color: "#2874f0", cursor: 'pointer' }}
-            >
-              Sign Up
-            </a>
-          </div>
-        }
       />
     )
   }
@@ -200,7 +204,7 @@ const Header = (props) => {
         <div className="authContainer">
           <div className="row">
             <div className="leftspace">
-              <h2>Sign Up</h2>
+              <h2>Looks like you're new here!</h2>
               <p>Get access to your Orders, Wishlist and Recommendations</p>
             </div>
             <div className="rightspace">
@@ -236,10 +240,10 @@ const Header = (props) => {
                   style={{
                     margin: "40px 0 20px 0",
                   }}
-                  // onClick={userLogin}
+                  onClick={userSignUp}
                 />
 
-                <p style={{ textAlign: "center" }}>OR</p>
+                {/* <p style={{ textAlign: "center" }}>OR</p>
                 
                 <MaterialButton
                   title="Request OTP"
@@ -248,7 +252,7 @@ const Header = (props) => {
                   style={{
                     margin: "20px 0",
                   }}
-                />
+                /> */}
               </div>
             </div>
           </div>
@@ -315,7 +319,8 @@ const Header = (props) => {
           />
           <div>
             <Link className="cart" to={'/cart'}>
-              <span style={{ fontSize: '23px', marginBottom: '4px', marginRight: '-6px' }}><IoIosCart /></span>
+              {/* <span style={{ fontSize: '23px', marginBottom: '4px', marginRight: '-6px' }}><IoIosCart /></span> */}
+              <Cart count = {Object.keys(cart.cartItems || {}).length}/>
               <span style={{ margin: "0 10px" }}>Cart</span>
             </Link>
           </div>

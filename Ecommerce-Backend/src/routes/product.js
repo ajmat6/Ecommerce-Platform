@@ -102,6 +102,15 @@ router.get('/product/:slug', async (req, res) => {
                     // sending response of the products by filtering them according to the price range:
                     res.status(200).json({
                         products,
+                        priceRange: {
+                            under5k: 5000,
+                            under10k: 10000,
+                            under20k: 20000,
+                            under30k: 30000,
+                            under50k: 50000,
+                            under100k: 100000,
+                            above100k: 100000,
+                        },
                         productsByPrice: {
                             under5k: products.filter(product => product.price <= 5000),
                             under10k: products.filter(product => product.price <= 10000 && product.price > 5000),

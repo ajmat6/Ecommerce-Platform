@@ -12,7 +12,8 @@ const initialState = {
         under50k: [],
         under100k: [],
         above100k: [],
-    }
+    },
+    priceRange: {}
 }
 
 // async action to fetch product by slug:
@@ -41,6 +42,7 @@ const productBySlugSlice = createSlice({
             state.productsByPrice = {
                 ...action.payload.productsByPrice
             }
+            state.priceRange = {...action.payload.priceRange}
         })
 
         builder.addCase(productBySlug.rejected, (state, action) => {

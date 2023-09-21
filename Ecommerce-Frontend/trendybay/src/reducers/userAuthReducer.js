@@ -50,15 +50,7 @@ export const signUpCredentials = createAsyncThunk('signupCredentials', async (us
         // extracting token and user from the response:
         const {token, user} = res.data
         localStorage.setItem('token', token) // storing token in localStorage
-        // localStorage.setItem('user', JSON.stringify(user)); // storing user in localStorage in the form of string 
-        console.log("Localstorage me token bhej diya bhai")
-    }
-    else
-    {
-        if(res.status === 400)
-        {
-            console.log("Axios fail ho gaya bhai!");
-        }
+        localStorage.setItem('user', JSON.stringify(user)); // storing user in localStorage in the form of string 
     }
 
     return res.data;
@@ -138,6 +130,7 @@ const userAuthSlice = createSlice({
 
         builder.addCase(signUpCredentials.pending, (state) => {
             state.authenticating = true
+            state.authenticate = false
         })
 
         builder.addCase(signUpCredentials.fulfilled, (state, action) => {

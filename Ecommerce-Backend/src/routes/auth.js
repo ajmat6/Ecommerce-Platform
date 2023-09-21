@@ -58,7 +58,17 @@ router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res
 
         const authToken = jwt.sign(data, process.env.JWT_SECRET);
 
-        res.status(201).json({authToken})
+        res.status(201).json({
+            token: authToken,
+            user: {
+                firstName,
+                lastName,
+                email,
+                role: 'user',
+                fullname: _user.fullname,
+                _id: _user._id
+            }
+        })
     }
     
     catch (error) {

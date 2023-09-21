@@ -19,7 +19,7 @@ const CartPage = (props) => {
     const navigate = useNavigate();
 
     // state to manage cartItems: cartItems is assigned cart.cartItems which is initially empty and it will not show items. So after addToCart Item is dispatched we have to set the cartItem state
-    const [cartItems, setCartItems] = useState(cart.cartItems || {});
+    const [cartItems, setCartItems] = useState(cart.cartItems);
 
     // this useeffect is dependent on the cart.cartItems details and it will change it will chage the state of cartItems useState
     useEffect(() => {

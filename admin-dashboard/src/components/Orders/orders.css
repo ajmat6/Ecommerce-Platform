@@ -8,10 +8,10 @@
     height: 5px;
     background: #777;
     position: relative;
-    font-size: 15px;
+    font-size: 14px;
 }
 
-.orderStatus .active {
+.orderStatus.active {
     background: #26A541;
 }
 
@@ -24,8 +24,12 @@
     height: 15px;
     position: absolute;
     border-radius: 8px;
-    top: -5px;
     background-color: #777;
+    top: -5px;
+}
+
+.orderStatus .point.active {
+    background-color: #26A541;
 }
 
 .orderInfo {
@@ -46,4 +50,9 @@
 .value {
     font-size: 14px;
     text-transform: capitalize;
+}
+
+.date {
+    height: 21px;
+    width: 66px;
 }

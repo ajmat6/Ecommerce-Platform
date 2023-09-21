@@ -158,6 +158,37 @@ router.post('/user/cart/getCartItems', fetchuser, userMiddleware, async (req, re
     }
 })
 
+// endpoint to remove an item from the cart:
+router.post('/user/cart/remove-item', fetchuser, userMiddleware, async (req, res) => {
+    try
+    {
+        const productId = req.body.productId;
+
+        if(productId)
+        {
+            const updateCart = await Cart.updateOne({useId: req.user.id}, {
+                $pull: {
+                    cartItems: {
+                        productId: productId
+                    }
+                }
+            })
+
+            res.status(202).json({updateCart});
+        }
+
+        else
+        {
+            return res.status(400).json({error: "Item not found"});
+        }
+    }
+    catch(error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");
+    }
+})
+
 
 
 module.exports = router;

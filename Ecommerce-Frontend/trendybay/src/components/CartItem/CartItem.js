@@ -1,9 +1,13 @@
 import React, {useState} from 'react'
 import { generatePublicURL } from '../../urlConfig';
 import './cartItem.css'
+import { useDispatch } from 'react-redux';
+import { removeCartItem } from '../../reducers/cartReducer';
 
 const CartItem = (props) => {
     const [quantity, setQuantity] = useState(props.cartItem.quantity);
+
+    const dispatch = useDispatch();
 
     // extracting cart item details passed as props
     const {_id, name, price, img} = props.cartItem;
@@ -18,6 +22,16 @@ const CartItem = (props) => {
         if(quantity == 1) return; // if quantity is one, you cannot decrease it more
         setQuantity(quantity - 1);
         props.onQuantityDec(_id, quantity - 1); // passing argument to props function
+    }
+
+    const removeItem = (productId) => {
+        const payload = {
+            productId
+        }
+
+        console.log(payload)
+
+        dispatch(removeCartItem(payload))
     }
 
     return (
@@ -46,7 +60,7 @@ const CartItem = (props) => {
                 </div>
 
                 <button className='cartActionBtn'>Save for later</button>
-                <button className='cartActionBtn'>Remove</button>
+                <button className='cartActionBtn' onClick={() => removeItem(_id)}>Remove</button>
             </div>
         </div>
     )

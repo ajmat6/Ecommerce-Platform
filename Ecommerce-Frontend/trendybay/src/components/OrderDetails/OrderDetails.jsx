@@ -14,11 +14,13 @@ const OrderDetails = () => {
 
     const orderId = location.pathname.split('/')[2] // finding order id from the url
     // console.log(orderId, "orderId")
-
+    
     useEffect(() => {
+        console.log(orderId)
         const payload = {
             orderId
         }
+        // console.log(payload)
 
         dispatch(orderDetail(payload));
     }, [])

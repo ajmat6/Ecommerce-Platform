@@ -33,6 +33,15 @@ function Orders() {
     })
   }
 
+  // function to format the date:
+  const formatDate = (date) => {
+    if(date)
+    {
+      const d = new Date(date);
+      return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`
+    }
+  }
+
   return (
     <Layout sidebar="true">
       {
@@ -86,7 +95,7 @@ function Orders() {
                 padding: '100px',
                 display: 'flex',
                 alignItems: 'center',
-                marginLeft: '22px'
+                marginLeft: '-20px'
               }}
             >
               {/* div that will show order track */}
@@ -104,8 +113,8 @@ function Orders() {
 
                       </div>
                       <div className='orderInfo'>
-                        <div className='status'>{status.type}</div>
-                        <div className='date'>{status.date}</div>
+                        <div className='status' style={{marginTop: '-5px'}}>{status.type}</div>
+                        <div className='date'>{formatDate(status.date)}</div>
                       </div>
                     </div>
                   ))
@@ -115,8 +124,9 @@ function Orders() {
               {/* input to apply order action */}
               <div
                 style={{
-                  padding: '0 30px',
-                  boxSizing: 'border-box'
+                  padding: '0 20px',
+                  boxSizing: 'border-box',
+                  marginLeft: '250px'
                 }}
               >
                 <select onChange={(e) => setType(e.target.value)}>
