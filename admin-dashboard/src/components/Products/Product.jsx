@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../Layout/Layout";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, getallProducts } from "../../reducers/productReducer";
+import { addProduct, getallProducts, removeProduct } from "../../reducers/productReducer";
 import Modal from "../Modal/Modal";
 import './product.css'
 import { generatePublicURL } from "../../urlConfig";
@@ -19,6 +19,10 @@ function Product() {
   const [description, setdescription] = useState("");
   const [category, setcategory] = useState("");
   const [productPictures, setproductPictures] = useState([]);
+
+  useEffect(() => {
+    dispatch(getallProducts());
+  }, [])
 
   // creating a list of categories:
   const createCategoryList = (categories, option = []) => {
@@ -61,6 +65,17 @@ function Product() {
     setproductPictures([]);
     setcategory("");
   };
+
+  const removeItem = (productId) => {
+    if(productId)
+    {
+      const payload = {
+        productId
+      }
+
+      dispatch(removeProduct(payload));
+    }
+  }
 
   // function to handle array of product pics:
   const handleProductPics = (e) => {
@@ -156,22 +171,27 @@ function Product() {
             <th scope="col">Quantity</th>
             <th scope="col">Price</th>
             <th scope="col">Category</th>
-            {/* <th scope="col">Product Pictures</th> */}
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
           {
             myProducts.products.length > 0 ?
             myProducts.products.map((product) => 
-              <tr style={{cursor: 'pointer'}} key={product._id} data-bs-toggle="modal"
-              data-bs-target={`#productModal-${product._id}`} >
+              <tr >
                 <th scope="row">1</th>
                 <td>{product.name}</td>
                 <td>{product.quantity}</td>
                 <td>{product.price}</td>
                 {/* <td>{product.description}</td> */}
                 <td>{product.category ? product.category.name : <div>--</div>}</td>
-                {/* <td>--</td> */}
+                <td>
+                  <span>
+                    <button className="btn btn-primary" style={{cursor: 'pointer', margin: '4px 0'}} key={product._id} data-bs-toggle="modal"
+                data-bs-target={`#productModal-${product._id}`}>View</button>
+                    <button className="btn btn-primary" style={{marginLeft: '3px'}} onClick={() => removeItem(product._id)}>Delete</button>
+                  </span>
+                </td>
               </tr>
             ) : null
           }

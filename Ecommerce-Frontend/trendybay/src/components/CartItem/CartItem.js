@@ -24,13 +24,12 @@ const CartItem = (props) => {
         props.onQuantityDec(_id, quantity - 1); // passing argument to props function
     }
 
-    const removeItem = (productId) => {
+    const removeItem = () => {
         const payload = {
-            productId
+            productId: _id
         }
 
         console.log(payload)
-
         dispatch(removeCartItem(payload))
     }
 
@@ -60,7 +59,7 @@ const CartItem = (props) => {
                 </div>
 
                 <button className='cartActionBtn'>Save for later</button>
-                <button className='cartActionBtn' onClick={() => removeItem(_id)}>Remove</button>
+                <button className='cartActionBtn' onClick={removeItem}>Remove</button>
             </div>
         </div>
     )

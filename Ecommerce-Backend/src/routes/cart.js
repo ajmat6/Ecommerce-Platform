@@ -3,6 +3,7 @@ const router = express.Router();
 const Cart = require('../models/Cart');
 const fetchuser = require('../middleware/fetchuser'); // to check for signed in or not
 const { userMiddleware } = require('../middleware/categoryMiddleware');
+const { default: mongoose } = require('mongoose');
 
 // function used to form promise array:
 function  runUpdate(condition, updatedData)
@@ -162,13 +163,14 @@ router.post('/user/cart/getCartItems', fetchuser, userMiddleware, async (req, re
 router.post('/user/cart/remove-item', fetchuser, userMiddleware, async (req, res) => {
     try
     {
+        // const productId = new mongoose.Types.ObjectId(req.body.productId);
         const productId = req.body.productId;
 
         if(productId)
         {
-            const updateCart = await Cart.updateOne({useId: req.user.id}, {
+            const updateCart = await Cart.updateOne({userId: req.user.id}, {
                 $pull: {
-                    cartItems: {
+                    "cartItems": {
                         productId: productId
                     }
                 }

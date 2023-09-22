@@ -35,15 +35,15 @@ export const addToCartDatabase = createAsyncThunk('addToCartDB', async (payload)
 })
 
 export const removeCartItem = createAsyncThunk('removeCartItem', async (payload) => {
-    const res = axiosInstance.post('/user/cart/remove-item', payload);
-    console.log(res);
-    if(res.status === 201)
+    const res = await axiosInstance.post('/user/cart/remove-item', payload);
+    console.log(res, 'remove');
+    if(res.status === 202)
     {
         const res2 = await axiosInstance.post('/user/cart/getCartItems');
 
-        if (res.status === 200)
+        if (res2.status === 200)
         {
-            const { cartItems } = res.data;
+            const { cartItems } = res2.data;
             return cartItems
         }
     }
@@ -180,7 +180,7 @@ const cartSlice = createSlice({
 
         builder.addCase(removeCartItem.rejected, (state, action) => {
             state.loading = false
-            state.cartItems = {}
+            // state.cartItems = {}
             // state.error = action.payload.error
         })
     }

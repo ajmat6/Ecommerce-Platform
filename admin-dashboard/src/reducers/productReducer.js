@@ -22,6 +22,16 @@ export const getallProducts = createAsyncThunk('getInitialData', async () => {
     return res;
 })
 
+export const removeProduct = createAsyncThunk('removeProduct', async (payload) => {
+    const res = await axiosInstance.delete(`/product/delete/${payload.productId}`);
+
+    if(res.status === 202)
+    {
+        const res2 = await axiosInstance.post('/initialdata')
+        return res2;
+    }
+})
+
 const productSlice = createSlice({
     name: 'prduct',
     initialState: initialState,
@@ -44,6 +54,24 @@ const productSlice = createSlice({
         })
 
         builder.addCase(getallProducts.rejected, (state, aciton) => {
+            state.loading = false
+            state.error = "Products fetching failed"
+        })
+
+        builder.addCase(removeProduct.pending, (state) => {
+            state.loading = true
+        })
+
+        builder.addCase(removeProduct.fulfilled, (state, action) => {
+            state.loading = false
+
+            if(action.payload.status === 200)
+            {
+                state.products = action.payload.data.products
+            }
+        })
+
+        builder.addCase(removeProduct.rejected, (state, aciton) => {
             state.loading = false
             state.error = "Products fetching failed"
         })

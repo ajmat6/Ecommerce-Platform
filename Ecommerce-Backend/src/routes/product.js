@@ -174,5 +174,30 @@ router.get('/product/productDetails/:productId', async (req, res) => {
 
 })
 
+// api end point to delete a product:
+router.delete('/product/delete/:productId', fetchuser, adminMiddleware, async (req, res) => {
+    try
+    {
+        const productId = req.params.productId;
+
+        if(productId)
+        {
+            // find product by its id and delete it:
+            const deleteProduct = await Product.deleteOne({_id: productId});
+            
+            res.status(202).json({deleteProduct});
+        }
+
+        else return res.status(400).json({error: "Params Required"})
+    
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+
+})
+
 
 module.exports = router;
