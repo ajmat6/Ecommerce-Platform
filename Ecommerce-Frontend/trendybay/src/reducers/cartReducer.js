@@ -26,7 +26,7 @@ export const getCartItems = createAsyncThunk('getCartItems', async () => {
 })
 
 export const addToCartDatabase = createAsyncThunk('addToCartDB', async (payload) => {
-    const res = axiosInstance.post('/user/cart/add-to-cart', payload);
+    const res = await axiosInstance.post('/user/cart/add-to-cart', payload);
     console.log(res);
     if(res.status === 201)
     {

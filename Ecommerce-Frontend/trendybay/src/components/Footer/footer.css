@@ -1,0 +1,32 @@
+.footerContainer {
+    padding: 40px 60px;
+    font-size: 12px;
+}
+
+.footerHeading {
+    color: #878787;
+    margin-bottom: 12px;
+}
+
+.footerItem {
+    margin: 5px 0;
+}
+
+.footerDowns {
+    border-top: 1px solid #454d5e;
+    margin: -2px 0;
+    padding: 30px 60px;
+}
+
+.item {
+    margin-right: 90px;
+}
+
+.link {
+    text-decoration: none;
+    color: white;
+}
+
+.link:hover {
+    text-decoration: underline;
+}

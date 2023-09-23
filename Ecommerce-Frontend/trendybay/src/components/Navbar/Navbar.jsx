@@ -81,7 +81,7 @@ const Header = (props) => {
           </a>
         }
         menus={[
-          { label: "My Profile", href: "", icon: null },
+          { label: "My Profile", href: "/account", icon: null },
           { label: "Flipkart Plus Zone", href: "", icon: null },
           { label: "SuperCoin Zone", href: "", icon: null },
           {

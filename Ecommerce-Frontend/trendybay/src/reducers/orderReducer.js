@@ -5,15 +5,18 @@ const initialState = {
     loading: false,
     orders: [],
     error: '',
-    orderDetails: {}
+    orderDetails: {},
+    orderId: null
 }
 
 export const addOrders = createAsyncThunk('addOrders', async (payload) => {
     const res = await axiosInstance.post('/user/addOrder', payload)
+    console.log(res)
 
     if(res.status === 201)
     {
-        return true
+        return res.data;
+        // return true
     }
 })
 
@@ -23,7 +26,7 @@ export const getOrders = createAsyncThunk('getOrders', async () => {
     return res.data
 })
 
-export const orderDetail = createAsyncThunk('orderDetails', async (payload) => {
+export const orderDetail = createAsyncThunk('orderDetail', async (payload) => {
     const res = await axiosInstance.post('/user/orderDetails', payload);
     console.log(res)
     return res.data
@@ -43,7 +46,7 @@ const orderSlice = createSlice({
 
         builder.addCase(addOrders.fulfilled, (state, action) => {
             state.loading = false
-            
+            state.orderId = action.payload.order._id
         })
 
         builder.addCase(addOrders.rejected, (state, action) => {

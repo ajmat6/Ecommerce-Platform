@@ -14,6 +14,7 @@ import { getUserAddress } from "../../reducers/addressReducer";
 import AddressForm from "./AddressForm";
 import { getCartItems, resetCart } from "../../reducers/cartReducer";
 import { addOrders } from "../../reducers/orderReducer";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutStep = (props) => {
   return (
@@ -37,7 +38,10 @@ const CheckoutPage = (props) => {
   const userAddress = useSelector((state) => state.address);
   const auth = useSelector((state) => state.auth);
   const cart = useSelector((state) => state.cart);
+  const order = useSelector((state) => state.orders);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   // state to manage show and hide of new address form
   const [newAddress, setNewAddress] = useState(false);
@@ -137,28 +141,38 @@ const CheckoutPage = (props) => {
     console.log(payload)
     dispatch(addOrders(payload))
     .then(() => {
-      dispatch(resetCart());
+      dispatch(resetCart())
     })
     setFinalConfirm(true)
   }
 
+  useEffect(() => {
+    if(finalConfirm && order.orderId)
+    {
+      navigate(`/orderDetails/${order.orderId}`);
+    }
+  }, [order.orderId])
+
   // if all the steps till final order confirmation is done, then show this and return:
   if (finalConfirm) {
-    return (
-      <Layout>
-        <Card
-          style = {{
-            alignItems: 'center',
-            padding: '20px'
-          }}
-        >
-          <div>
-            Thank You! for shopping, C
-          </div>
-        </Card>
-      </Layout>
-    )
+    // return (
+    //   <Layout>
+    //     <Card
+    //       style = {{
+    //         alignItems: 'center',
+    //         padding: '20px'
+    //       }}
+    //     >
+    //       <div>
+    //         Thank You! for shopping, C
+    //       </div>
+    //     </Card>
+    //   </Layout>
+    // )
+
+    // navigate('/orders')
   }
+
   return (
     <Layout>
       <div className="cartContainer" style={{ alignItems: "flex-start" }}>

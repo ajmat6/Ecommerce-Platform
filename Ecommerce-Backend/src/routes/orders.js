@@ -89,7 +89,7 @@ router.post('/user/orderDetails', fetchuser, userMiddleware, async (req, res) =>
         const orderId = new mongoose.Types.ObjectId(req.body.orderId);
 
         // lean is used to address property to order below. Becoz without it, it is mongoose document and it does not allow to modify it. Using lean document is converted into plaibn js object and now you can add more properties to it.
-        const order = await Orders.findOne({_id: orderId}).lean()
+        const order = await Orders.findOne({_id: orderId}).populate('items.productId', 'name productPic').lean()
 
         // if order is found, find the address of that order:
         if(order)
