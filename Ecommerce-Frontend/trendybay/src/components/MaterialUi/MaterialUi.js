@@ -91,6 +91,7 @@ const Modal = (props) => {
             backgroundColor: props.bgColor,
             color: props.textColor,
             fontSize: props.fontSize,
+            height: props.height
           }}
           onClick={onClick}
         >

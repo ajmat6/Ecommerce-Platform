@@ -291,6 +291,7 @@ const CheckoutPage = (props) => {
           {
             newAddress === true ?
               <AddressForm
+                title = {"ADD ADDRESS"}
                 withoutLayout={true}
                 onSubmitForm={onAddressSubmit}
                 onCancel={() => { }}

@@ -219,7 +219,7 @@ const AddressForm = (props) => {
         </div>
         <div className="flexRow">
           <MaterialButton
-            title="SAVE AND DELIVER HERE"
+            title= {props.title ? props.title : "SAVE AND DELIVER HERE"}
             onClick={onAddressSubmit}
             style={{
               width: "250px",

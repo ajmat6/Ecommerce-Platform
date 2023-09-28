@@ -1,0 +1,136 @@
+.container {
+    width: 100%;
+    margin: 15px 188px;
+}
+
+.left {
+    margin-right: 15px;
+}
+
+.arrow {
+    rotate: 270deg;
+    color: #878787;
+    margin-bottom: 1px;
+    
+}
+
+.orders {
+    margin-left: 15px;
+    color: #878787;
+    font-size: 16px;
+}
+
+.others {
+    margin-left: 15px;
+    color: #878787;
+    font-size: 16px;
+}
+
+.orders:hover {
+    color: #2874f0;
+}
+
+.section {
+    /* margin-bottom: 10px; */
+    border-top: 1px solid #878787;
+    padding: 16px;
+}
+
+/* .items {
+    margin-left: 30px;
+    padding-bottom: 0;
+    color: #878787;
+    font-size: 15px;
+} */
+
+.itemNew {
+    margin-right: 0;
+    padding: 12px 5px 12px 66px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.itemNew:hover {
+    color: #2874f0;
+    background: #e3e6eb;
+}
+
+.allLinks {
+    text-decoration: none;
+    color: black;
+    display: block;
+}
+
+.rightContainer {
+    padding: 24px 32px 0;
+}
+
+.edit {
+    font-weight: 500;
+    color: #2874f0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.inputContainer {
+    width: 100%;
+    padding-bottom: 2px;
+}
+
+.inputField {
+    height: 50px;
+    padding: 20px 16px 0 13px;
+    border: 1px solid #878787;
+    width: 100%;
+    
+}
+
+.labell {
+    transform: translateY(-15%) scale(.815);
+    padding: 10px 0 0 9px;
+    font-size: 14px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #878787;
+}
+
+.checkoutStep {
+    box-sizing: border-box;
+    background: #fff;
+    box-shadow: 0 1px 1px 0px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+}
+
+.checkoutHeader {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 20px;
+}
+
+.checkoutHeader .stepNumber {
+    display: inline-block;
+    text-align: center;
+    background: #eee;
+    color: #2874f0;
+    border-radius: 3px;
+    font-size: 12px;
+    box-sizing: border-box;
+    padding: 3px 7px;
+}
+
+.checkoutHeader.active .stepNumber {
+    background: #fff;
+}
+
+.stepTitle {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #878787;
+    margin-left: 15px;
+}
+
+.checkoutHeader.active .stepTitle {
+    color: #fff;
+}
