@@ -67,7 +67,7 @@ const addressSchema = new mongoose.Schema({
         enum: ['home', 'work'],
     }
 
-}, {timestamps: true})
+})
 
 const userAddressSchema = new mongoose.Schema({
     user: {

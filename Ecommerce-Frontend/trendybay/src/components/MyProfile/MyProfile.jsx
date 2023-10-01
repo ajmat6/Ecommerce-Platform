@@ -47,6 +47,10 @@ const MyProfile = () => {
         auth.authenticate && dispatch(getUserAddress());
     }, [auth.authenticate]);
 
+    // useEffect(() => {
+    //     auth.authenticate && dispatch(getUserAddress())
+    // }, [userAddress.allAddress])
+
     useEffect(() => {
         // to select a particular address and then only to show the edit and delivery here buttun:
         // keeping current single address object same and adding two more properties to it
@@ -399,9 +403,6 @@ const MyProfile = () => {
                                     }
 
                                     <CheckoutStep
-                                        // stepNumber={"2"}
-                                        // title={"DELIVERY ADDRESS"}
-                                        // active={!confirmAddress && auth.authenticate}
                                         body={
                                             <>
                                                 {

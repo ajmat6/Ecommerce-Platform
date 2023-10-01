@@ -42,6 +42,8 @@ const AddressForm = (props) => {
     initialData ? initialData.addressType : ''
   );
 
+  console.log("address type ", addressType)
+
   const dispatch = useDispatch();
   const userAddress = useSelector((state) => state.address);
   const [submitFlag, setSubmitFlag] = useState(false);
@@ -71,7 +73,7 @@ const AddressForm = (props) => {
         }
       }
     };
-    console.log(form);
+    console.log(form, "form address");
 
     // if address is for edit, sending also with payload:
     if(id)
@@ -79,8 +81,11 @@ const AddressForm = (props) => {
       form.payload.address._id = id
     }
 
-    dispatch(createAddress(form));
-    setSubmitFlag(true)
+    dispatch(createAddress(form))
+    .then(() => {
+      setSubmitFlag(true)
+      console.log("Ho gaya")
+    })
   };
 
   useEffect(() => {
@@ -195,25 +200,26 @@ const AddressForm = (props) => {
           </div>
         </div>
         <div>
-          <label>Address Type</label>
-          <div className="flexRow">
+          <label style={{marginTop: '12px'}}>Address Type</label>
+          <div className="flexRow" style={{marginTop: '5px'}}>
             <div>
               <input
                 type="radio"
-                onClick={(e) => setAddressType(e.target.value)}
                 name="addressType"
                 value={addressType}
+                onClick={(e) => setAddressType(e.target.value)}
               />
-              <span>Home</span>
+              <span style={{marginLeft: '4px'}}>Home</span>
             </div>
             <div>
               <input
                 type="radio"
-                onClick={() => setAddressType("work")}
                 name="addressType"
-                value="work"
+                value={addressType}
+                onClick={(e) => setAddressType(e.target.value)}
+                style={{marginLeft: '25px'}}
               />
-              <span>Work</span>
+              <span style={{marginLeft: '4px'}}>Work</span>
             </div>
           </div>
         </div>
