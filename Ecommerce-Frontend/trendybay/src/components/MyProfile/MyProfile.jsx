@@ -14,15 +14,30 @@ import bottomImage from '../../images/bottomImage.png'
 import { Anchor, MaterialButton } from '../MaterialUi/MaterialUi'
 import AddressForm from '../Checkout/AddressForm'
 import { getUserAddress } from '../../reducers/addressReducer'
+import { isUserLoggedIn, updateUserInfo } from '../../reducers/userAuthReducer'
 
 const MyProfile = () => {
+
     const auth = useSelector((state) => state.auth);
     const userAddress = useSelector((state) => state.address);
 
     const dispatch = useDispatch();
 
+
     const [firstName, setFirstName] = useState(auth.userInfo.firstName);
     const [lastName, setLastName] = useState(auth.userInfo.lastName);
+    const [gender, setGender] = useState(auth.userInfo.gender);
+    const [email, setEmail] = useState(auth.userInfo.email);
+    const [contact, setContact] = useState(auth.userInfo.contact);
+   
+    // as firstName was showing undefined in beginning, that's wny:
+    useEffect(() => {
+        setFirstName(auth.userInfo.firstName);
+        setLastName(auth.userInfo.lastName);
+        setGender(auth.userInfo.gender);
+        setContact(auth.userInfo.contact);
+        setEmail(auth.userInfo.email);
+    }, [auth.userInfo])
 
     const [editPValue, setEditPValue] = useState('Edit')
     const [editP, setEditP] = useState(false)
@@ -46,10 +61,6 @@ const MyProfile = () => {
     useEffect(() => {
         auth.authenticate && dispatch(getUserAddress());
     }, [auth.authenticate]);
-
-    // useEffect(() => {
-    //     auth.authenticate && dispatch(getUserAddress())
-    // }, [userAddress.allAddress])
 
     useEffect(() => {
         // to select a particular address and then only to show the edit and delivery here buttun:
@@ -91,6 +102,8 @@ const MyProfile = () => {
     // if any address is selected for the delivery, then this function will be executed:
     const onAddressSubmit = (address) => {
         setNewAddress(false)
+        console.log("On address edit")
+        dispatch(getUserAddress())
     };
 
     const editPersonal = () => {
@@ -134,6 +147,51 @@ const MyProfile = () => {
     const address = () => {
         setShowPersonal(false);
         setShowAddress(true)
+    }
+
+    // function to handle personal info edit:
+    const personalInfoEdit = () => {
+        editPersonal()
+        const form = {
+            payload: {
+                info: {
+                    firstName,
+                    lastName,
+                    gender
+                }
+            }
+        }
+
+        dispatch(updateUserInfo(form))
+    }
+
+    // function to handle email edit:
+    const emailEdit = () => {
+        editEmailAction()
+        const form = {
+            payload: {
+                info: {
+                    email
+                }
+            }
+        }
+
+        dispatch(updateUserInfo(form))
+    }
+
+    // function to handle mobile number edit:
+    const contactEdit = () => {
+        editMobileAction()
+        console.log("edit ho raha")
+        const form = {
+            payload: {
+                info: {
+                    contact
+                }
+            }
+        }
+
+        dispatch(updateUserInfo(form))
     }
 
     const CheckoutStep = (props) => {
@@ -274,14 +332,28 @@ const MyProfile = () => {
                                         <div className='flexRow inputContainer'>
                                             <div style={{ width: '270px', paddingRight: '12px' }}>
                                                 <div style={{ marginBottom: '10px', position: 'relative' }}>
-                                                    <input type="text" className='inputField' placeholder={auth.userInfo.firstName} value={firstName} disabled />
+                                                    <input
+                                                        type="text"
+                                                        className='inputField'
+                                                        placeholder={auth.userInfo.firstName}
+                                                        value={firstName}
+                                                        disabled={!editP ? true : false}
+                                                        onChange={(e) => setFirstName(e.target.value)}
+                                                    />
                                                     <label htmlFor="firstname" className='labell'>First Name</label>
                                                 </div>
                                             </div>
 
                                             <div style={{ width: '270px', paddingRight: '12px' }}>
                                                 <div style={{ marginBottom: '10px', position: 'relative' }}>
-                                                    <input type="text" className='inputField' placeholder={auth.userInfo.lastName} value={lastName} disabled />
+                                                    <input
+                                                        type="text"
+                                                        className='inputField'
+                                                        placeholder={auth.userInfo.lastName}
+                                                        value={lastName}
+                                                        disabled={!editP ? true : false}
+                                                        onChange={(e) => setLastName(e.target.value)}
+                                                    />
                                                     <label htmlFor="lastname" className='labell'>Last Name</label>
                                                 </div>
                                             </div>
@@ -295,6 +367,7 @@ const MyProfile = () => {
                                                     }}
                                                     height={'49px'}
                                                     bgColor={'#2874f0'}
+                                                    onClick={personalInfoEdit}
                                                 />
                                             }
                                         </div>
@@ -305,11 +378,11 @@ const MyProfile = () => {
 
                                         <div className='flexRow'>
                                             <div className='flexRow'>
-                                                <input type="radio" name='gender' />
+                                                <input type="radio" name='gender' disabled={!editP ? true : false} value="male" onChange={(e) => setGender(e.target.value)} checked={gender === 'male'} />
                                                 <div style={{ marginLeft: '10px' }}>Male</div>
                                             </div>
                                             <div className='flexRow' style={{ marginLeft: '30px' }}>
-                                                <input type="radio" name='gender' />
+                                                <input type="radio" name='gender' disabled={!editP ? true : false} value="female" onChange={(e) => setGender(e.target.value)} checked={gender === 'female'} />
                                                 <div style={{ marginLeft: '10px' }}>Female</div>
                                             </div>
                                         </div>
@@ -324,7 +397,14 @@ const MyProfile = () => {
                                                     </div>
                                                 </div>
                                                 <div style={{ position: 'relative', display: 'flex' }}>
-                                                    <input className='inputField' style={{ width: '250px' }} type="email" placeholder={auth.userInfo.email} />
+                                                    <input
+                                                        className='inputField'
+                                                        style={{ width: '250px' }}
+                                                        type="email" placeholder={auth.userInfo.email}
+                                                        value={email}
+                                                        disabled={!editEmail ? true : false}
+                                                        onChange={(e) => setEmail(e.target.value)}
+                                                    />
                                                     <label htmlFor="lastname" className='labell' style={{ paddingLeft: '13px' }}>Email</label>
                                                     {
                                                         editEmail &&
@@ -336,6 +416,7 @@ const MyProfile = () => {
                                                             }}
                                                             height={'49px'}
                                                             bgColor={'#2874f0'}
+                                                            onClick={emailEdit}
                                                         />
                                                     }
                                                 </div>
@@ -349,7 +430,15 @@ const MyProfile = () => {
                                                     </div>
                                                 </div>
                                                 <div style={{ position: 'relative', display: 'flex' }}>
-                                                    <input className='inputField' style={{ width: '250px' }} type="email" placeholder={auth.userInfo.email} />
+                                                    <input
+                                                        className='inputField'
+                                                        style={{ width: '250px' }}
+                                                        type="number"
+                                                        placeholder={auth.userInfo.contact ? auth.userInfo.contact : "ADD MOBILE NUMBER"}
+                                                        disabled={!editMobile ? true : false}
+                                                        value={contact}
+                                                        onChange={(e) => setContact(e.target.value)}
+                                                    />
                                                     <label htmlFor="lastname" className='labell'>Mobile Number</label>
                                                     {
                                                         editMobile &&
@@ -361,6 +450,7 @@ const MyProfile = () => {
                                                             }}
                                                             height={'49px'}
                                                             bgColor={'#2874f0'}
+                                                            onClick={contactEdit}
                                                         />
                                                     }
                                                 </div>
@@ -409,29 +499,29 @@ const MyProfile = () => {
                                                     moreAddress.map(address =>
                                                         <div className="flexRow addressContainer">
                                                             <div>
-                                                                <input name="address" type="radio" onClick={() => selectAddress(address)} style={{ marginRight: '10px' }} />
+                                                                <input name="address" type="radio" onClick={() => selectAddress(address)} style={{ marginRight: '10px' }}/>
                                                             </div>
                                                             <div className="flexRow sb addressInfo">
                                                                 {
                                                                     !address.edit ?
                                                                         (
-                                                                            <div style={{ width: '100%'}}>
-                                                                                    <div className="addressDetail">
-                                                                                        <div>
-                                                                                            <span className="addressName">{address.name}</span>
-                                                                                            <span className="addressType">{address.addressType}</span>
-                                                                                            <span className="addressMobileNumber">{address.mobileNumber}</span>
-                                                                                        </div>
+                                                                            <div style={{ width: '100%' }}>
+                                                                                <div className="addressDetail">
+                                                                                    <div>
+                                                                                        <span className="addressName">{address.name}</span>
+                                                                                        <span className="addressType">{address.addressType}</span>
+                                                                                        <span className="addressMobileNumber">{address.mobileNumber}</span>
                                                                                     </div>
-                                                                                    <div className="fullAddress">
-                                                                                        {address.address} <br /> {" "}
-                                                                                        {address.state} - {address.pinCode}
-                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="fullAddress">
+                                                                                    {address.address} <br /> {" "}
+                                                                                    {address.state} - {address.pinCode}
+                                                                                </div>
 
                                                                                 <div style={{ display: 'flex', width: '267%', justifyContent: 'space-between', marginTop: '10px' }}>
                                                                                     {
                                                                                         address.selected && (
-                                                                                            <div className='flexRow' style={{marginTop: '10px'}}>
+                                                                                            <div className='flexRow' style={{ marginTop: '10px' }}>
                                                                                                 <MaterialButton
                                                                                                     title={"EDIT"}
                                                                                                     onClick={() => enableAddressEditForm(address)}
@@ -479,7 +569,7 @@ const MyProfile = () => {
                                                                             <AddressForm
                                                                                 withoutLayout={true}
                                                                                 initialData={address}
-                                                                                title = {"SAVE"}
+                                                                                title={"SAVE"}
                                                                                 onSubmitForm={onAddressSubmit}
                                                                                 onCancel={() => { }}
                                                                             />
@@ -492,9 +582,6 @@ const MyProfile = () => {
                                             </>
                                         }
                                     />
-
-
-
                                 </div>
                         }
                         <img src={bottomImage} alt="greetings" />

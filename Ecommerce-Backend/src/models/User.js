@@ -9,6 +9,7 @@ const UserSchema =  new mongoose.Schema({
         min: 3, // min first name length
         max: 20
     },
+    
     lastName: {
         type: String,
         required: true,
@@ -16,6 +17,7 @@ const UserSchema =  new mongoose.Schema({
         min: 3, // min first name length
         max: 20
     },
+
     username: {
         type: String,
         required: true,
@@ -24,6 +26,7 @@ const UserSchema =  new mongoose.Schema({
         index: true, // so that we can find username on the basis of their index
         lowercase: true
     },
+
     email: {
         type: String,
         required: true,
@@ -31,18 +34,27 @@ const UserSchema =  new mongoose.Schema({
         unique: true,
         lowercase: true
     },
+
     hash_password: {
         type: String,
         required: true
     },
+
     role: {
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
     },
+    
+    gender: {
+        type: String,
+        enum: ['male', 'female', 'others']
+    },
+
     contact: {
         type: String,
     },
+
     profilePicture: {
         type: String
     }
@@ -66,7 +78,7 @@ UserSchema.virtual('fullname')
 // method to authenticate the password:
 // UserSchema.methods = {
 //     authenticate: function(password){
-//         return bcrypt.compareSync(password, this.hash_password); // first argument is password that user will enter and the second is the hashed password that we had created above using salt. It will return either true or false based on the comparing
+//         return await bcrypt.compareSync(password, this.hash_password); // first argument is password that user will enter and the second is the hashed password that we had created above using salt. It will return either true or false based on the comparing
 //     }
 // }
  

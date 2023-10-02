@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axiosInstance from "../helpers/axios"
+import { json } from "react-router-dom"
 
 // defining initial State:
 const initialState = {
@@ -75,6 +76,18 @@ export const signoutAction = createAsyncThunk('signout', async () => {
         console.log(error.message)
     }
 })
+
+// update action: 
+export const updateUserInfo = createAsyncThunk('updateUserInfo', async (payload) => {
+    const res = await axiosInstance.post('/user/update', payload)
+    console.log(res)
+    if(res.status === 200)
+    {
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+    }
+    return res.data
+})
+
 
 const userAuthSlice = createSlice({
     name: "auth",
@@ -166,6 +179,23 @@ const userAuthSlice = createSlice({
         builder.addCase(signoutAction.rejected, (state, action) => {
             state.authenticating = false
             state.authenticate = false
+            // state.error = action.payload.message
+        })
+
+        builder.addCase(updateUserInfo.pending, (state) => {
+            state.authenticating = true
+            state.authenticate = true
+        })
+
+        builder.addCase(updateUserInfo.fulfilled, (state, action) => {
+            state.authenticating = false
+            state.authenticate = true
+            state.userInfo = action.payload.user
+        })
+
+        builder.addCase(updateUserInfo.rejected, (state, action) => {
+            state.authenticating = false
+            state.authenticate = true
             // state.error = action.payload.message
         })
     

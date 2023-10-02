@@ -9,7 +9,7 @@ import gift from '../../images/gift.svg'
 
 const Footer = () => {
     return (
-        <div style={{ background: '#172337', color: 'white', marginTop: '15px' }}>
+        <div style={{ background: '#172337', color: 'white', marginTop: '15px', bottom: '0'}}>
             <div className='flexRow footerContainer sb'>
                 <div className='flexRow sb links'>
                     <div className='item'>

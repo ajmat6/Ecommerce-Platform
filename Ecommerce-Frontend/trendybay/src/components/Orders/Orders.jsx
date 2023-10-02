@@ -30,6 +30,18 @@ const Orders = () => {
                 breedIcon = {<IoIosArrowForward />}
             />
             {
+                order.orders.length === 0 ? 
+                <Card
+                    style = {{
+                        maxWidth: '1200px',
+                        marginTop: '40px',
+                        textAlign: 'center',
+                        padding: '100px'
+                    }}
+                >
+                    <strong>No orders!!</strong>
+                </Card>
+                :
                 order.orders.map((order, index) => 
                     order.items.map((item, index) => 
                         <Card

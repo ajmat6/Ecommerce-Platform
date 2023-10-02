@@ -82,10 +82,7 @@ const AddressForm = (props) => {
     }
 
     dispatch(createAddress(form))
-    .then(() => {
-      setSubmitFlag(true)
-      console.log("Ho gaya")
-    })
+    setSubmitFlag(true)
   };
 
   useEffect(() => {
@@ -117,7 +114,8 @@ const AddressForm = (props) => {
         // if the address is newly added  then the added address is last in allAddress state
         _address = userAddress.allAddress.slice(userAddress.allAddress.length - 1)[0];
       }
-      console.log(_address, "new address")
+      console.log("_address", _address)
+      // console.log(_address, "new address")
       props.onSubmitForm(_address) // sending this address as prop
     }
   }, [userAddress.allAddress])
@@ -206,8 +204,9 @@ const AddressForm = (props) => {
               <input
                 type="radio"
                 name="addressType"
-                value={addressType}
-                onClick={(e) => setAddressType(e.target.value)}
+                value="home"
+                onChange={(e) => setAddressType(e.target.value)}
+                checked = {addressType === 'home'}
               />
               <span style={{marginLeft: '4px'}}>Home</span>
             </div>
@@ -215,9 +214,10 @@ const AddressForm = (props) => {
               <input
                 type="radio"
                 name="addressType"
-                value={addressType}
-                onClick={(e) => setAddressType(e.target.value)}
+                value="work"
+                onChange={(e) => setAddressType(e.target.value)}
                 style={{marginLeft: '25px'}}
+                checked = {addressType === 'work'}
               />
               <span style={{marginLeft: '4px'}}>Work</span>
             </div>

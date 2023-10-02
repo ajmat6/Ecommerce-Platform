@@ -8,6 +8,7 @@ const {body, validationResult} = require('express-validator'); // express valida
 const {validateSignupRequest, validateSigninRequest, isRequestValidated} = require('../validators/validate'); // importing validators
 const shorid = require('shortid');
 const shortid = require('shortid');
+const { userMiddleware } = require('../middleware/categoryMiddleware');
 
 // API end point for signup: POST Request -> to create an account:
 router.post('/signup', validateSignupRequest, isRequestValidated, async (req,res) => { /// using validateRequest(array) and isRequestValidated as midddleware defined in validators folder
@@ -123,7 +124,9 @@ router.post('/signin', validateSigninRequest, isRequestValidated, async (req,res
                 email,
                 role,
                 fullname,
-                _id
+                _id,
+                gender: 'male',
+                contact: user.contact ? user.contact : ''
             }
         })
     }
@@ -161,6 +164,73 @@ router.post('/profile', fetchuser, async (req, res) => {
         const user = await User.findById(userId);
         res.status(200).json({user});
     } 
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+})
+
+// API end point to update users info:
+router.post('/user/update', fetchuser, userMiddleware, async (req, res) => {
+    try
+    {
+        const {payload} = req.body;
+        
+        if(payload.info)
+        {
+            const userId = req.user.id;
+
+            const updateFields = {};
+
+            if(payload.info.firstName)
+            {
+                updateFields.firstName = payload.info.firstName
+            }
+
+            if(payload.info.lastName)
+            {
+                updateFields.lastName = payload.info.lastName
+            }
+
+            if(payload.info.gender)
+            {
+                updateFields.gender = payload.info.gender
+            }
+
+            if(payload.info.email)
+            {
+                updateFields.email = payload.info.email
+            }
+
+            if(payload.info.contact)
+            {
+                updateFields.contact = payload.info.contact
+            }
+
+            const updatedInfo = await User.findOneAndUpdate({_id: userId}, {
+                "$set": updateFields
+            }, {new: true})
+    
+            res.status(200).json({
+                user: {
+                    firstName: updatedInfo.firstName,
+                    lastName: updatedInfo.lastName,
+                    email: updatedInfo.email,
+                    role: updatedInfo.role,
+                    fullname: updatedInfo.fullname,
+                    _id: updatedInfo._id,
+                    gender: updatedInfo.gender ? updatedInfo.gender : "",
+                    contact: updatedInfo.contact ? updatedInfo.contact : ""
+                }
+            })
+        }
+    
+        else
+        {
+            return res.status(400).json({error: "Params required in address"})
+        }
+    }
     catch (error)
     {
         console.log(error.message);
