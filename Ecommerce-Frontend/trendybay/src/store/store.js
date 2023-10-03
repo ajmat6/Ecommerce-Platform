@@ -7,6 +7,7 @@ import productDetailsReducer from '../reducers/productDetailsReducer';
 import cartReducer from '../reducers/cartReducer';
 import addressReducer from '../reducers/addressReducer';
 import orderReducer from '../reducers/orderReducer';
+import homeReducer from '../reducers/homeReducer';
 
 const store = configureStore({
     reducer: {
@@ -17,7 +18,8 @@ const store = configureStore({
         productDetails: productDetailsReducer,
         cart: cartReducer,
         address: addressReducer,
-        orders: orderReducer
+        orders: orderReducer,
+        home: homeReducer
     }
 })
 

@@ -14,6 +14,7 @@ const initialDataRoutes = require('./routes/initialData');
 const pageRoutes = require('./routes/page');
 const addressRoutes = require('./routes/address');
 const orderRoutes = require('./routes/orders');
+const homeRoutes = require('./routes/homePage')
 
 // Using env variable (Port no)
 env.config();
@@ -35,7 +36,7 @@ app.use(express.json());
 app.use(cors()) // to follow the cors policy to make use of backend in the frontend as both frontend and backend are running on different ports
 app.use('/public', express.static(path.join(__dirname, 'uploads'))); // joining curr file to uploads folder and serving upload folder as a static file to browser
 
-app.use('/api', userRoutes); // middleware and every route to be start with /api
+app.use('/api', userRoutes);
 app.use('/api', categoryRoutes); 
 app.use('/api', productRoutes);
 app.use('/api', cartRoutes);
@@ -43,6 +44,7 @@ app.use('/api', initialDataRoutes);
 app.use('/api', pageRoutes);
 app.use('/api', addressRoutes);
 app.use('/api', orderRoutes);
+app.use('/api', homeRoutes);
 
 app.listen(process.env.PORT, () => {    
     console.log(`Server Chal Raha He Bhai at ${process.env.PORT}`);
