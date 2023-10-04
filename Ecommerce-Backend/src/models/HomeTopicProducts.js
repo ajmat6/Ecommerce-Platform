@@ -1,15 +1,11 @@
 const mongoose = require('mongoose');
 
-const hometopicNameSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true
+const homeTopicProductsSchema = mongoose.Schema({
+    title: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'HomeTopicTitle',
+        required: true
     },
-})
-
-const homeTopicSchema = mongoose.Schema({
-    title: hometopicNameSchema,
     
     products: [
         {
@@ -25,6 +21,10 @@ const homeTopicSchema = mongoose.Schema({
                 required: true
             },
 
+            productpic: {
+                img: {type: String, required: true}
+            },
+
             startingPrice: {
                 type: Number,
                 required: true
@@ -36,4 +36,4 @@ const homeTopicSchema = mongoose.Schema({
 {timestamps: true}
 )
 
-module.exports = mongoose.model('HomeTopic', homeTopicSchema);
+module.exports = mongoose.model('HomeTopicProduct', homeTopicProductsSchema);

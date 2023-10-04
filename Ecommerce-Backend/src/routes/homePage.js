@@ -4,6 +4,12 @@ const upload = require('../middleware/uploadMiddleware');
 const fetchuser = require('../middleware/fetchuser');
 const { adminMiddleware } = require('../middleware/categoryMiddleware');
 const Home = require('../models/HomePage')
+const slugify = require('slugify');
+const shortid = require('shortid');
+const HomeTopicTitle = require('../models/HomeTopicTitle');
+const HomeTopicProducts = require('../models/HomeTopicProducts');
+
+
 router.post('/home/banners', fetchuser, adminMiddleware, upload.array('banners'), async (req, res) => {
     try
     {
@@ -54,6 +60,77 @@ router.get('/getbanners', async (req, res) => {
     {
         console.log(error.message);
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");  
+    }
+})
+
+router.post('/home/addtopic', fetchuser, adminMiddleware, upload.single('productPic'), async (req, res) => {
+    try
+    {
+        const requestBody = {
+            title: req.body.title,
+            slug: `${slugify(req.body.title)}-${shortid.generate()}`,
+        }
+
+        // check if topic already exist or not:
+        const alreadyExist = await HomeTopicTitle.findOne({title: req.body.title});
+        if(alreadyExist) return res.status(400).json({error: "Topic Already Exist!"});
+        
+        const newTopic = await new HomeTopicTitle(requestBody);
+        await newTopic.save()
+        
+        res.status(201).json(newTopic);
+    }
+    
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+})
+
+router.get('/home/getTopics', fetchuser, adminMiddleware, upload.single('productPic'), async (req, res) => {
+    try
+    {
+        const allTopics = await HomeTopicTitle.find({});
+        if(allTopics) return res.status(200).json(allTopics);
+        else return res.status(400).json({error: 'No Topics Found'});
+    }
+    
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
+    }
+})
+
+router.post('/home/addProduct', fetchuser, adminMiddleware, async (req, res) => {
+    try
+    {
+        if(req.files)
+        {
+            req.body.products.productPic = {
+                img: `${process.env.CATEGORY_PICURL}/public/${req.file.filename}`
+            }
+        }
+
+        // check if the product already exist:
+        // const alreadyProduct = await HomeTopicProducts.find({'products.productName': req.body.productName});
+        // if(alreadyProduct) return res.status(400).json({error: "Product already exist!"})
+
+        const product = await HomeTopicProducts.findOneAndUpdate({title: req.user.title},
+            {
+                $push:{
+                    "products": req.body.products
+                }
+            },
+            {new: true}
+        )
+        res.status(201).json(product);
+    }
+    catch (error)
+    {
+        console.log(error.message);
+        res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
     }
 })
 

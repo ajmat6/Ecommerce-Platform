@@ -18,6 +18,7 @@ import Category from './components/Category/Category';
 import { getAllCategories } from './reducers/categoryReducer';
 import { getallProducts } from './reducers/productReducer';
 import Page from './components/Page/Page';
+import { getTopics } from './reducers/homePageReducer';
 
 function App() {
   let navigate = useNavigate();
@@ -35,6 +36,7 @@ function App() {
     {
       dispatch(getAllCategories());
       dispatch(getallProducts());
+      dispatch(getTopics());
     }
   }, [auth.authenticate])
   
