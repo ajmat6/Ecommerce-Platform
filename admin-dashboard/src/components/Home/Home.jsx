@@ -91,7 +91,8 @@ function Home(props) {
   }
 
   const handleProductImage = (e) => {
-    setProductPic(e.target.file);
+    setProductPic(e.target.files[0]);
+    console.log(productPic)
   }
 
   const handleTopicSubmit = (e) => {
@@ -102,22 +103,24 @@ function Home(props) {
 
   const handleProductsSubmit = (e) => {
     e.preventDefault();
-    const payload = {
-      title: productTopic,
-      products: {
-        productName: productTitle,
-        categoryId: productCategory,
-        startingPrice: frontPrice,
-        productPic: productPic
-      }
-    }
-    // const form = new FormData();
+    // const payload = {
+    //   title: productTopic,
+    //   products: {
+    //     productName: productTitle,
+    //     categoryId: productCategory,
+    //     startingPrice: frontPrice,
+    //     productPic: productPic
+    //   }
+    // }
+    const form = new FormData();
+    console.log(productPic)
 
-    // form.append('productName', productTitle);
-    // form.append('categoryId', productCategory);
-    // form.append('startingPrice', frontPrice);
-    // form.append('title', )
-    dispatch(addHomeProduct(payload))
+    form.append('productName', productTitle);
+    form.append('categoryId', productCategory);
+    form.append('startingPrice', frontPrice);
+    form.append('title', productTopic)
+    form.append('productPic', productPic);
+    dispatch(addHomeProduct(form))
   }
 
   const renderTopicModal = () => {
@@ -235,9 +238,9 @@ function Home(props) {
           onChange={handleProductImage}
         />
 
-        {
+        {/* {
           productPic != '' ? <div>{productPic}</div> : null
-        }
+        } */}
       </Modal>
     )
   }

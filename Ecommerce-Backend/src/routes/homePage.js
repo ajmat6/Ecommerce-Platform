@@ -63,7 +63,7 @@ router.get('/getbanners', async (req, res) => {
     }
 })
 
-router.post('/home/addtopic', fetchuser, adminMiddleware, upload.single('productPic'), async (req, res) => {
+router.post('/home/addtopic', fetchuser, adminMiddleware, async (req, res) => {
     try
     {
         const requestBody = {
@@ -88,7 +88,7 @@ router.post('/home/addtopic', fetchuser, adminMiddleware, upload.single('product
     }
 })
 
-router.get('/home/getTopics', fetchuser, adminMiddleware, upload.single('productPic'), async (req, res) => {
+router.get('/home/getTopics', fetchuser, adminMiddleware, async (req, res) => {
     try
     {
         const allTopics = await HomeTopicTitle.find({});
@@ -103,35 +103,56 @@ router.get('/home/getTopics', fetchuser, adminMiddleware, upload.single('product
     }
 })
 
-router.post('/home/addProduct', fetchuser, adminMiddleware, async (req, res) => {
+router.post('/home/addProduct', fetchuser, adminMiddleware, upload.single('productPic'), async (req, res) => {
     try
     {
-        if(req.files)
-        {
-            req.body.products.productPic = {
-                img: `${process.env.CATEGORY_PICURL}/public/${req.file.filename}`
+        const payload = {
+            title: req.body.title,
+            products: {
+                productName: req.body.productName,
+                categoryId: req.body.categoryId,
+                startingPrice: req.body.startingPrice
             }
         }
-
+        
+        if(req.file)
+        {
+            payload.products.productpic = `${process.env.CATEGORY_PICURL}/public/${req.file.filename}`
+        }
         // check if the product already exist:
         // const alreadyProduct = await HomeTopicProducts.find({'products.productName': req.body.productName});
         // if(alreadyProduct) return res.status(400).json({error: "Product already exist!"})
 
-        const product = await HomeTopicProducts.findOneAndUpdate({title: req.user.title},
+        const product = await HomeTopicProducts.findOneAndUpdate({title: req.body.title},
             {
                 $push:{
-                    "products": req.body.products
+                    "products": payload.products
                 }
             },
             {new: true}
         )
-        res.status(201).json(product);
+        
+        if(product) return res.status(201).json(product);
+        
+        else
+        {
+            const newProduct = await new HomeTopicProducts(payload)
+            await newProduct.save();
+    
+            return res.status(200).json(newProduct)
+        }
     }
     catch (error)
     {
         console.log(error.message);
         res.status(500).send("Some Internal Server Error Occured! Please try again after some times");    
     }
+})
+
+router.get('/home/getProducts', async (req, res) => {
+    const allHomeProducts = await HomeTopicProducts.find({}).populate('title', 'title');
+    if(allHomeProducts) return res.status(200).json(allHomeProducts);
+    else return res.status(400).json({message: "No products found!"})
 })
 
 module.exports = router;

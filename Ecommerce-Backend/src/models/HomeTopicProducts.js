@@ -22,7 +22,8 @@ const homeTopicProductsSchema = mongoose.Schema({
             },
 
             productpic: {
-                img: {type: String, required: true}
+                type: String,
+                required: true
             },
 
             startingPrice: {

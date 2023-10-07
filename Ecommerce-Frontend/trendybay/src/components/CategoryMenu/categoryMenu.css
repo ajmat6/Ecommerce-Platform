@@ -16,7 +16,7 @@
 /* below is dirct(first) child of .categoryMenu */
 .categoryMenu > ul {
     display: flex;
-    margin: 0 50px;
+    margin: 0 30px;
     position: relative;
 }
 

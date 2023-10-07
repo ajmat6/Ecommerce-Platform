@@ -68,6 +68,7 @@ export const getAllCategories = createAsyncThunk('getInitialData', async () => {
 export const addCategory = createAsyncThunk('addCategory', async (form) => {
     try
     {
+        console.log(form, "category form")
         const res = await axiosInstance.post('/category/create', form);
         return res;
 

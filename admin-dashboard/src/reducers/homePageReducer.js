@@ -59,14 +59,15 @@ export const getTopics = createAsyncThunk('getTopics', async () => {
     }
 })
 
-export const addHomeProduct = createAsyncThunk('addProduct', async (payload) => {
+export const addHomeProduct = createAsyncThunk('addProduct', async (form) => {
     try
     {
         const headers = {
             "auth-token": localStorage.getItem('token')
         }
 
-        const res = await axiosInstance.post('/home/addProduct', payload, {headers})
+        console.log(form)
+        const res = await axiosInstance.post('/home/addProduct', form)
         console.log(res)
         return res;
     }
